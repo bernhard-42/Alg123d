@@ -1,2 +1,4 @@
-from py123d.direct_api import *
-from py123d.part import *
+from .direct_api import *
+from .common import *
+from .part import *
+from .sketch import *

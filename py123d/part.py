@@ -1,100 +1,78 @@
 from dataclasses import dataclass
-from typing import List, Tuple, Union
+import build123d as bd
+from .common import Build, Mixin
 
-from .direct_api import (
-    Compound,
-    Solid,
-    Face,
-    Wire,
-    Edge,
-    Vertex,
-    Vector,
-    Plane,
-    Location,
-    Rotation,
-    VectorLike,
-    RotationLike,
-    CadObj,
-)
-from .enums import Mode
+
+class Part(Build):
+    def __repr__(self):
+        return "Part(\n" + "\n".join(["    " + str(t) for t in self.tasks]) + "\n)"
 
 
 @dataclass
-class Task:
-    obj: CadObj
-    mode: Mode
+class Box(bd.Box, Mixin):
+    __module__ = "build123d.build_part"
 
-
-class Part(Compound):
-    def __init__(self):
-        self.tasks: List[Task] = []
-        self.obj: Compound = None
-
-    def _place(self, solid: CadObj, mode: Mode, at: Union[List[Location], None] = None):
-        if at is None:
-            at = [Location()]
-
-        for loc in at:
-            new_solid = solid.obj.located(loc)
-            self.tasks.append(Task(new_solid, mode))
-            if mode == Mode.ADD:
-                if self.obj == None:
-                    self.obj = Compound.make_compound([new_solid])
-                else:
-                    self.obj = self.obj.fuse(new_solid)
-
-            elif mode == Mode.SUBTRACT:
-                if self.obj is None:
-                    raise RuntimeError("Connect cut solid from None")
-
-                self.obj = self.obj.cut(new_solid)
-
-    def add(self, solid: CadObj, at: Union[List[Location], None] = None):
-        self._place(solid, Mode.ADD, at)
-
-    def subtract(self, solid: CadObj, at: Union[List[Location], None] = None):
-        self._place(solid, Mode.SUBTRACT, at)
-
-    def intersect(self, solid: CadObj, at: Union[List[Location], None] = None):
-        self._place(solid, Mode.INTERSECT, at)
-
-
-@dataclass
-class Box:
     length: float
     width: float
     height: float
-    centered: tuple[bool, bool, bool] = (True, True, True)
+    centered: tuple[bool, bool, bool]
 
-    def __post_init__(self):
+    def __init__(
+        self,
+        length: float,
+        width: float,
+        height: float,
+        centered: tuple[bool, bool, bool] = (True, True, True),
+    ):
+        with bd.BuildPart():
+            with bd.Locations(bd.Location()):
+                super().__init__(
+                    length, width, height, centered=centered, mode=bd.Mode.PRIVATE
+                )
 
-        center_offset = Vector(
-            -self.length / 2 if self.centered[0] else 0,
-            -self.width / 2 if self.centered[1] else 0,
-            -self.height / 2 if self.centered[2] else 0,
-        )
-
-        self.obj = Solid.make_box(
-            self.length, self.width, self.height, Plane(center_offset)
-        )
+        del self.rotation
+        del self.mode
 
 
 @dataclass
-class Cylinder:
+class Cylinder(bd.Cylinder, Mixin):
+    __module__ = "build123d.build_part"
+
     radius: float
     height: float
-    arc_size: float = 360
-    centered: tuple[bool, bool, bool] = (True, True, True)
+    arc_size: float
+    centered: tuple[bool, bool, bool]
 
-    def __post_init__(self):
-        center_offset = Vector(
-            0 if self.centered[0] else self.radius,
-            0 if self.centered[1] else self.radius,
-            -self.height / 2 if self.centered[2] else 0,
-        )
-        self.obj = Solid.make_cylinder(
-            self.radius,
-            self.height,
-            Plane(center_offset),
-            self.arc_size,
-        )
+    def __init__(
+        self,
+        radius: float,
+        height: float,
+        arc_size: float = 360,
+        centered: tuple[bool, bool, bool] = (True, True, True),
+    ):
+        with bd.BuildPart():
+            with bd.Locations(bd.Location()):
+                super().__init__(
+                    radius, height, arc_size, centered=centered, mode=bd.Mode.PRIVATE
+                )
+
+        del self.rotation
+        del self.mode
+
+
+# Operations
+
+
+class Extrusion(bd.Extrude):
+    def __init__(
+        self,
+        to_extrude: bd.Face = None,
+        amount: float = None,
+        until: bd.Until = None,
+        both: bool = False,
+        taper: float = 0.0,
+    ):
+        with bd.BuildPart() as bp:
+
+            with bd.Locations():
+                self.__init__(to_extrude, amount, until=until, both=both, taper=taper)
