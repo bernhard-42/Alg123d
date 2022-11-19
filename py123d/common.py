@@ -17,13 +17,20 @@ class Task:
     loc: bd.Location
     mode: bd.Mode
 
+    def __init__(self, obj: Union[CadObj2d, CadObj3d], loc: bd.Location, mode: bd.Mode):
+        self.obj = {"name": obj.__class__.__name__}
+        for name in obj.__dataclass_fields__:
+            self.obj[name] = getattr(obj, name)
+        self.loc = loc.to_tuple()
+        self.mode = mode
+
 
 class Build:
-    def __init__(self):
-        self.tasks: List[Task] = []
-        self.obj: bd.Compound = None
+    def __init__(self, obj=None, tasks=None):
+        self.tasks: List[Task] = [] if tasks is None else tasks
+        self.obj: bd.Compound = obj
 
-    def _place(self, mode: bd.Mode, obj: CadObj23d, at: Location = None):
+    def _place(self, mode: bd.Mode, obj: CadObj23d, at: Location = None, combine=True):
         if at is None:
             loc = obj.location
         elif isinstance(at, bd.Location):
@@ -33,39 +40,46 @@ class Build:
 
         new_obj = obj.located(loc)
 
-        self.tasks.append(Task(obj, loc, mode))
+        if combine:
+            new_build = self
+        else:
+            new_build = Build(
+                None if self.obj is None else self.obj.copy(), self.tasks.copy()
+            )
+
+        new_build.tasks.append(Task(obj, loc, mode))
 
         if mode == bd.Mode.ADD:
-            if self.obj == None:
-                self.obj = bd.Compound.make_compound([new_obj])
+            if new_build.obj == None:
+                new_build.obj = bd.Compound.make_compound([new_obj])
             else:
-                self.obj = self.obj.fuse(new_obj)
+                new_build.obj = new_build.obj.fuse(new_obj)
 
         elif mode == bd.Mode.SUBTRACT:
-            if self.obj is None:
+            if new_build.obj is None:
                 raise RuntimeError("Connect cut obj from None")
 
-            self.obj = self.obj.cut(new_obj)
+            new_build.obj = new_build.obj.cut(new_obj)
 
-    def add(self, obj: CadObj23d, at: Location = None):
-        self._place(bd.Mode.ADD, obj, at=at)
-        return self
+        return new_build
 
-    def subtract(self, obj: CadObj23d, at: Location = None):
-        self._place(bd.Mode.SUBTRACT, obj, at=at)
-        return self
+    def add(self, obj: CadObj23d, at: Location = None, combine=True):
+        return self._place(bd.Mode.ADD, obj, at=at, combine=combine)
 
-    def intersect(self, obj: CadObj23d, at: Location = None):
-        self._place(bd.Mode.INTERSECT, obj, at=at)
-        return self
+    def subtract(self, obj: CadObj23d, at: Location = None, combine=True):
+        return self._place(bd.Mode.SUBTRACT, obj, at=at, combine=combine)
+
+    def intersect(self, obj: CadObj23d, at: Location = None, combine=True):
+        return self._place(bd.Mode.INTERSECT, obj, at=at, combine=combine)
 
     def __add__(self, other: CadObj23d):
-        self.add(other)
-        return self
+        return self.add(other, combine=False)
 
     def __sub__(self, other: CadObj23d):
-        self.subtract(other)
-        return self
+        return self.subtract(other, combine=False)
+
+    def __and__(self, other: CadObj23d):
+        return self.intersect(other, combine=False)
 
 
 class Mixin:
