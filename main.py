@@ -1,27 +1,30 @@
 from py123d import *
-from cq_vscode import show
+from cq_vscode import show, set_defaults
+set_defaults(axes=True, axes0=True, transparent=False)
 
 
 # %%
+
+plane = Workplane.ZY
 
 cyl = Cylinder(1, 0.5)
 box = Box(0.3, 0.3, 0.5)
 
 p = Part()
-p.add(cyl)
+p.add(cyl, on=plane)
 
 for loc in PolarLocations(0.7, 8):
-    p.subtract(box, at=loc)
+    p.subtract(box, on=plane, at=loc)
 
 show(p.obj)
 
 # %%
 
 p = Part()
-p += cyl
+p += cyl @ plane
 
-for loc in PolarLocations(0.7, 8):
-    p -= box @ loc
+for loc in PolarLocations(0.7, 10):
+    p -= box @ (plane * loc)
 
 show(p.obj)
 
@@ -39,10 +42,10 @@ show(s.obj)
 
 s = Sketch()
 for outer_loc in GridLocations(3, 3, 2, 2):
-    s += Circle(1) @ outer_loc
+    s += Circle(1) @ (plane * outer_loc)
 
     for loc in PolarLocations(0.8, 12):
-        s -= Rectangle(0.1, 0.3) @ (outer_loc * loc)
+        s -= Rectangle(0.1, 0.3) @ (plane * outer_loc * loc)
 
 show(s.obj)
 # %%
