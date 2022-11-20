@@ -23,8 +23,6 @@ class Part(Build):
 
 @dataclass
 class Box(bd.Box, Mixin):
-    __module__ = "build123d.build_generic"  # hack to survive validate_inputs
-
     length: float
     width: float
     height: float
@@ -49,8 +47,6 @@ class Box(bd.Box, Mixin):
 
 @dataclass
 class Cylinder(bd.Cylinder, Mixin):
-    __module__ = "build123d.build_generic"  # hack to survive validate_inputs
-
     radius: float
     height: float
     arc_size: float
@@ -78,8 +74,6 @@ class Cylinder(bd.Cylinder, Mixin):
 
 @dataclass
 class Extrusion(bd.Extrude, Mixin):
-    __module__ = "build123d.build_generic"  # hack to survive validate_inputs
-
     def __init__(
         self,
         to_extrude: Union[bd.Face, Sketch],

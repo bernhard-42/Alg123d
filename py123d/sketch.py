@@ -10,8 +10,6 @@ class Sketch(Build):
 
 @dataclass
 class Circle(bd.Circle, Mixin):
-    __module__ = "build123d.build_sketch"
-
     radius: float
     centered: tuple[bool, bool]
 
@@ -24,8 +22,6 @@ class Circle(bd.Circle, Mixin):
 
 @dataclass
 class Rectangle(bd.Rectangle, Mixin):
-    __module__ = "build123d.build_sketch"
-
     width: float
     height: float
     centered: tuple[bool, bool]
