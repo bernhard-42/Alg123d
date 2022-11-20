@@ -156,80 +156,85 @@ class Workplane(bd.Plane):
         return Workplane(self.to_location() * loc)
 
 
-class Build:
-    def __init__(self, obj=None, tasks=None):
+class OperatorCompound(bd.Compound):
+    def __init__(self, compound=None, tasks=None):
         self.tasks: List[Task] = [] if tasks is None else tasks
-        self.obj: bd.Compound = obj
+        self.wrapped = None if compound is None else compound.wrapped
+
+    def _params(self, exclude):
+        # get the paramter dict from the data class
+        params = {
+            k: v for k, v in self.__dict__.items() if k in self.__dataclass_fields__
+        }
+        for ex in exclude:
+            del params[ex]
+        return params
+
+    def create_context_and_part(self, cls, exclude=[]):
+        with bd.BuildPart():
+            self.create_part(cls, exclude)
+
+    def create_part(self, cls, exclude=[]):
+        with bd.Locations(bd.Location()):
+            self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
+
+        self._applies_to = cls._applies_to
+        self.tasks = [Task(self, self.location, bd.Mode.ADD)]
+
+    def create_context_and_sketch(self, cls, exclude=[]):
+        with bd.BuildSketch():
+            self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
+
+        self._applies_to = bd.Circle._applies_to
+        self.tasks = [Task(self, self.location, bd.Mode.ADD)]
 
     def _place(
         self,
         mode: bd.Mode,
         obj: CadObj23d,
-        on: bd.Plane = None,
         at: bd.Location = None,
-        combine=True,
     ):
         if at is None:
             loc = obj.location
         elif isinstance(at, bd.Location):
             loc = at
-        else:
+        elif isinstance(at, Workplane):
+            loc = at.to_location()
+        elif isinstance(at, tuple):
             loc = bd.Location(at)
-
-        if on is not None:
-            loc = on.to_location() * loc
-
-        new_obj = obj.located(loc)
-
-        if combine:
-            new_build = self
         else:
-            new_build = Build(
-                None if self.obj is None else self.obj.copy(), self.tasks.copy()
-            )
+            raise ValueError(f"{at } is no location orm plane")
 
-        new_build.tasks.append(Task(obj, loc, mode))
+        located_obj = obj.located(loc)
 
-        if mode == bd.Mode.ADD:
-            if new_build.obj == None:
-                new_build.obj = bd.Compound.make_compound([new_obj])
+        if self.wrapped is None:
+            if mode == bd.Mode.ADD:
+                compound = located_obj
             else:
-                new_build.obj = new_build.obj.fuse(new_obj)
+                raise RuntimeError("Can only add to empty object")
+        else:
+            compound = self.copy()
+            if mode == bd.Mode.ADD:
+                compound = compound.fuse(located_obj)
+            elif mode == bd.Mode.SUBTRACT:
+                compound = compound.cut(located_obj)
+            elif mode == bd.Mode.INTERSECT:
+                compound = compound.intersect(located_obj)
 
-        elif mode == bd.Mode.SUBTRACT:
-            if new_build.obj is None:
-                raise RuntimeError("Connect cut obj from None")
+        tasks = self.tasks.copy()
+        tasks.append(Task(obj, loc, mode))
 
-            new_build.obj = new_build.obj.cut(new_obj)
-
-        return new_build
-
-    def add(
-        self, obj: CadObj23d, on: bd.Plane = None, at: bd.Location = None, combine=True
-    ):
-        return self._place(bd.Mode.ADD, obj, on=on, at=at, combine=combine)
-
-    def subtract(
-        self, obj: CadObj23d, on: bd.Plane = None, at: bd.Location = None, combine=True
-    ):
-        return self._place(bd.Mode.SUBTRACT, obj, on=on, at=at, combine=combine)
-
-    def intersect(
-        self, obj: CadObj23d, on: bd.Plane = None, at: bd.Location = None, combine=True
-    ):
-        return self._place(bd.Mode.INTERSECT, obj, on=on, at=at, combine=combine)
+        return OperatorCompound(compound, tasks)
 
     def __add__(self, other: CadObj23d):
-        return self.add(other, combine=False)
+        return self._place(bd.Mode.ADD, other)
 
     def __sub__(self, other: CadObj23d):
-        return self.subtract(other, combine=False)
+        return self._place(bd.Mode.SUBTRACT, other)
 
     def __and__(self, other: CadObj23d):
-        return self.intersect(other, combine=False)
+        return self._place(bd.Mode.INTERSECT, other)
 
-
-class Mixin:
     def __matmul__(self, obj):
         if isinstance(obj, bd.Location):
             loc = obj
@@ -241,6 +246,15 @@ class Mixin:
             raise ValueError(f"Cannot multiply with {obj}")
 
         return self.located(loc)
+
+    def __repr__(self):
+        return "Sketch(\n" + "\n".join(["    " + str(t) for t in self.tasks]) + "\n)"
+
+
+class Empty(OperatorCompound):
+    def __init__(self):
+        self.wrapped = None
+        self.tasks = []
 
 
 class Locations(bd.Locations):
