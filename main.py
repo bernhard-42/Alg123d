@@ -1,11 +1,12 @@
 from py123d import *
 from cq_vscode import show, set_defaults
+
 set_defaults(axes=True, axes0=True, transparent=False)
 
 
 # %%
 
-plane = Workplane.ZY
+plane = Workplane.XY
 
 cyl = Cylinder(1, 0.5)
 box = Box(0.3, 0.3, 0.5)
