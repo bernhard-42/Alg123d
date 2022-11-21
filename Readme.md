@@ -28,9 +28,7 @@ For $n = 2, 3$:
     - $-: G3, G3 \rightarrow G3$ with $a, b \rightarrow$ `a - b = a.cut(b)` (cut two objects)
 
 - Intersect objects
-    - $ \And : G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
-
-Some more theoretical topics (can be ignored for Alg123d)
+    - $ &amp; : G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
 
 - **Neutral elements**
 
