@@ -30,14 +30,14 @@ For $n = 2, 3$:
 - Intersect objects
     - &amp; $: G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
 
-- **Neutral elements**
+- Neutral elements
 
     For $n = 2, 3$:
 
     - $e_0 =$ `Empty` is the neutral element for $+$
     - $l_0 =$ `Location()` and $p_0 =$ `Plane.XY` are the neutral elements for $*$
 
-- **Inverse elements**
+- Inverse elements
 
     For $n = 2, 3$:
 
