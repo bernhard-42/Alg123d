@@ -42,5 +42,5 @@ For $n = 2, 3$:
     For $n = 2, 3$:
 
     - For $l \in L: l^{-1} =$ `l.inverse()`
-    - For $w \in W: w^{-1} =$ `Workplane(w.to_location().inverse())``
-    - For $g \in G^n: g^{-1}$ is defined by $h - g$ for $h \in G^n$
+    - For $w \in W: w^{-1} =$ `Workplane(w.to_location().inverse())`
+    - For $g \in G^n: g^{-1}$ is defined by $g + g^{-1} := g - g = e_0$
