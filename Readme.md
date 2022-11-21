@@ -8,9 +8,9 @@ $G^2 := \lbrace$`Empty`, `Rectangle`, `Circle`$\rbrace$
 
 $G^3 := \lbrace$`Empty`, `Box`, `Cylinder`, `Extrusion`$\rbrace$
 
-$L  := \lbrace$`Location`$((x,y,z), (a,b,c)): x,y,z \in \R $ and $a,b,c \in [-360.0,360.0]\rbrace$
+$L  := \lbrace$`Location`$((x,y,z), (a,b,c)): x,y,z \in \reals $ and $a,b,c \in [-360.0,360.0]\rbrace$
 
-$W  := \lbrace$`Workplane`$(o,x,z): o,x,z ∈ \R^3 $ and $ \|x\| == \|z\| == 1\rbrace$
+$W  := \lbrace$`Workplane`$(o,x,z): o,x,z ∈ \reals^3 $ and $ \|x\| == \|z\| == 1\rbrace$
 
 **Operations:**
 
