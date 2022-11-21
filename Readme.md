@@ -8,9 +8,9 @@ $G^2 := \lbrace$`Empty`, `Rectangle`, `Circle`$\rbrace$
 
 $G^3 := \lbrace$`Empty`, `Box`, `Cylinder`, `Extrusion`$\rbrace$
 
-$L  := \lbrace$`Location`$((x,y,z), (a,b,c)): x,y,z \in \R$ and $a,b,c \in [-360.0,360.0]\rbrace$
+$L  := \lbrace$`Location`$((x,y,z), (a,b,c)): x,y,z \in \R $ and $a,b,c \in [-360.0,360.0]\rbrace$
 
-$W  := \lbrace$`Workplane`$(o,x,z): o,x,z ∈ \R^3$ and $ \|x\| == \|z\| == 1\rbrace$
+$W  := \lbrace$`Workplane`$(o,x,z): o,x,z ∈ \R^3 $ and $ \|x\| == \|z\| == 1\rbrace$
 
 **Operations:**
 
@@ -28,7 +28,7 @@ For $n = 2, 3$:
     - $-: G3, G3 \rightarrow G3$ with $a, b \rightarrow$ `a - b = a.cut(b)` (cut two objects)
 
 - Intersect objects
-    - $ \& : G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
+    - $ \And : G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
 
 Some more theoretical topics (can be ignored for Alg123d)
 
