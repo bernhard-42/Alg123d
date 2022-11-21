@@ -34,8 +34,8 @@ For $n = 2, 3$:
 
     For $n = 2, 3$:
 
-    - $e_0 = $ `Empty` is the neutral element for $+$
-    - $l_0 =$ `Location()` and $p_0 =$ `Plane.XY` are the neutral elements for $*$
+    - $e_0 =$ `Empty` is the neutral element for $ + $
+    - $l_0 =$ `Location()` and $p_0 =$ `Plane.XY` are the neutral elements for $ * $
 
 - **Inverse elements**
 
