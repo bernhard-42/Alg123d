@@ -32,14 +32,10 @@ For $n = 2, 3$:
 
 - Neutral elements
 
-    For $n = 2, 3$:
-
     - $e_0 =$ `Empty` is the neutral element for $+$
     - $l_0 =$ `Location()` and $p_0 =$ `Plane.XY` are the neutral elements for $*$
 
 - Inverse elements
-
-    For $n = 2, 3$:
 
     - For $l \in L: l^{-1} =$ `l.inverse()`
     - For $w \in W: w^{-1} =$ `Workplane(w.to_location().inverse())`
