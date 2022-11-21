@@ -4,13 +4,13 @@
 
 **Sets:**
 
-$G^2 := \{$`Empty, Rectangle, Circle`$\}$
+$G^2 := \{Empty, Rectangle, Circle\}$
 
-$G^3 := \{$`Empty, Box, Cylinder, Extrusion`$\}$
+$G^3 := \{Empty, Box, Cylinder, Extrusion\}$
 
-$L  := \{$`Location((x,y,z), (a,b,c))`$: x,y,z \in \R$ and $a,b,c \in [-360.0,360.0] \} $
+$L  := \{Location((x,y,z), (a,b,c)): x,y,z \in \R$ and $a,b,c \in [-360.0,360.0]\}$
 
-$W  := \{$`Workplane(o,x,z)`$: o,x,z ∈ \R^3$ and $\|x\| == \|z\| == 1 \}$
+$W  := \{Workplane(o,x,z): o,x,z ∈ \R^3$ and $\|x\| == \|z\| == 1\}$
 
 **Operations:**
 
