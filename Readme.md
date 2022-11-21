@@ -19,7 +19,7 @@ For $n = 2, 3$:
 - Location arithmentic
     - $*: W,L \rightarrow W$   (locate workplane $w \in W$ at location $l \in L$, i.e. `Workplane(w.to_location() * l)`)
     - $*: L,L \rightarrow L$   (multiply two locations $l_1, l_2 \in L$, i.e. `l1 * l2`)
-    - $*: G^n,P \rightarrow G^n$  (locate an object $g \in G^n$ to the location of workplane $w \in W$ of the plane, i.e. `g.located(w.to_location())`)
+    - $*: G^n,P \rightarrow G^n$  (locate an object $g \in G^n$ to the location of workplane $w \in W$, i.e. `g.located(w.to_location())`)
     - $*: G^n,L \rightarrow G^n$  (locate an object $g \in G^n$ to the location $l \in L$, i.e. `g.located(l)`)
 
 - Fuse or cut objects
@@ -28,7 +28,7 @@ For $n = 2, 3$:
     - $-: G3, G3 \rightarrow G3$ with $a, b \rightarrow$ `a - b = a.cut(b)` (cut two objects)
 
 - Intersect objects
-    - $\&: G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
+    - $ \& : G^n, G^n \rightarrow G^n$ with $a, b \rightarrow$ `a & b = a.intersect(b)`, with `a & b = (a + b) - (a - b) - (b - a)`
 
 Some more theoretical topics (can be ignored for Alg123d)
 
