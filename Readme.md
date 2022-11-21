@@ -8,9 +8,9 @@ $G^2 := \lbrace$`Empty`, `Rectangle`, `Circle`$\rbrace$
 
 $G^3 := \lbrace$`Empty`, `Box`, `Cylinder`, `Extrusion`$\rbrace$
 
-$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in \R \land a,b,c \in [-360.0,360.0]\rbrace$
+$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in R \land a,b,c \in [-360.0,360.0]\rbrace$
 
-$W  := \lbrace$ `Workplane` $(o,x,z): o,x,z ∈ \R^3 \land \|x\| == \|z\| == 1\rbrace$
+$W  := \lbrace$ `Workplane` $(o,x,z): o,x,z ∈ R^3 \land \|x\| == \|z\| == 1\rbrace$
 
 **Operations:**
 
@@ -34,8 +34,8 @@ For $n = 2, 3$:
 
     For $n = 2, 3$:
 
-    - $e_0 =$ `Empty` is the neutral element for $ + $
-    - $l_0 =$ `Location()` and $p_0 =$ `Plane.XY` are the neutral elements for $ * $
+    - $e_0 =$ `Empty` is the neutral element for $+$
+    - $l_0 =$ `Location()` and $p_0 =$ `Plane.XY` are the neutral elements for $*$
 
 - **Inverse elements**
 
