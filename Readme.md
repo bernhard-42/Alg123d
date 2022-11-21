@@ -4,7 +4,7 @@
 
 **Sets:**
 
-$G^2 := \{Empty, Rectangle, Circle\}$
+$G^2 := \lbrace$ `Empty, Rectangle, Circle` $\rbrace$
 
 $G^3 := \{Empty, Box, Cylinder, Extrusion\}$
 
