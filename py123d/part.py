@@ -3,11 +3,11 @@ from typing import Union
 
 import build123d as bd
 
-from .common import OperatorCompound
+from .common import AlgCompound
 
 
 @dataclass
-class Box(OperatorCompound):
+class Box(AlgCompound):
     length: float
     width: float
     height: float
@@ -18,7 +18,7 @@ class Box(OperatorCompound):
 
 
 @dataclass
-class Cylinder(OperatorCompound):
+class Cylinder(AlgCompound):
     radius: float
     height: float
     arc_size: float = 360
@@ -29,7 +29,7 @@ class Cylinder(OperatorCompound):
 
 
 @dataclass
-class Extrusion(OperatorCompound):
+class Extrusion(AlgCompound):
     to_extrude: bd.Compound
     amount: float
     until: bd.Until = None

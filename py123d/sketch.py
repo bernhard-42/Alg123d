@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 import build123d as bd
-from .common import OperatorCompound
+from .common import AlgCompound
 
 
 @dataclass
-class Circle(OperatorCompound):
+class Circle(AlgCompound):
     radius: float
     centered: tuple[bool, bool] = (True, True)
 
@@ -13,7 +13,7 @@ class Circle(OperatorCompound):
 
 
 @dataclass
-class Rectangle(OperatorCompound):
+class Rectangle(AlgCompound):
     width: float
     height: float
     centered: tuple[bool, bool] = (True, True)
