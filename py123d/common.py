@@ -2,7 +2,6 @@ from typing import Union, List, overload
 from dataclasses import dataclass
 
 import build123d as bd
-from OCP.gp import gp_Pln
 from .direct_api import Workplane
 
 CadObj1d = Union[bd.Wire, bd.Edge, bd.Compound]

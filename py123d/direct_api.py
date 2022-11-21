@@ -1,5 +1,5 @@
 from typing import overload
-from OCP.gp import gp_Pln
+from OCP.gp import gp_Pln  # pyright: ignore[reportMissingImports]
 import build123d as bd
 
 
