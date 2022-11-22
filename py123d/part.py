@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import Union
+from typing import Union, List
 
 import build123d as bd
 
-from .common import AlgCompound
+from .common import AlgCompound, Obj123d
 
 
-@dataclass
+@dataclass(repr=False)
 class Box(AlgCompound):
     length: float
     width: float
@@ -17,7 +17,7 @@ class Box(AlgCompound):
         self.create_context_and_part(bd.Box)
 
 
-@dataclass
+@dataclass(repr=False)
 class Cylinder(AlgCompound):
     radius: float
     height: float
@@ -28,7 +28,7 @@ class Cylinder(AlgCompound):
         self.create_context_and_part(bd.Cylinder)
 
 
-@dataclass
+@dataclass(repr=False)
 class Extrusion(AlgCompound):
     to_extrude: bd.Compound
     amount: float

@@ -1,8 +1,10 @@
+import copy
 from typing import Union, List, overload
 from dataclasses import dataclass
 
 import build123d as bd
 from .direct_api import Workplane
+from OCP.BRepBuilderAPI import BRepBuilderAPI_Copy
 
 CadObj1d = Union[bd.Wire, bd.Edge, bd.Compound]
 CadObj2d = Union[bd.Face, bd.Compound]
@@ -11,7 +13,7 @@ CadObj23d = Union[bd.Solid, bd.Face, bd.Compound]
 
 
 @dataclass
-class Task:
+class Obj123d:
     obj: Union[CadObj2d, CadObj3d]
     loc: bd.Location
     mode: bd.Mode
@@ -22,13 +24,14 @@ class Task:
             for name in obj.__dataclass_fields__:
                 self.obj[name] = getattr(obj, name)
         self.loc = loc.to_tuple()
-        self.mode = mode
+        self.mode = "" if mode is None else mode.name
 
 
 class AlgCompound(bd.Compound):
-    def __init__(self, compound=None, tasks=None):
-        self.tasks: List[Task] = [] if tasks is None else tasks
+    def __init__(self, compound=None, objects=None, dim: int = None):
+        self.objects: List[Obj123d] = [] if objects is None else objects
         self.wrapped = None if compound is None else compound.wrapped
+        self.dim = dim
 
     def _params(self, exclude):
         # get the paramter dict from the data class
@@ -47,15 +50,17 @@ class AlgCompound(bd.Compound):
         with bd.Locations(bd.Location()):
             self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
 
-        self._applies_to = cls._applies_to
-        self.tasks = [Task(self, self.location, bd.Mode.ADD)]
+        # self._applies_to = cls._applies_to
+        self.objects = [Obj123d(self, self.location, bd.Mode.ADD)]
+        self.dim = 3
 
     def create_context_and_sketch(self, cls, exclude=[]):
         with bd.BuildSketch():
             self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
 
-        self._applies_to = bd.Circle._applies_to
-        self.tasks = [Task(self, self.location, bd.Mode.ADD)]
+        # self._applies_to = cls._applies_to
+        self.objects = [Obj123d(self, self.location, bd.Mode.ADD)]
+        self.dim = 2
 
     def _place(
         self,
@@ -64,17 +69,19 @@ class AlgCompound(bd.Compound):
         at: bd.Location = None,
     ):
         if at is None:
+            located_obj = obj
             loc = obj.location
-        elif isinstance(at, bd.Location):
-            loc = at
-        elif isinstance(at, Workplane):
-            loc = at.to_location()
-        elif isinstance(at, tuple):
-            loc = bd.Location(at)
         else:
-            raise ValueError(f"{at } is no location orm plane")
+            if isinstance(at, bd.Location):
+                loc = at
+            elif isinstance(at, Workplane):
+                loc = at.to_location()
+            elif isinstance(at, tuple):
+                loc = bd.Location(at)
+            else:
+                raise ValueError(f"{at } is no location or plane")
 
-        located_obj = obj.located(loc)
+            located_obj = obj.located(loc)
 
         if self.wrapped is None:
             if mode == bd.Mode.ADD:
@@ -82,7 +89,7 @@ class AlgCompound(bd.Compound):
             else:
                 raise RuntimeError("Can only add to empty object")
         else:
-            compound = self.copy()
+            compound = self
             if mode == bd.Mode.ADD:
                 compound = compound.fuse(located_obj)
             elif mode == bd.Mode.SUBTRACT:
@@ -90,10 +97,10 @@ class AlgCompound(bd.Compound):
             elif mode == bd.Mode.INTERSECT:
                 compound = compound.intersect(located_obj)
 
-        tasks = self.tasks.copy()
-        tasks.append(Task(obj, loc, mode))
+        tasks = self.objects.copy()
+        tasks.append(Obj123d(obj, loc, mode))
 
-        return AlgCompound(compound, tasks)
+        return AlgCompound(compound, tasks, self.dim)
 
     def __add__(self, other: CadObj23d):
         return self._place(bd.Mode.ADD, other)
@@ -117,13 +124,37 @@ class AlgCompound(bd.Compound):
         return self.located(loc)
 
     def __repr__(self):
-        return "Sketch(\n" + "\n".join(["    " + str(t) for t in self.tasks]) + "\n)"
+        repr = "{\n"
+        repr += f'  "dim": {self.dim},\n'
+        repr += '  "objects": [\n    '
+        repr += "\n    ".join([str(task) for task in self.objects])
+        repr += "\n  ]\n"
+        repr += "}"
+        return repr
+
+    def copy(self):
+        memo = {}
+        memo[id(self.wrapped)] = bd.downcast(BRepBuilderAPI_Copy(self.wrapped).Shape())
+        if hasattr(self, "part"):
+            memo[id(self.part.wrapped)] = (
+                bd.downcast(BRepBuilderAPI_Copy(self.part.wrapped).Shape()),
+            )
+
+        return copy.deepcopy(self, memo)
 
 
-class Empty(AlgCompound):
+class Empty2d(AlgCompound):
     def __init__(self):
         self.wrapped = None
-        self.tasks = []
+        self.objects = []
+        self.dim = 2
+
+
+class Empty3d(AlgCompound):
+    def __init__(self):
+        self.wrapped = None
+        self.objects = []
+        self.dim = 3
 
 
 class Locations(bd.Locations):

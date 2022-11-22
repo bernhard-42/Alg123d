@@ -10,6 +10,8 @@ plane = Workplane.ZX
 cyl = Cylinder(1, 0.5)
 box = Box(0.3, 0.3, 0.5)
 
+# %%
+
 p = cyl @ plane
 
 for loc in PolarLocations(0.7, 10):
@@ -24,7 +26,7 @@ show(p, p.faces().group_by(Axis.Y)[0], transparent=True)
 
 locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s = Empty()
+s = Empty3d()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = (
         plane * outer_loc * locs[i]
@@ -40,14 +42,16 @@ show(e)
 
 # %%
 
-a = Box(1, 1, 1) @ Location((0, 0, 0), (45, 0, 0))
-b = Box(1, 1, 1) @ Location((0, 0, 0), (0, 0, 0))
-c = Box(1, 1, 1) @ Location((0, 0, 0), (0, 0, 45))
-
-# show((a + b) - (a - b) - (b - a))
-show(a - (b - (c - (a - b))))
+b = Box(1, 1, 1)
+a = b + Cylinder(0.1, 2) @ (-0.3, -0.3)
+a = chamfer(a, b.edges(), 0.1)
+show(a)
 
 # %%
 
+a = Box(1, 1, 1)
+b = a - Cylinder(0.1, 2) @ (0.3, 0.3)
+c = fillet(b, a.edges(), 0.1)
+show(a, b @ (0,2), c @ (0,4))
 
 # %%
