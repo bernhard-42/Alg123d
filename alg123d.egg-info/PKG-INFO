@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: alg123d
+Version: 0.1.0
+Summary: Algebraic 3D CAD
+Home-page: https://github.com/bernhard-42/py123d
+Author: Bernhard Walter
+Author-email: b_walter@arcor.de
+Keywords: CAD,cadquery
+Classifier: Development Status :: 3 - Alpha
+Classifier: Framework :: IPython
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Multimedia :: Graphics
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.8
+
+A system to create CAD objects in an algebraic way

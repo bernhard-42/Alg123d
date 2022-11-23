@@ -4,21 +4,26 @@ from dataclasses import dataclass
 
 import build123d as bd
 from .direct_api import Workplane
-from OCP.BRepBuilderAPI import BRepBuilderAPI_Copy
 
-CadObj1d = Union[bd.Wire, bd.Edge, bd.Compound]
-CadObj2d = Union[bd.Face, bd.Compound]
-CadObj3d = Union[bd.Solid, bd.Compound]
-CadObj23d = Union[bd.Solid, bd.Face, bd.Compound]
+from OCP.BRepBuilderAPI import (  # pyright: ignore[reportMissingImports]
+    BRepBuilderAPI_Copy,
+)
+
+Obj1d = bd.Compound | bd.Wire | bd.Edge
+Obj2d = bd.Compound | bd.Face
+Obj3d = bd.Compound | bd.Solid
+Obj12d = Obj1d | Obj2d
+Obj23d = Obj2d | Obj3d
+Obj123d = Obj1d | Obj2d | Obj3d
 
 
 @dataclass
-class Obj123d:
-    obj: Union[CadObj2d, CadObj3d]
+class Step:
+    obj: Obj23d
     loc: bd.Location
     mode: bd.Mode
 
-    def __init__(self, obj: Union[CadObj2d, CadObj3d], loc: bd.Location, mode: bd.Mode):
+    def __init__(self, obj: Obj2d | Obj3d, loc: bd.Location, mode: bd.Mode):
         self.obj = {"name": obj.__class__.__name__}
         if hasattr(obj, "__dataclass_fields__"):
             for name in obj.__dataclass_fields__:
@@ -51,7 +56,7 @@ class AlgCompound(bd.Compound):
             self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
 
         # self._applies_to = cls._applies_to
-        self.objects = [Obj123d(self, self.location, bd.Mode.ADD)]
+        self.objects = [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 3
 
     def create_context_and_sketch(self, cls, exclude=[]):
@@ -59,13 +64,13 @@ class AlgCompound(bd.Compound):
             self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
 
         # self._applies_to = cls._applies_to
-        self.objects = [Obj123d(self, self.location, bd.Mode.ADD)]
+        self.objects = [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 2
 
     def _place(
         self,
         mode: bd.Mode,
-        obj: CadObj23d,
+        obj: Obj23d,
         at: bd.Location = None,
     ):
         if at is None:
@@ -97,18 +102,18 @@ class AlgCompound(bd.Compound):
             elif mode == bd.Mode.INTERSECT:
                 compound = compound.intersect(located_obj)
 
-        tasks = self.objects.copy()
-        tasks.append(Obj123d(obj, loc, mode))
+        steps = self.objects.copy()
+        steps.append(Step(obj, loc, mode))
 
-        return AlgCompound(compound, tasks, self.dim)
+        return AlgCompound(compound, steps, self.dim)
 
-    def __add__(self, other: CadObj23d):
+    def __add__(self, other: Obj23d):
         return self._place(bd.Mode.ADD, other)
 
-    def __sub__(self, other: CadObj23d):
+    def __sub__(self, other: Obj23d):
         return self._place(bd.Mode.SUBTRACT, other)
 
-    def __and__(self, other: CadObj23d):
+    def __and__(self, other: Obj23d):
         return self._place(bd.Mode.INTERSECT, other)
 
     def __matmul__(self, obj):
@@ -159,14 +164,9 @@ class Empty3d(AlgCompound):
 
 class Locations(bd.Locations):
     def __init__(self, *pts: Union[bd.VectorLike, bd.Vertex, bd.Location]):
+        bd.Workplanes(bd.Plane.XY).__enter__()
         super().__init__(*pts)
         del self.plane_index
-
-    def __enter__(self):
-        raise RuntimeError("No context!")
-
-    def __exit__(self):
-        raise RuntimeError("No context!")
 
 
 class PolarLocations(bd.PolarLocations):
@@ -178,14 +178,9 @@ class PolarLocations(bd.PolarLocations):
         stop_angle: float = 360.0,
         rotate: bool = True,
     ):
+        bd.Workplanes(bd.Plane.XY).__enter__()
         super().__init__(radius, count, start_angle, stop_angle, rotate)
         del self.plane_index
-
-    def __enter__(self):
-        raise RuntimeError("No context!")
-
-    def __exit__(self):
-        raise RuntimeError("No context!")
 
 
 class GridLocations(bd.GridLocations):
@@ -197,11 +192,6 @@ class GridLocations(bd.GridLocations):
         y_count: int,
         centered: tuple[bool, bool] = (True, True),
     ):
+        bd.Workplanes(bd.Plane.XY).__enter__()
         super().__init__(x_spacing, y_spacing, x_count, y_count, centered)
         del self.plane_index
-
-    def __enter__(self):
-        raise RuntimeError("No context!")
-
-    def __exit__(self):
-        raise RuntimeError("No context!")
