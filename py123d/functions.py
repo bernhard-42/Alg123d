@@ -10,7 +10,7 @@ def extrude(
     to_extrude: bd.Compound,
     amount: float,
     until: bd.Until = None,
-    part: bd.Compound = None,
+    until_part: bd.Compound = None,
     both: bool = False,
     taper: float = 0.0,
 ):
@@ -26,8 +26,8 @@ def extrude(
         if len(ctx.pending_faces) == 0:
             raise RuntimeError(f"No faces found in {to_extrude}")
 
-        if part is not None:
-            ctx._add_to_context(part)
+        if until_part is not None:
+            ctx._add_to_context(until_part)
 
         with bd.Locations(bd.Location()):
             compound = bd.Extrude(
