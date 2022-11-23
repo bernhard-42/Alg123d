@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Tuple
 
 import build123d as bd
-from .common import AlgCompound, Step, Obj12d, Obj23d
+from .common import AlgCompound, Step, Obj12d, Obj123d
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
@@ -88,7 +88,7 @@ def mirror(
 
 
 def offset(
-    *objects: Obj23d,
+    objects: List[Obj123d] | Obj123d,
     amount: float,
     openings: bd.Face | list[bd.Face] = None,
     kind: bd.Kind = bd.Kind.ARC,
@@ -100,6 +100,39 @@ def offset(
         compound = bd.Offset(
             *objs, amount=amount, openings=openings, kind=kind, mode=bd.Mode.PRIVATE
         )
+
+    steps = [Step(compound, compound.location, None)]  # TODO
+
+    return AlgCompound(compound, steps, dim)
+
+
+def scale(objects: bd.Shape, by: float | Tuple[float, float, float]):
+    objs = objects if isinstance(objects, (list, tuple)) else [objects]
+
+    dim = max([o.dim for o in objs])
+
+    if dim == 2 and isinstance(by, (list, tuple)) and len(by) == 2:
+        by = (by[0], by[1], 1)
+
+    with CTX[dim]():
+        compound = bd.Scale(*objs, by=by, mode=bd.Mode.PRIVATE)
+
+    steps = [Step(compound, compound.location, None)]  # TODO
+
+    return AlgCompound(compound, steps, dim)
+
+
+def split(
+    objects: List[Obj123d] | Obj123d,
+    by: bd.Plane = bd.Plane.XZ,
+    keep: bd.Keep = bd.Keep.TOP,
+):
+    objs = objects if isinstance(objects, (list, tuple)) else [objects]
+
+    dim = max([o.dim for o in objs])
+
+    with CTX[dim]():
+        compound = bd.Split(*objs, bisect_by=by, keep=keep, mode=bd.Mode.PRIVATE)
 
     steps = [Step(compound, compound.location, None)]  # TODO
 
