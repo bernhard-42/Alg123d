@@ -2,7 +2,7 @@ Metadata-Version: 2.1
 Name: alg123d
 Version: 0.1.0
 Summary: Algebraic 3D CAD
-Home-page: https://github.com/bernhard-42/py123d
+Home-page: https://github.com/bernhard-42/Alg123d
 Author: Bernhard Walter
 Author-email: b_walter@arcor.de
 Keywords: CAD,cadquery

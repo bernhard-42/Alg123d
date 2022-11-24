@@ -122,18 +122,32 @@ def scale(objects: bd.Shape, by: float | Tuple[float, float, float]):
     return AlgCompound(compound, steps, dim)
 
 
+def _wrap(cls, objects, **kwargs):
+    objs = objects if isinstance(objects, (list, tuple)) else [objects]
+    dim = max([o.dim for o in objs])
+
+    with CTX[dim]():
+        compound = cls(*objs, **kwargs, mode=bd.Mode.PRIVATE)
+
+    steps = [Step(compound, compound.location, None)]  # TODO
+
+    return AlgCompound(compound, steps, dim)
+
+
 def split(
     objects: List[Obj123d] | Obj123d,
     by: bd.Plane = bd.Plane.XZ,
     keep: bd.Keep = bd.Keep.TOP,
 ):
-    objs = objects if isinstance(objects, (list, tuple)) else [objects]
+    return _wrap(bd.Split, objects, dict(by=by, keep=keep))
 
-    dim = max([o.dim for o in objs])
+    # objs = objects if isinstance(objects, (list, tuple)) else [objects]
 
-    with CTX[dim]():
-        compound = bd.Split(*objs, bisect_by=by, keep=keep, mode=bd.Mode.PRIVATE)
+    # dim = max([o.dim for o in objs])
 
-    steps = [Step(compound, compound.location, None)]  # TODO
+    # with CTX[dim]():
+    #     compound = bd.Split(*objs, bisect_by=by, keep=keep, mode=bd.Mode.PRIVATE)
 
-    return AlgCompound(compound, steps, dim)
+    # steps = [Step(compound, compound.location, None)]  # TODO
+
+    # return AlgCompound(compound, steps, dim)

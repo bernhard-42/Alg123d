@@ -12,7 +12,7 @@ setup_args = {
     "zip_safe": False,
     "author": "Bernhard Walter",
     "author_email": "b_walter@arcor.de",
-    "url": "https://github.com/bernhard-42/py123d",
+    "url": "https://github.com/bernhard-42/Alg123d",
     "keywords": ["CAD", "cadquery"],
     "classifiers": [
         "Development Status :: 3 - Alpha",
