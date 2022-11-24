@@ -30,8 +30,8 @@ show(a.edges(), b)
 
 # %%
 
-b = split(a.edges(), Plane.YZ)
+b = split(a, Plane.YZ)
 
-show(a, b)
+show(a.edges(), b)
 
 # %%

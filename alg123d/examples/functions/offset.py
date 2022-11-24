@@ -1,9 +1,8 @@
-from py123d import *
-import build123d as bd
+from alg123d import *
 from cq_vscode import show, set_defaults
 
 set_defaults(
-    axes=True, axes0=True, transparent=True, grid=(True, True, True), reset_camera=False
+    axes=True, axes0=True, transparent=True, grid=(True, True, True)
 )
 
 # %%
