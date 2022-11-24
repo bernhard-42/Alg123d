@@ -2,11 +2,6 @@ Generic:
     BoundingBox (?)
 
 Sketch: 
-1    Ellipse
-1    Polygon
-1    RegularPolygon
-1    Text
-1    Trapezoid
 4    SlotArc
 4    SlotCenterPoint
 4    SlotCenterToCenter
@@ -21,11 +16,6 @@ Part:
 3        Revolve
 3        Section
 3        Sweep
-    Objects: 
-1        Cone
-1        Sphere
-1        Torus
-1        Wedge
         
 Line: 
 5    Line

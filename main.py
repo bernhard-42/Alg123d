@@ -1,8 +1,12 @@
-from py123d import *
+from alg123d import *
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
+
+# %%
+pts = [(0, 1), (1, 0), (1, 1), (0, 1)]
+show(Polygon(pts))
 
 # %%
 plane = Workplane.ZX
@@ -26,7 +30,7 @@ plane = Workplane.ZX
 
 locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s = Empty3d()
+s = Empty3()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = (
         plane * outer_loc * locs[i]
