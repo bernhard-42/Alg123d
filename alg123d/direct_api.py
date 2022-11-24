@@ -2,10 +2,6 @@ from typing import overload
 from OCP.gp import gp_Pln  # pyright: ignore[reportMissingImports]
 import build123d as bd
 
-__all__ = [
-    "Workplane",
-]
-
 
 class Workplane(bd.Plane):
     @classmethod
