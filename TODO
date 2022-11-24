@@ -1,0 +1,41 @@
+Generic: 
+    BoundingBox (?)
+
+Sketch: 
+1    Ellipse
+1    Polygon
+1    RegularPolygon
+1    Text
+1    Trapezoid
+4    SlotArc
+4    SlotCenterPoint
+4    SlotCenterToCenter
+4    SlotOverall
+
+Part: 
+    Operations: 
+2        CounterBoreHole
+2        CounterSinkHole
+2        Hole
+3        Loft
+3        Revolve
+3        Section
+3        Sweep
+    Objects: 
+1        Cone
+1        Sphere
+1        Torus
+1        Wedge
+        
+Line: 
+5    Line
+5    PolarLine
+5    Polyline
+6    Spline
+6    Helix
+7    CenterArc
+7    RadiusArc
+7    SagittaArc
+7    TangentArc
+7    ThreePointArc
+8    JernArc
