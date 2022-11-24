@@ -75,9 +75,16 @@ class AlgCompound(bd.Compound):
         self.steps = [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 3
 
-    def create_context_and_sketch(self, cls, exclude=[]):
+    def create_context_and_sketch(self, cls, objects=None, exclude=[]):
         with bd.BuildSketch():
-            self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
+            if objects is None:
+                self.wrapped = cls(
+                    **self._params(exclude), mode=bd.Mode.PRIVATE
+                ).wrapped
+            else:
+                self.wrapped = cls(
+                    *objects, **self._params(exclude), mode=bd.Mode.PRIVATE
+                ).wrapped
 
         # self._applies_to = cls._applies_to
         self.steps = [Step(self, self.location, bd.Mode.ADD)]
