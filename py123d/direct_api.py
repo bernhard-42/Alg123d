@@ -1,119 +1,135 @@
 from typing import overload
-
-from build123d.direct_api import *
-
-from build123d import Location as _Location
-
-from OCP.gp import gp_EulerSequence, gp_Trsf
-from OCP.TopLoc import TopLoc_Location
-
-__all__ = [
-    "Axis",
-    "BoundBox",
-    "Compound",
-    "Edge",
-    "Face",
-    "Location",
-    "Matrix",
-    "Mixin1D",
-    "Mixin3D",
-    "Plane",
-    "Rotation",
-    "RotationLike",
-    "Shape",
-    "ShapeList",
-    "Shell",
-    "Solid",
-    "SVG",
-    "Vector",
-    "VectorLike",
-    "Vertex",
-    "Wire",
-]
+from OCP.gp import gp_Pln  # pyright: ignore[reportMissingImports]
+import build123d as bd
 
 
-class Location(_Location):
+class Workplane(bd.Plane):
+    @classmethod
+    @property
+    def XY(cls) -> "Workplane":
+        """XY Plane"""
+        return cls((0, 0, 0), (1, 0, 0), (0, 0, 1))
+
+    @classmethod
+    @property
+    def YZ(cls) -> "Workplane":
+        """YZ Plane"""
+        return cls((0, 0, 0), (0, 1, 0), (1, 0, 0))
+
+    @classmethod
+    @property
+    def ZX(cls) -> "Workplane":
+        """ZX Plane"""
+        return cls((0, 0, 0), (0, 0, 1), (0, 1, 0))
+
+    @classmethod
+    @property
+    def XZ(cls) -> "Workplane":
+        """XZ Plane"""
+        return cls((0, 0, 0), (1, 0, 0), (0, -1, 0))
+
+    @classmethod
+    @property
+    def YX(cls) -> "Workplane":
+        """YX Plane"""
+        return cls((0, 0, 0), (0, 1, 0), (0, 0, -1))
+
+    @classmethod
+    @property
+    def ZY(cls) -> "Workplane":
+        """ZY Plane"""
+        return cls((0, 0, 0), (0, 0, 1), (-1, 0, 0))
+
+    @classmethod
+    @property
+    def front(cls) -> "Workplane":
+        """Front Plane"""
+        return cls((0, 0, 0), (1, 0, 0), (0, 0, 1))
+
+    @classmethod
+    @property
+    def back(cls) -> "Workplane":
+        """Back Plane"""
+        return cls((0, 0, 0), (-1, 0, 0), (0, 0, -1))
+
+    @classmethod
+    @property
+    def left(cls) -> "Workplane":
+        """Left Plane"""
+        return cls((0, 0, 0), (0, 0, 1), (-1, 0, 0))
+
+    @classmethod
+    @property
+    def right(cls) -> "Workplane":
+        """Right Plane"""
+        return cls((0, 0, 0), (0, 0, -1), (1, 0, 0))
+
+    @classmethod
+    @property
+    def top(cls) -> "Workplane":
+        """Top Plane"""
+        return cls((0, 0, 0), (1, 0, 0), (0, 1, 0))
+
+    @classmethod
+    @property
+    def bottom(cls) -> "Workplane":
+        """Bottom Plane"""
+        return cls((0, 0, 0), (1, 0, 0), (0, -1, 0))
+
     @overload
-    def __init__(self) -> None:  # pragma: no cover
-        "Empty location with not rotation or translation with respect to the original location."
+    def __init__(self, gp_pln: gp_Pln):  # pragma: no cover
         ...
 
     @overload
-    def __init__(self, location: "Location") -> None:  # pragma: no cover
-        "Location with another given location."
+    def __init__(self, face: bd.Face):  # pragma: no cover
         ...
 
     @overload
-    def __init__(self, translation: VectorLike) -> None:  # pragma: no cover
-        "Location with translation with respect to the original location."
+    def __init__(self, plane: bd.Plane):  # pragma: no cover
         ...
 
     @overload
-    def __init__(self, plane: Plane) -> None:  # pragma: no cover
-        "Location corresponding to the location of the Plane."
-        ...
-
-    @overload
-    def __init__(
-        self, plane: Plane, plane_offset: VectorLike
-    ) -> None:  # pragma: no cover
-        "Location corresponding to the angular location of the Plane with translation plane_offset."
-        ...
-
-    @overload
-    def __init__(self, top_loc: TopLoc_Location) -> None:  # pragma: no cover
-        "Location wrapping the low-level TopLoc_Location object"
-        ...
-
-    @overload
-    def __init__(self, gp_trsf: gp_Trsf) -> None:  # pragma: no cover
-        "Location wrapping the low-level gp_Trsf object"
-        ...
-
-    @overload
-    def __init__(
-        self,
-        translation: VectorLike,
-        axis: VectorLike = (0, 0, 1),
-        angle: float = 0,
-    ) -> None:  # pragma: no cover
-        """Location with translation and rotation around axis by angle
-        with respect to the original location."""
-        ...
-
-    @overload
-    def __init__(
-        self,
-        translation: VectorLike,
-        rotation: RotationLike,
-    ) -> None:  # pragma: no cover
-        """Location with translation and rotation
-        with respect to the original location."""
+    def __init__(self, plane: bd.Plane):  # pragma: no cover
         ...
 
     def __init__(self, *args, **kwargs):
-        if len(args) == 1 and isinstance(args[0], Location):
-            super().__init__(args[0].wrapped)
+        """Create a plane from either an OCCT gp_pln or coordinates"""
+        if isinstance(args[0], bd.Plane):
+            p = args[0]
+            super().__init__(p.origin, p.x_dir, p.y_dir)
 
-        elif len(args) == 1 and kwargs.get("rotation") is not None:
-            rot = kwargs["rotation"]
-            rot = Rotation(*rot) if isinstance(rot, tuple) else rot
-            pos = Location(args[0])
-            self.wrapped = (pos * rot).wrapped
+        elif isinstance(args[0], (bd.Face, bd.Location)):
+            if isinstance(args[0], bd.Face):
+                face = args[0]
+                origin = face.center()
+            else:
+                face = bd.Face.make_rect(1, 1).move(args[0])
+                origin = args[0].position
 
-        elif len(args) == 1 and kwargs.get("angle") is not None:
-            axis = kwargs.get("axis", (0, 0, 1))
-            super().__init__(args[0], axis, kwargs["angle"])
+            x_dir = bd.Vector(face._geom_adaptor().Position().XDirection())
+            z_dir = face.normal_at(origin)
+
+            super().__init__(origin=origin, x_dir=x_dir, z_dir=z_dir)
 
         else:
-            super().__init__(*args)
+            super().__init__(*args, **kwargs)
 
-    def to_tuple(self) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
-        transformation = self.wrapped.Transformation()
-        trans = transformation.TranslationPart()
-        rot = transformation.GetRotation()
+    def __repr__(self):
+        """To String
 
-        rv_trans = (trans.X(), trans.Y(), trans.Z())
-        rv_rot = rot.GetEulerAngles(gp_EulerSequence.gp_Intrinsic_XYZ)
+        Convert Plane to String for display
 
-        return rv_trans, rv_rot
+        Returns:
+            Plane as String
+        """
+        origin_str = ", ".join((f"{v:.2f}" for v in self._origin.to_tuple()))
+        x_dir_str = ", ".join((f"{v:.2f}" for v in self.x_dir.to_tuple()))
+        z_dir_str = ", ".join((f"{v:.2f}" for v in self.z_dir.to_tuple()))
+        return f"Workplane(o=({origin_str}), x=({x_dir_str}), z=({z_dir_str}))"
+
+    def __mul__(self, loc) -> "Workplane":
+        if not isinstance(loc, bd.Location):
+            raise RuntimeError(
+                "Planes can only be multiplied with Locations to relocate them"
+            )
+        return Workplane(self.to_location() * loc)
