@@ -12,12 +12,12 @@ b = split(a)
 show(a.edges(), b)
 # %%
 
-b = split(a, Plane.XY, keep=bd.Keep.BOTTOM)
+b = split(a, Plane.XY, Keep.BOTTOM)
 show(a.edges(), b)
 
 # %%
 
-b = split(a, Plane.XY, keep=bd.Keep.BOTH)
+b = split(a, Plane.XY, Keep.BOTH)
 
 show(a.edges(), *b.solids())
 

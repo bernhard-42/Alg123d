@@ -6,8 +6,9 @@ set_defaults(axes=True, axes0=True, transparent=False)
 # %%
 
 a = Box(1, 2, 3) @ (4, 2, 0)
+a = fillet(a, a.edges(), 0.1)
 b = a + mirror(a, Plane.XZ)
-show(b)
+show(a.edges(), b)
 
 # %%
 

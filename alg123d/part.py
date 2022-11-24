@@ -1,8 +1,17 @@
 from dataclasses import dataclass
-
 import build123d as bd
+from .wrappers import AlgCompound
 
-from .common import AlgCompound
+__all__ = [
+    "Empty3",
+    "Box",
+    "Cylinder",
+]
+
+
+class Empty3(AlgCompound):
+    def __init__(self):
+        super().__init__(dim=3)
 
 
 @dataclass(repr=False)

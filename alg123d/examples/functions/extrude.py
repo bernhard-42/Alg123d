@@ -8,7 +8,7 @@ plane = Workplane.ZX
 
 locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s = Empty3d()
+s = Empty3()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = (
         plane * outer_loc * locs[i]
