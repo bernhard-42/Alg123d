@@ -77,7 +77,7 @@ class AlgCompound(bd.Compound):
             self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
 
         # self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
-        # self.dim = 3
+        self.dim = 3
 
     def create_sketch(self, cls, objects=None, exclude=[]):
         with bd.BuildSketch():
