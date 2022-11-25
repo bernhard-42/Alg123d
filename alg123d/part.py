@@ -22,7 +22,7 @@ class Empty3(AlgCompound):
         super().__init__(dim=3)
 
 
-@dataclass(repr=False)
+@dataclass
 class Box(AlgCompound):
     length: float
     width: float
@@ -33,7 +33,7 @@ class Box(AlgCompound):
         self.create_part(bd.Box)
 
 
-@dataclass(repr=False)
+@dataclass
 class Cylinder(AlgCompound):
     radius: float
     height: float
@@ -44,7 +44,7 @@ class Cylinder(AlgCompound):
         self.create_part(bd.Cylinder)
 
 
-@dataclass(repr=False)
+@dataclass
 class Cone(AlgCompound):
     bottom_radius: float
     top_radius: float
@@ -56,7 +56,7 @@ class Cone(AlgCompound):
         self.create_part(bd.Cone)
 
 
-@dataclass(repr=False)
+@dataclass
 class Sphere(AlgCompound):
     radius: float
     arc_size1: float = -90
@@ -68,7 +68,7 @@ class Sphere(AlgCompound):
         self.create_part(bd.Sphere)
 
 
-@dataclass(repr=False)
+@dataclass
 class Torus(AlgCompound):
     major_radius: float
     minor_radius: float
@@ -81,7 +81,7 @@ class Torus(AlgCompound):
         self.create_part(bd.Torus)
 
 
-@dataclass(repr=False)
+@dataclass
 class Wedge(AlgCompound):
     dx: float
     dy: float
@@ -95,7 +95,7 @@ class Wedge(AlgCompound):
         self.create_part(bd.Wedge)
 
 
-@dataclass(repr=False)
+@dataclass
 class CounterBore(AlgCompound):
     part: AlgCompound
     radius: float
@@ -107,7 +107,7 @@ class CounterBore(AlgCompound):
         self.create_part(bd.CounterBoreHole, self.part, exclude=["part"])
 
 
-@dataclass(repr=False)
+@dataclass
 class CounterSink(AlgCompound):
     part: AlgCompound
     radius: float
@@ -119,7 +119,7 @@ class CounterSink(AlgCompound):
         self.create_part(bd.CounterSinkHole, self.part, exclude=["part"])
 
 
-@dataclass(repr=False)
+@dataclass
 class Bore(AlgCompound):
     part: AlgCompound
     radius: float
@@ -129,7 +129,7 @@ class Bore(AlgCompound):
         self.create_part(bd.Hole, self.part, exclude=["part"])
 
 
-@dataclass(repr=False)
+@dataclass
 class Extrusion(AlgCompound):
     to_extrude: bd.Compound
     amount: float
