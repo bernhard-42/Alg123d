@@ -16,9 +16,9 @@ __all__ = [
 
 
 class LocationList:
-    def __init__(self):
+    def __init__(self, generator):
         bd.Workplanes(bd.Plane.XY).__enter__()
-        self.generator
+        self.generator = generator
 
     def __iter__(self):
         return self.generator.__iter__()
@@ -29,7 +29,7 @@ class LocationList:
 
 class Locations(LocationList):
     def __init__(self, *pts: bd.VectorLike | bd.Vertex | bd.Location):
-        self.generator = bd.Locations(*pts)
+        super().__init__(bd.Locations(*pts))
 
 
 class PolarLocations(LocationList):
@@ -41,8 +41,8 @@ class PolarLocations(LocationList):
         stop_angle: float = 360.0,
         rotate: bool = True,
     ):
-        self.generator = bd.PolarLocations(
-            radius, count, start_angle, stop_angle, rotate
+        super().__init__(
+            bd.PolarLocations(radius, count, start_angle, stop_angle, rotate)
         )
 
 
@@ -55,8 +55,8 @@ class GridLocations(LocationList):
         y_count: int,
         centered: tuple[bool, bool] = (True, True),
     ):
-        self.generator = bd.GridLocations(
-            x_spacing, y_spacing, x_count, y_count, centered
+        super().__init__(
+            bd.GridLocations(x_spacing, y_spacing, x_count, y_count, centered)
         )
 
 
@@ -68,4 +68,4 @@ class HexLocations(LocationList):
         y_count: int,
         centered: tuple[bool, bool] = (True, True),
     ):
-        self.generator = bd.HexLocations(diagonal, x_count, y_count, centered)
+        super().__init__(bd.HexLocations(diagonal, x_count, y_count, centered))

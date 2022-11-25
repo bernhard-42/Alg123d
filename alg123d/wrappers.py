@@ -63,17 +63,21 @@ class AlgCompound(bd.Compound):
             del params[ex]
         return params
 
-    def create_part(self, cls, part=None, exclude=[]):
+    def create_part(self, cls, part=None, faces=None, planes=None, exclude=[]):
         with bd.BuildPart() as ctx:
             if part is not None:
                 ctx._add_to_context(part)
-            with bd.Locations(bd.Location()):
-                self.wrapped = cls(
-                    **self._params(exclude), mode=bd.Mode.PRIVATE
-                ).wrapped
 
-        self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
-        self.dim = 3
+            if faces is not None:
+                ctx.pending_faces = faces
+
+            if planes is not None:
+                ctx.pending_face_planes = planes
+
+            self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
+
+        # self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
+        # self.dim = 3
 
     def create_sketch(self, cls, objects=None, exclude=[]):
         with bd.BuildSketch():
@@ -124,8 +128,8 @@ class AlgCompound(bd.Compound):
             elif mode == bd.Mode.INTERSECT:
                 compound = compound.intersect(located_obj)
 
-        steps = self.steps.copy()
-        steps.append(Step(obj, loc, mode))
+        # steps = self.steps.copy()
+        # steps.append(Step(obj, loc, mode))
 
         return AlgCompound(compound, [], self.dim)
 
@@ -164,10 +168,11 @@ class AlgCompound(bd.Compound):
     def copy(self):
         memo = {}
         memo[id(self.wrapped)] = bd.downcast(BRepBuilderAPI_Copy(self.wrapped).Shape())
-        if hasattr(self, "part"):
-            memo[id(self.part.wrapped)] = (
-                bd.downcast(BRepBuilderAPI_Copy(self.part.wrapped).Shape()),
-            )
+        for _, value in self.__dict__.items():
+            if hasattr(value, "wrapped"):
+                memo[id(value.wrapped)] = (
+                    bd.downcast(BRepBuilderAPI_Copy(value.wrapped).Shape()),
+                )
 
         return copy.deepcopy(self, memo)
 
@@ -193,6 +198,6 @@ def _function_wrap(cls, objects, ctx_add=None, mode=bd.Mode.PRIVATE, **kwargs):
             ctx._add_to_context(bd.Compound(ctx_add.wrapped))
         compound = cls(*objs, **kwargs)
 
-    steps = [Step(compound, compound.location, None)]  # TODO
+    steps = []  # [Step(compound, compound.location, None)]  # TODO
 
     return AlgCompound(compound, steps, dim)

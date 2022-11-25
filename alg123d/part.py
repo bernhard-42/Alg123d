@@ -13,6 +13,7 @@ __all__ = [
     "CounterBore",
     "CounterSink",
     "Bore",
+    "Extrusion",
 ]
 
 
@@ -126,3 +127,25 @@ class Bore(AlgCompound):
 
     def __post_init__(self):
         self.create_part(bd.Hole, self.part, exclude=["part"])
+
+
+@dataclass(repr=False)
+class Extrusion(AlgCompound):
+    to_extrude: bd.Compound
+    amount: float
+    until_part: bd.Compound = None
+    until: bd.Until = None
+    both: bool = False
+    taper: float = 0.0
+
+    def __post_init__(self):
+        is_face = isinstance(self.to_extrude, bd.Face)
+        faces = [self.to_extrude] if is_face else self.to_extrude.faces()
+        planes = [bd.Plane(face.to_pln()) for face in faces]
+        self.create_part(
+            bd.Extrude,
+            part=self.until_part,
+            faces=faces,
+            planes=planes,
+            exclude=["to_extrude", "until_part"],
+        )
