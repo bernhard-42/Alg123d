@@ -122,11 +122,11 @@ class AlgCompound(bd.Compound):
         else:
             compound = self
             if mode == bd.Mode.ADD:
-                compound = compound.fuse(located_obj)
+                compound = compound.fuse(located_obj).clean()
             elif mode == bd.Mode.SUBTRACT:
-                compound = compound.cut(located_obj)
+                compound = compound.cut(located_obj).clean()
             elif mode == bd.Mode.INTERSECT:
-                compound = compound.intersect(located_obj)
+                compound = compound.intersect(located_obj).clean()
 
         # steps = self.steps.copy()
         # steps.append(Step(obj, loc, mode))
