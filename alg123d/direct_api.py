@@ -1,4 +1,4 @@
-from typing import overload
+from typing import overload, List
 from OCP.gp import gp_Pln  # pyright: ignore[reportMissingImports]
 import build123d as bd
 
@@ -133,3 +133,153 @@ class Workplane(bd.Plane):
                 "Planes can only be multiplied with Locations to relocate them"
             )
         return Workplane(self.to_location() * loc)
+
+
+def front_faces(c: bd.Compound) -> bd.ShapeList:
+    """Front face"""
+    return c.faces().group_by(bd.Axis.Y)[0]
+
+
+def back_faces(c: bd.Compound) -> bd.ShapeList:
+    """Back face"""
+    return c.faces().group_by(bd.Axis.Y)[-1]
+
+
+def left_faces(c: bd.Compound) -> bd.ShapeList:
+    """Left face"""
+    return c.faces().group_by(bd.Axis.X)[0]
+
+
+def right_faces(c: bd.Compound) -> bd.ShapeList:
+    """Right face"""
+    return c.faces().group_by(bd.Axis.X)[-1]
+
+
+def top_faces(c: bd.Compound) -> bd.ShapeList:
+    """Top face"""
+    return c.faces().group_by(bd.Axis.Z)[-1]
+
+
+def bottom_faces(c: bd.Compound) -> bd.Face:
+    """Bottom face"""
+    return c.faces().group_by(bd.Axis.Z)[0]
+
+
+def front_face(c: bd.Compound) -> bd.Face:
+    """Front face"""
+    return c.faces().sort_by(bd.Axis.Y)[0]
+
+
+def back_face(c: bd.Compound) -> bd.Face:
+    """Back face"""
+    return c.faces().sort_by(bd.Axis.Y)[-1]
+
+
+def left_face(c: bd.Compound) -> bd.Face:
+    """Left face"""
+    return c.faces().sort_by(bd.Axis.X)[0]
+
+
+def right_face(c: bd.Compound) -> bd.Face:
+    """Right face"""
+    return c.faces().sort_by(bd.Axis.X)[-1]
+
+
+def top_face(c: bd.Compound) -> bd.Face:
+    """Top face"""
+    return c.faces().sort_by(bd.Axis.Z)[-1]
+
+
+def bottom_face(c: bd.Compound) -> bd.Face:
+    """Bottom face"""
+    return c.faces().sort_by(bd.Axis.Z)[0]
+
+
+def front_edges(c: bd.Compound) -> bd.ShapeList:
+    """Front edges"""
+    return c.edges().group_by(bd.Axis.Y)[0]
+
+
+def back_edges(c: bd.Compound) -> bd.ShapeList:
+    """Back edges"""
+    return c.edges().group_by(bd.Axis.Y)[-1]
+
+
+def left_edges(c: bd.Compound) -> bd.ShapeList:
+    """Left edges"""
+    return c.edges().group_by(bd.Axis.X)[0]
+
+
+def right_edges(c: bd.Compound) -> bd.ShapeList:
+    """Right edges"""
+    return c.edges().group_by(bd.Axis.X)[-1]
+
+
+def top_edges(c: bd.Compound) -> bd.ShapeList:
+    """Top edges"""
+    return c.edges().group_by(bd.Axis.Z)[-1]
+
+
+def bottom_edges(c: bd.Compound) -> bd.ShapeList:
+    """Bottom edges"""
+    return c.edges().group_by(bd.Axis.Z)[0]
+
+
+def front_planes(c: bd.Compound) -> List[Workplane]:
+    """Front workplanes"""
+    return [Workplane(f) for f in front_faces(c)]
+
+
+def back_planes(c: bd.Compound) -> List[Workplane]:
+    """Back workplanes"""
+    return [Workplane(f) for f in back_faces(c)]
+
+
+def left_planes(c: bd.Compound) -> List[Workplane]:
+    """Left workplanes"""
+    return [Workplane(f) for f in left_faces(c)]
+
+
+def right_planes(c: bd.Compound) -> List[Workplane]:
+    """Right workplanes"""
+    return [Workplane(f) for f in right_faces(c)]
+
+
+def top_planes(c: bd.Compound) -> List[Workplane]:
+    """Top workplanes"""
+    return [Workplane(f) for f in top_faces(c)]
+
+
+def bottom_planes(c: bd.Compound) -> List[Workplane]:
+    """Bottom workplanes"""
+    return [Workplane(f) for f in bottom_faces(c)]
+
+
+def front_plane(c: bd.Compound) -> Workplane:
+    """Front workplanes"""
+    return Workplane(front_face(c))
+
+
+def back_plane(c: bd.Compound) -> Workplane:
+    """Back workplanes"""
+    return Workplane(back_face(c))
+
+
+def left_plane(c: bd.Compound) -> Workplane:
+    """Left workplanes"""
+    return Workplane(left_face(c))
+
+
+def right_plane(c: bd.Compound) -> Workplane:
+    """Right workplanes"""
+    return Workplane(right_face(c))
+
+
+def top_plane(c: bd.Compound) -> Workplane:
+    """Top workplanes"""
+    return Workplane(top_face(c))
+
+
+def bottom_plane(c: bd.Compound) -> Workplane:
+    """Bottom workplanes"""
+    return Workplane(bottom_face(c))

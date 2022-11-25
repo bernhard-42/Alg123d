@@ -9,9 +9,6 @@ Sketch:
 
 Part: 
     Operations: 
-2        CounterBoreHole
-2        CounterSinkHole
-2        Hole
 3        Loft
 3        Revolve
 3        Section

@@ -72,7 +72,7 @@ class AlgCompound(bd.Compound):
             self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
 
         # self._applies_to = cls._applies_to
-        self.steps = [Step(self, self.location, bd.Mode.ADD)]
+        self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 3
 
     def create_context_and_sketch(self, cls, objects=None, exclude=[]):
@@ -87,7 +87,7 @@ class AlgCompound(bd.Compound):
                 ).wrapped
 
         # self._applies_to = cls._applies_to
-        self.steps = [Step(self, self.location, bd.Mode.ADD)]
+        self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 2
 
     def _place(
@@ -128,7 +128,7 @@ class AlgCompound(bd.Compound):
         steps = self.steps.copy()
         steps.append(Step(obj, loc, mode))
 
-        return AlgCompound(compound, steps, self.dim)
+        return AlgCompound(compound, [], self.dim)
 
     def __add__(self, other: Obj23d):
         return self._place(bd.Mode.ADD, other)

@@ -10,6 +10,9 @@ __all__ = [
     "Sphere",
     "Torus",
     "Wedge",
+    "CounterBore",
+    "CounterSink",
+    "Bore",
 ]
 
 
@@ -89,3 +92,52 @@ class Wedge(AlgCompound):
 
     def __post_init__(self):
         self.create_context_and_part(bd.Wedge)
+
+
+@dataclass(repr=False)
+class CounterBore(AlgCompound):
+    part: AlgCompound
+    radius: float
+    counter_bore_radius: float
+    counter_bore_depth: float
+    depth: float = None
+
+    def __post_init__(self):
+        if self.part is None:
+            self.create_context_and_part(bd.CounterBoreHole, exclude=["part"])
+        else:
+            with bd.BuildPart() as ctx:
+                ctx._add_to_context(self.part)
+                self.create_part(bd.CounterBoreHole, exclude=["part"])
+
+
+@dataclass(repr=False)
+class CounterSink(AlgCompound):
+    part: AlgCompound
+    radius: float
+    counter_sink_radius: float
+    counter_sink_angle: float = 82
+    depth: float = None
+
+    def __post_init__(self):
+        if self.part is None:
+            self.create_context_and_part(bd.CounterSinkHole, exclude=["part"])
+        else:
+            with bd.BuildPart() as ctx:
+                ctx._add_to_context(self.part)
+                self.create_part(bd.CounterSinkHole, exclude=["part"])
+
+
+@dataclass(repr=False)
+class Bore(AlgCompound):
+    part: AlgCompound
+    radius: float
+    depth: float = None
+
+    def __post_init__(self):
+        if self.part is None:
+            self.create_context_and_part(bd.Hole, exclude=["part"])
+        else:
+            with bd.BuildPart() as ctx:
+                ctx._add_to_context(self.part)
+                self.create_part(bd.Hole, exclude=["part"])
