@@ -63,19 +63,19 @@ class AlgCompound(bd.Compound):
             del params[ex]
         return params
 
-    def create_context_and_part(self, cls, exclude=[]):
-        with bd.BuildPart():
-            self.create_part(cls, exclude)
+    def create_part(self, cls, part=None, exclude=[]):
+        with bd.BuildPart() as ctx:
+            if part is not None:
+                ctx._add_to_context(part)
+            with bd.Locations(bd.Location()):
+                self.wrapped = cls(
+                    **self._params(exclude), mode=bd.Mode.PRIVATE
+                ).wrapped
 
-    def create_part(self, cls, exclude=[]):
-        with bd.Locations(bd.Location()):
-            self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
-
-        # self._applies_to = cls._applies_to
         self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 3
 
-    def create_context_and_sketch(self, cls, objects=None, exclude=[]):
+    def create_sketch(self, cls, objects=None, exclude=[]):
         with bd.BuildSketch():
             if objects is None:
                 self.wrapped = cls(
@@ -86,7 +86,6 @@ class AlgCompound(bd.Compound):
                     *objects, **self._params(exclude), mode=bd.Mode.PRIVATE
                 ).wrapped
 
-        # self._applies_to = cls._applies_to
         self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
         self.dim = 2
 

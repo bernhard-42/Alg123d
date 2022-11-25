@@ -27,7 +27,7 @@ class Circle(AlgCompound):
     centered: tuple[bool, bool] = (True, True)
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.Circle)
+        self.create_sketch(bd.Circle)
 
 
 @dataclass
@@ -38,7 +38,7 @@ class Ellipse(AlgCompound):
     centered: tuple[bool, bool] = (True, True)
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.Ellipse)
+        self.create_sketch(bd.Ellipse)
 
 
 @dataclass
@@ -48,7 +48,7 @@ class Rectangle(AlgCompound):
     centered: tuple[bool, bool] = (True, True)
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.Rectangle)
+        self.create_sketch(bd.Rectangle)
 
 
 @dataclass
@@ -57,7 +57,7 @@ class Polygon(AlgCompound):
     centered: tuple[bool, bool] = (True, True)
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.Polygon, objects=self.pts, exclude=["pts"])
+        self.create_sketch(bd.Polygon, objects=self.pts, exclude=["pts"])
 
 
 @dataclass
@@ -67,7 +67,7 @@ class RegularPolygon(AlgCompound):
     centered: tuple[bool, bool] = (True, True)
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.RegularPolygon)
+        self.create_sketch(bd.RegularPolygon)
 
 
 @dataclass
@@ -83,7 +83,7 @@ class Text(AlgCompound):
     position_on_path: float = 0.0
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.Text)
+        self.create_sketch(bd.Text)
 
 
 @dataclass
@@ -95,4 +95,4 @@ class Trapezoid(AlgCompound):
     centered: tuple[bool, bool] = (True, True)
 
     def __post_init__(self):
-        self.create_context_and_sketch(bd.Trapezoid)
+        self.create_sketch(bd.Trapezoid)

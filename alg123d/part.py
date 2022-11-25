@@ -29,7 +29,7 @@ class Box(AlgCompound):
     centered: tuple[bool, bool, bool] = (True, True, True)
 
     def __post_init__(self):
-        self.create_context_and_part(bd.Box)
+        self.create_part(bd.Box)
 
 
 @dataclass(repr=False)
@@ -40,7 +40,7 @@ class Cylinder(AlgCompound):
     centered: tuple[bool, bool, bool] = (True, True, True)
 
     def __post_init__(self):
-        self.create_context_and_part(bd.Cylinder)
+        self.create_part(bd.Cylinder)
 
 
 @dataclass(repr=False)
@@ -52,7 +52,7 @@ class Cone(AlgCompound):
     centered: tuple[bool, bool, bool] = (True, True, True)
 
     def __post_init__(self):
-        self.create_context_and_part(bd.Cone)
+        self.create_part(bd.Cone)
 
 
 @dataclass(repr=False)
@@ -64,7 +64,7 @@ class Sphere(AlgCompound):
     centered: tuple[bool, bool, bool] = (True, True, True)
 
     def __post_init__(self):
-        self.create_context_and_part(bd.Sphere)
+        self.create_part(bd.Sphere)
 
 
 @dataclass(repr=False)
@@ -77,7 +77,7 @@ class Torus(AlgCompound):
     centered: tuple[bool, bool, bool] = (True, True, True)
 
     def __post_init__(self):
-        self.create_context_and_part(bd.Torus)
+        self.create_part(bd.Torus)
 
 
 @dataclass(repr=False)
@@ -91,7 +91,7 @@ class Wedge(AlgCompound):
     zmax: float
 
     def __post_init__(self):
-        self.create_context_and_part(bd.Wedge)
+        self.create_part(bd.Wedge)
 
 
 @dataclass(repr=False)
@@ -103,12 +103,7 @@ class CounterBore(AlgCompound):
     depth: float = None
 
     def __post_init__(self):
-        if self.part is None:
-            self.create_context_and_part(bd.CounterBoreHole, exclude=["part"])
-        else:
-            with bd.BuildPart() as ctx:
-                ctx._add_to_context(self.part)
-                self.create_part(bd.CounterBoreHole, exclude=["part"])
+        self.create_part(bd.CounterBoreHole, self.part, exclude=["part"])
 
 
 @dataclass(repr=False)
@@ -120,12 +115,7 @@ class CounterSink(AlgCompound):
     depth: float = None
 
     def __post_init__(self):
-        if self.part is None:
-            self.create_context_and_part(bd.CounterSinkHole, exclude=["part"])
-        else:
-            with bd.BuildPart() as ctx:
-                ctx._add_to_context(self.part)
-                self.create_part(bd.CounterSinkHole, exclude=["part"])
+        self.create_part(bd.CounterSinkHole, self.part, exclude=["part"])
 
 
 @dataclass(repr=False)
@@ -135,9 +125,4 @@ class Bore(AlgCompound):
     depth: float = None
 
     def __post_init__(self):
-        if self.part is None:
-            self.create_context_and_part(bd.Hole, exclude=["part"])
-        else:
-            with bd.BuildPart() as ctx:
-                ctx._add_to_context(self.part)
-                self.create_part(bd.Hole, exclude=["part"])
+        self.create_part(bd.Hole, self.part, exclude=["part"])
