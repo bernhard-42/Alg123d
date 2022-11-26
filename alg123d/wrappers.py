@@ -18,8 +18,6 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
 __all__ = [
     "AlgCompound",
-    "AlgEdge",
-    "AlgWire",
     "create_compound",
 ]
 
@@ -39,7 +37,7 @@ class Mixin:
             else:
                 obj = cls(*objects, **params, mode=Mode.PRIVATE)
 
-        self.wrapped = obj.wrapped
+        self.wrapped = Compound.make_compound(obj.edges()).wrapped
         self._params = params
         self.dim = 1
 
@@ -101,15 +99,21 @@ class Mixin:
             else:
                 raise RuntimeError("Can only add to empty object")
         else:
-            compound = self
-            if mode == Mode.ADD:
-                compound = compound.fuse(located_obj).clean()
-            elif mode == Mode.SUBTRACT:
-                compound = compound.cut(located_obj).clean()
-            elif mode == Mode.INTERSECT:
-                compound = compound.intersect(located_obj).clean()
+            if self.dim == 1:
+                if mode == Mode.ADD:
+                    wire = self.fuse(located_obj).clean()
+                    return AlgCompound(wire, {}, self.dim)
+                else:
+                    raise RuntimeError("Lines can only be added")
+            else:
+                if mode == Mode.ADD:
+                    compound = self.fuse(located_obj).clean()
+                elif mode == Mode.SUBTRACT:
+                    compound = self.cut(located_obj).clean()
+                elif mode == Mode.INTERSECT:
+                    compound = self.intersect(located_obj).clean()
 
-        return AlgCompound(compound, {}, self.dim)
+                return AlgCompound(compound, {}, self.dim)
 
     def __add__(self, other: Obj23d):
         return self._place(Mode.ADD, other)
@@ -150,31 +154,23 @@ class Mixin:
         return copy.deepcopy(self, memo)
 
 
-class AlgEdge(Mixin, Edge):  # keep order to overwrite __matmul__
-    def __init__(self, edge=None, params=None, dim: int = None):
-        self.wrapped = None if edge is None else edge.wrapped
-        self.dim = dim
-        self._params = [] if params is None else params
-
-    def __and__(self, position):
-        return self.position_at(position)
-
-
-class AlgWire(Mixin, Wire):  # keep order to overwrite __matmul__
-    def __init__(self, wire=None, params=None, dim: int = None):
-        self.wrapped = None if wire is None else wire.wrapped
-        self.dim = dim
-        self._params = [] if params is None else params
-
-    def __and__(self, position):
-        return self.position_at(position)
-
-
 class AlgCompound(Compound, Mixin):
     def __init__(self, compound=None, params=None, dim: int = None):
         self.wrapped = None if compound is None else compound.wrapped
         self.dim = dim
         self._params = [] if params is None else params
+
+    def __call__(self, position):
+        if self.dim == 1:
+            return Wire.make_wire(self.edges()).position_at(position)
+        else:
+            raise TypeError(f"unsupported operand type(s)")
+
+    def __mod__(self, position):
+        if self.dim == 1:
+            return Wire.make_wire(self.edges()).tangent_at(position)
+        else:
+            raise TypeError(f"unsupported operand type(s)")
 
 
 #
