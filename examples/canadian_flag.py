@@ -2,10 +2,6 @@ from alg123d import *
 from cq_vscode import show, show_object, set_defaults
 
 
-def vx(v):
-    return Vertex(*v.to_tuple())
-
-
 # %%
 
 l1 = Polyline(((0.0000, 0.0771), (0.0187, 0.0771), (0.0094, 0.2569)))
@@ -24,7 +20,7 @@ r5 = TangentArc(l6(1), l7(0), tangent=l6 % 1)
 s = Spline((l5(1), l6(0)), tangents=(l5 % 1, l6 % 0), tangent_scalars=(2, 2))
 
 flag = l1 + l2 + l3 + l4 + l5 + l6 + l7 + r1 + r2 + r3 + r4 + r5 + s
-
-flag += make_face(mirror(flag, about=Plane.YZ))
+flag += mirror(flag, about=Plane.YZ)
+flag = make_face(flag)
 
 show(flag)
