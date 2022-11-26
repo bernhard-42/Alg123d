@@ -26,7 +26,12 @@ __all__ = [
 #
 
 
-class Mixin:
+class AlgCompound(Compound):
+    def __init__(self, compound=None, params=None, dim: int = None):
+        self.wrapped = None if compound is None else compound.wrapped
+        self.dim = dim
+        self._params = [] if params is None else params
+
     def create_line(self, cls, objects=None, params=None):
         if params is None:
             params = {}
@@ -152,13 +157,6 @@ class Mixin:
         memo[id(self.wrapped)] = bd.downcast(BRepBuilderAPI_Copy(self.wrapped).Shape())
 
         return copy.deepcopy(self, memo)
-
-
-class AlgCompound(Compound, Mixin):
-    def __init__(self, compound=None, params=None, dim: int = None):
-        self.wrapped = None if compound is None else compound.wrapped
-        self.dim = dim
-        self._params = [] if params is None else params
 
     def __call__(self, position):
         if self.dim == 1:
