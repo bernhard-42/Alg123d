@@ -1,20 +1,3 @@
-Introduce negative objects
-
-Generic: 
-    BoundingBox (?)
-    
-Sketch: 
-5    Understand center option of Polygon
-        
-Line: 
-1    Line
-1    PolarLine
-1    Polyline
-2    Spline
-2    Helix
-3    CenterArc
-3    RadiusArc
-3    SagittaArc
-3    TangentArc
-3    ThreePointArc
-4    JernArc
+3 Introduce negative objects
+2 Generic: BoundingBox (?)
+1 Sketch: Understand center option of Polygon

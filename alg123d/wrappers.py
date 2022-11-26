@@ -63,6 +63,22 @@ class AlgCompound(Compound):
         self._params = params
         self.dim = 2
 
+    def create_line(self, cls, objects=None, params=None):
+        if params is None:
+            params = {}
+
+        with bd.BuildLine() as ctx:
+            if objects is None:
+                compound = cls(**params, mode=Mode.PRIVATE)
+            else:
+                compound = cls(*objects, **params, mode=Mode.PRIVATE)
+
+        compound = Compound.make_compound([compound])
+
+        self.wrapped = compound.wrapped
+        self._params = params
+        self.dim = 1
+
     def _place(
         self,
         mode: Mode,
