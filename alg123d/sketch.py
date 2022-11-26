@@ -13,6 +13,10 @@ __all__ = [
     "RegularPolygon",
     "Text",
     "Trapezoid",
+    "SlotArc",
+    "SlotCenterPoint",
+    "SlotCenterToCenter",
+    "SlotOverall",
 ]
 
 
@@ -39,13 +43,11 @@ class Ellipse(AlgCompound):
         self,
         x_radius: float,
         y_radius: float,
-        rotation: float = 0,
         centered: tuple[bool, bool] = (True, True),
     ):
         params = dict(
             x_radius=x_radius,
             y_radius=y_radius,
-            rotation=rotation,
             centered=centered,
         )
         self.create_sketch(bd.Ellipse, params=params)
@@ -137,3 +139,57 @@ class Trapezoid(AlgCompound):
             centered=centered,
         )
         self.create_sketch(bd.Trapezoid, params=params)
+
+
+class SlotArc(AlgCompound):
+    def __init__(
+        self,
+        arc: bd.Edge | bd.Wire,
+        height: float,
+    ):
+        params = dict(
+            arc=arc,
+            height=height,
+        )
+        self.create_sketch(bd.SlotArc, params=params)
+
+
+class SlotCenterPoint(AlgCompound):
+    def __init__(
+        self,
+        center: bd.VectorLike,
+        point: bd.VectorLike,
+        height: float,
+    ):
+        params = dict(
+            center=center,
+            point=point,
+            height=height,
+        )
+        self.create_sketch(bd.SlotCenterPoint, params=params)
+
+
+class SlotCenterToCenter(AlgCompound):
+    def __init__(
+        self,
+        center_separation: float,
+        height: float,
+    ):
+        params = dict(
+            center_separation=center_separation,
+            height=height,
+        )
+        self.create_sketch(bd.SlotCenterToCenter, params=params)
+
+
+class SlotOverall(AlgCompound):
+    def __init__(
+        self,
+        width: float,
+        height: float,
+    ):
+        params = dict(
+            width=width,
+            height=height,
+        )
+        self.create_sketch(bd.SlotOverall, params=params)
