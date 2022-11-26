@@ -11,8 +11,8 @@ show(Polygon(pts))
 # %%
 plane = Workplane.ZX
 
-# cyl = Cylinder(1, 0.5)
-# box = Box(0.3, 0.3, 0.5)
+cyl = Cylinder(1, 0.5)
+box = Box(0.3, 0.3, 0.5)
 
 # %%
 
@@ -42,6 +42,5 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
 
 e = extrude(s, 0.3)
 show(e)
-
 
 # %%

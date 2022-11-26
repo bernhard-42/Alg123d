@@ -20,28 +20,8 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
 __all__ = [
     "AlgCompound",
-    "_function_wrap",
+    "create_compound",
 ]
-
-#
-# Tracking class
-#
-
-
-@dataclass
-class Step:
-    obj: Obj23d
-    loc: bd.Location
-    mode: bd.Mode
-
-    def __init__(self, obj: Obj2d | Obj3d, loc: bd.Location, mode: bd.Mode):
-        self.obj = {"name": obj.__class__.__name__}
-        if hasattr(obj, "__dataclass_fields__"):
-            for name in obj.__dataclass_fields__:
-                self.obj[name] = getattr(obj, name)
-        self.loc = loc.to_tuple()
-        self.mode = "" if mode is None else mode.name
-
 
 #
 # Algebra operations enhanced Compound
@@ -49,21 +29,22 @@ class Step:
 
 
 class AlgCompound(bd.Compound):
-    def __init__(self, compound=None, steps=None, dim: int = None):
-        self.steps: List[Obj123d] = [] if steps is None else steps
+    def __init__(self, compound=None, params=None, dim: int = None):
         self.wrapped = None if compound is None else compound.wrapped
         self.dim = dim
+        self._params = [] if params is None else params
 
-    def _params(self, exclude):
-        # get the paramter dict from the data class
-        params = {
-            k: v for k, v in self.__dict__.items() if k in self.__dataclass_fields__
-        }
-        for ex in exclude:
-            del params[ex]
-        return params
+    def create_part(
+        self,
+        cls,
+        part=None,
+        faces=None,
+        planes=None,
+        params=None,
+    ):
+        if params is None:
+            params = {}
 
-    def create_part(self, cls, part=None, faces=None, planes=None, exclude=[]):
         with bd.BuildPart() as ctx:
             if part is not None:
                 ctx._add_to_context(part)
@@ -74,23 +55,22 @@ class AlgCompound(bd.Compound):
             if planes is not None:
                 ctx.pending_face_planes = planes
 
-            self.wrapped = cls(**self._params(exclude), mode=bd.Mode.PRIVATE).wrapped
+            self.wrapped = cls(**params, mode=bd.Mode.PRIVATE).wrapped
 
-        # self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
+        self._params = params
         self.dim = 3
 
-    def create_sketch(self, cls, objects=None, exclude=[]):
+    def create_sketch(self, cls, objects=None, params=None):
+        if params is None:
+            params = {}
+
         with bd.BuildSketch():
             if objects is None:
-                self.wrapped = cls(
-                    **self._params(exclude), mode=bd.Mode.PRIVATE
-                ).wrapped
+                self.wrapped = cls(**params, mode=bd.Mode.PRIVATE).wrapped
             else:
-                self.wrapped = cls(
-                    *objects, **self._params(exclude), mode=bd.Mode.PRIVATE
-                ).wrapped
+                self.wrapped = cls(*objects, **params, mode=bd.Mode.PRIVATE).wrapped
 
-        self.steps = []  # [Step(self, self.location, bd.Mode.ADD)]
+        self._params = params
         self.dim = 2
 
     def _place(
@@ -128,10 +108,7 @@ class AlgCompound(bd.Compound):
             elif mode == bd.Mode.INTERSECT:
                 compound = compound.intersect(located_obj).clean()
 
-        # steps = self.steps.copy()
-        # steps.append(Step(obj, loc, mode))
-
-        return AlgCompound(compound, [], self.dim)
+        return AlgCompound(compound, {}, self.dim)
 
     def __add__(self, other: Obj23d):
         return self._place(bd.Mode.ADD, other)
@@ -155,24 +132,19 @@ class AlgCompound(bd.Compound):
         return self.located(loc)
 
     def __repr__(self):
-        repr = "{\n"
-        repr += f'  "dim": {self.dim},\n'
-        repr += '  "steps": ['
-        if len(self.steps) > 0:
-            repr += "\n    "
-            repr += "\n    ".join([str(task) for task in self.steps])
-            repr += "\n  "
-        repr += "]\n}"
-        return repr
+        def r2(v):
+            return tuple([round(e, 2) for e in v])
+
+        p = ""
+        for k, v in self._params.items():
+            p += f"{k}={v},"
+
+        loc_str = f"position={r2(self.location.position)}, rotation={r2(self.location.orientation)}"
+        return f"{self.__class__.__name__}({p}); loc=({loc_str}); dim={self.dim}"
 
     def copy(self):
         memo = {}
         memo[id(self.wrapped)] = bd.downcast(BRepBuilderAPI_Copy(self.wrapped).Shape())
-        for _, value in self.__dict__.items():
-            if hasattr(value, "wrapped"):
-                memo[id(value.wrapped)] = (
-                    bd.downcast(BRepBuilderAPI_Copy(value.wrapped).Shape()),
-                )
 
         return copy.deepcopy(self, memo)
 
@@ -182,7 +154,7 @@ class AlgCompound(bd.Compound):
 #
 
 
-def _function_wrap(cls, objects, ctx_add=None, mode=bd.Mode.PRIVATE, **kwargs):
+def create_compound(cls, objects, ctx_add=None, mode=bd.Mode.PRIVATE, **kwargs):
     objs = objects if isinstance(objects, (list, tuple)) else [objects]
 
     if ctx_add is None:
@@ -198,6 +170,4 @@ def _function_wrap(cls, objects, ctx_add=None, mode=bd.Mode.PRIVATE, **kwargs):
             ctx._add_to_context(bd.Compound(ctx_add.wrapped))
         compound = cls(*objs, **kwargs)
 
-    steps = []  # [Step(compound, compound.location, None)]  # TODO
-
-    return AlgCompound(compound, steps, dim)
+    return AlgCompound(compound, {}, dim)

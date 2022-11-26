@@ -18,7 +18,7 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
         # Use polar locations on c_plane
         s -= Rectangle(0.1, 0.3) @ (c_plane * loc)
 
-e = Extrusion(s, 0.3)
+e = extrude(s, 0.3)
 
 show(e)
 # %%

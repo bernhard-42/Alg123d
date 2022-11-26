@@ -21,78 +21,119 @@ class Empty2(AlgCompound):
         super().__init__(dim=2)
 
 
-@dataclass
 class Circle(AlgCompound):
-    radius: float
-    centered: tuple[bool, bool] = (True, True)
+    def __init__(
+        self,
+        radius: float,
+        centered: tuple[bool, bool] = (True, True),
+    ):
+        params = dict(
+            radius=radius,
+            centered=centered,
+        )
+        self.create_sketch(bd.Circle, params=params)
 
-    def __post_init__(self):
-        self.create_sketch(bd.Circle)
 
-
-@dataclass
 class Ellipse(AlgCompound):
-    x_radius: float
-    y_radius: float
-    rotation: float = 0
-    centered: tuple[bool, bool] = (True, True)
+    def __init__(
+        self,
+        x_radius: float,
+        y_radius: float,
+        rotation: float = 0,
+        centered: tuple[bool, bool] = (True, True),
+    ):
+        params = dict(
+            x_radius=x_radius,
+            y_radius=y_radius,
+            rotation=rotation,
+            centered=centered,
+        )
+        self.create_sketch(bd.Ellipse, params=params)
 
-    def __post_init__(self):
-        self.create_sketch(bd.Ellipse)
 
-
-@dataclass
 class Rectangle(AlgCompound):
-    width: float
-    height: float
-    centered: tuple[bool, bool] = (True, True)
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        centered: tuple[bool, bool] = (True, True),
+    ):
+        params = dict(
+            width=width,
+            height=height,
+            centered=centered,
+        )
+        self.create_sketch(bd.Rectangle, params=params)
 
-    def __post_init__(self):
-        self.create_sketch(bd.Rectangle)
 
-
-@dataclass
 class Polygon(AlgCompound):
-    pts: List[bd.VectorLike]
-    centered: tuple[bool, bool] = (True, True)
+    def __init__(
+        self,
+        pts: List[bd.VectorLike],
+        centered: tuple[bool, bool] = (True, True),
+    ):
+        params = dict(
+            centered=centered,
+        )
+        self.create_sketch(bd.Polygon, objects=pts, params=params)
 
-    def __post_init__(self):
-        self.create_sketch(bd.Polygon, objects=self.pts, exclude=["pts"])
 
-
-@dataclass
 class RegularPolygon(AlgCompound):
-    radius: float
-    side_count: int
-    centered: tuple[bool, bool] = (True, True)
+    def __init__(
+        self,
+        radius: float,
+        side_count: int,
+        centered: tuple[bool, bool] = (True, True),
+    ):
+        params = dict(
+            radius=radius,
+            side_count=side_count,
+            centered=centered,
+        )
+        self.create_sketch(bd.RegularPolygon, params=params)
 
-    def __post_init__(self):
-        self.create_sketch(bd.RegularPolygon)
 
-
-@dataclass
 class Text(AlgCompound):
-    txt: str
-    fontsize: float
-    font: str = "Arial"
-    font_path: str = None
-    font_style: FontStyle = FontStyle.REGULAR
-    halign: Halign = Halign.LEFT
-    valign: Valign = Valign.CENTER
-    path: Edge | Wire = None
-    position_on_path: float = 0.0
+    def __init__(
+        self,
+        txt: str,
+        fontsize: float,
+        font: str = "Arial",
+        font_path: str = None,
+        font_style: FontStyle = FontStyle.REGULAR,
+        halign: Halign = Halign.LEFT,
+        valign: Valign = Valign.CENTER,
+        path: Edge | Wire = None,
+        position_on_path: float = 0.0,
+    ):
+        params = dict(
+            txt=txt,
+            fontsize=fontsize,
+            font=font,
+            font_path=font_path,
+            font_style=font_style,
+            halign=halign,
+            valign=valign,
+            path=path,
+            position_on_path=position_on_path,
+        )
+        self.create_sketch(bd.Text, params=params)
 
-    def __post_init__(self):
-        self.create_sketch(bd.Text)
 
-
-@dataclass
 class Trapezoid(AlgCompound):
-    width: float
-    height: float
-    left_side_angle: float
-    right_side_angle: float = None
-    centered: tuple[bool, bool] = (True, True)
-
-    def __post_init__(self):
-        self.create_sketch(bd.Trapezoid)
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        left_side_angle: float,
+        right_side_angle: float = None,
+        centered: tuple[bool, bool] = (True, True),
+    ):
+        params = dict(
+            width=width,
+            height=height,
+            left_side_angle=left_side_angle,
+            right_side_angle=right_side_angle,
+            centered=centered,
+        )
+        self.create_sketch(bd.Trapezoid, params=params)

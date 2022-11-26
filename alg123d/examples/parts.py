@@ -1,3 +1,4 @@
+from math import sin, pi
 from alg123d import *
 from cq_vscode import show, set_defaults
 
@@ -70,12 +71,59 @@ show(Torus(1, 0.2, centered=centered))
 
 # %%
 
-show(Torus(1, 0.2, minor_start_angle=0, minor_end_angle=90, major_angle=90))  # broken
+show(
+    Torus(1, 0.2, minor_start_angle=15, minor_end_angle=135, major_angle=90)
+)  # OCC broken
 
 # %%
 
 show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=centered).edges())
 
+# loft
+
 # %%
+
+s1 = Rectangle(1, 1)
+s2 = Rectangle(0.5, 2) @ (1, 0, 1)
+
+l = loft([s1, s2])
+show(s1.edges(), s2.edges(), l)
+
+# %%
+
+slice_count = 10
+sections = [
+    Circle(5 + 10 * sin(i * pi / slice_count)) @ (0, 0, 3 * i)
+    for i in range(slice_count + 1)
+]
+
+l = loft(sections)
+
+show(*[s.edges() for s in sections], l)
+
+# revolve
+
+# %%
+s1 = Circle(0.1) @ (0, 0.5, 0)
+r = revolve(s1, Axis.X, 90)
+show(r)
+
+# %%
+
+s1 = Circle(0.1) @ (0, 0.5, 0)
+r = revolve(s1, Axis.X, -130)
+show(r)
+
+# %%
+from alg123d import *
+from cq_vscode import show, set_defaults
+
+set_defaults(axes=True, axes0=True, transparent=False)
+
+# %%
+
+s = Sphere(1) @ (0.9, 0, 0)
+sections = section(s, [Plane.XZ, Plane.ZY])
+show(s, sections, transparent=True)
 
 # %%
