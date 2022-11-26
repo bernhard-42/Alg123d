@@ -1,9 +1,7 @@
 from typing import List
-from dataclasses import dataclass
 import build123d as bd
-from build123d.build_enums import Transition
 from .wrappers import AlgCompound, create_compound
-from .direct_api import Workplane
+from .direct_api import *
 from .generics import tupleize
 
 __all__ = [
@@ -202,21 +200,19 @@ class Bore(AlgCompound):
 
 
 def extrude(
-    to_extrude: bd.Compound,
+    to_extrude: Compound,
     amount: float,
-    until: bd.Until = None,
-    until_part: bd.Compound = None,
+    until: Until = None,
+    until_part: Compound = None,
     both: bool = False,
     taper: float = 0.0,
 ):
     with bd.BuildPart() as ctx:
         # store to_extrude's faces in context
         ctx.pending_faces = (
-            [to_extrude] if isinstance(to_extrude, bd.Face) else to_extrude.faces()
+            [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
         )
-        ctx.pending_face_planes = [
-            bd.Plane(face.to_pln()) for face in ctx.pending_faces
-        ]
+        ctx.pending_face_planes = [Plane(face.to_pln()) for face in ctx.pending_faces]
 
         if len(ctx.pending_faces) == 0:
             raise RuntimeError(f"No faces found in {to_extrude}")
@@ -224,22 +220,22 @@ def extrude(
         if until_part is not None:
             ctx._add_to_context(until_part)
 
-        # with bd.Locations(bd.Location()):
+        # with bd.Locations(Location()):
         compound = bd.Extrude(
             amount=amount,
             until=until,
             both=both,
             taper=taper,
-            mode=bd.Mode.PRIVATE,
+            mode=Mode.PRIVATE,
         )
 
     return AlgCompound(compound, {}, 3)
 
 
-def loft(sections: List[AlgCompound | bd.Face], ruled: bool = False):
+def loft(sections: List[AlgCompound | Face], ruled: bool = False):
     faces = []
     for s in tupleize(sections):
-        if isinstance(s, bd.Compound):
+        if isinstance(s, Compound):
             faces += s.faces()
         else:
             faces.append(s)
@@ -248,13 +244,13 @@ def loft(sections: List[AlgCompound | bd.Face], ruled: bool = False):
 
 
 def revolve(
-    profiles: List[bd.Compound | bd.Face] | bd.Compound | bd.Face,
-    axis: bd.Axis,
+    profiles: List[Compound | Face] | Compound | Face,
+    axis: Axis,
     arc: float = 360.0,
 ):
     for p in tupleize(profiles):
         faces = []
-        if isinstance(p, bd.Compound):
+        if isinstance(p, Compound):
             faces += p.faces()
         else:
             faces.append(p)
@@ -265,13 +261,13 @@ def revolve(
 
 
 def sweep(
-    sections: List[bd.Face | bd.Compound],
-    path: bd.Edge | bd.Wire = None,
+    sections: List[Face | Compound],
+    path: Edge | Wire = None,
     multisection: bool = False,
     is_frenet: bool = False,
     transition: Transition = Transition.TRANSFORMED,
-    normal: bd.VectorLike = None,
-    binormal: bd.Edge | bd.Wire = None,
+    normal: VectorLike = None,
+    binormal: Edge | Wire = None,
 ):
     return create_compound(
         bd.Sweep,
@@ -293,5 +289,5 @@ def section(
     height: float = 0.0,
 ):
     return create_compound(
-        bd.Section, by, part=part, params=dict(height=height, mode=bd.Mode.INTERSECT)
+        bd.Section, by, part=part, params=dict(height=height, mode=Mode.INTERSECT)
     )

@@ -1,5 +1,5 @@
 import build123d as bd
-from .wrappers import AlgCompound
+from .direct_api import *
 
 __all__ = [
     "LocationList",
@@ -10,14 +10,9 @@ __all__ = [
 ]
 
 
-#
-# Location generators
-#
-
-
 class LocationList:
     def __init__(self, generator):
-        bd.Workplanes(bd.Plane.XY).__enter__()
+        bd.Workplanes(Plane.XY).__enter__()
         self.generator = generator
 
     def __iter__(self):
@@ -28,7 +23,7 @@ class LocationList:
 
 
 class Locations(LocationList):
-    def __init__(self, *pts: bd.VectorLike | bd.Vertex | bd.Location):
+    def __init__(self, *pts: VectorLike | Vertex | Location):
         super().__init__(bd.Locations(*pts))
 
 

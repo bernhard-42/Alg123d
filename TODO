@@ -4,17 +4,17 @@ Generic:
     BoundingBox (?)
     
 Sketch: 
-9    Understand center option of Polygon
+5    Understand center option of Polygon
         
 Line: 
-5    Line
-5    PolarLine
-5    Polyline
-6    Spline
-6    Helix
-7    CenterArc
-7    RadiusArc
-7    SagittaArc
-7    TangentArc
-7    ThreePointArc
-8    JernArc
+1    Line
+1    PolarLine
+1    Polyline
+2    Spline
+2    Helix
+3    CenterArc
+3    RadiusArc
+3    SagittaArc
+3    TangentArc
+3    ThreePointArc
+4    JernArc

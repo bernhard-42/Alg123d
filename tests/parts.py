@@ -79,6 +79,26 @@ show(
 
 show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=centered).edges())
 
+# %%
+
+plane = Workplane.ZX
+
+rotations = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
+
+s = Empty3()
+for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
+    # on plane, located to grid position, and finally rotated
+    c_plane = plane * outer_loc * rotations[i]
+    s += Circle(1) @ c_plane
+
+    for loc in PolarLocations(0.8, (i + 3) * 2):
+        # Use polar locations on c_plane
+        s -= Rectangle(0.1, 0.3) @ (c_plane * loc)
+
+e = extrude(s, 0.3)
+
+show(e)
+
 # loft
 
 # %%

@@ -1,8 +1,7 @@
 from typing import List
-from dataclasses import dataclass
 import build123d as bd
 from .wrappers import AlgCompound
-from alg123d import FontStyle, Halign, Valign, Edge, Wire
+from .direct_api import *
 
 __all__ = [
     "Empty2",
@@ -71,7 +70,7 @@ class Rectangle(AlgCompound):
 class Polygon(AlgCompound):
     def __init__(
         self,
-        pts: List[bd.VectorLike],
+        pts: List[VectorLike],
         centered: tuple[bool, bool] = (True, True),
     ):
         params = dict(
@@ -144,7 +143,7 @@ class Trapezoid(AlgCompound):
 class SlotArc(AlgCompound):
     def __init__(
         self,
-        arc: bd.Edge | bd.Wire,
+        arc: Edge | Wire,
         height: float,
     ):
         params = dict(
@@ -157,8 +156,8 @@ class SlotArc(AlgCompound):
 class SlotCenterPoint(AlgCompound):
     def __init__(
         self,
-        center: bd.VectorLike,
-        point: bd.VectorLike,
+        center: VectorLike,
+        point: VectorLike,
         height: float,
     ):
         params = dict(
