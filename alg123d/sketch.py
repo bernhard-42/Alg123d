@@ -16,7 +16,18 @@ __all__ = [
     "SlotCenterPoint",
     "SlotCenterToCenter",
     "SlotOverall",
+    "make_face",
 ]
+
+
+def make_face(objs: AlgCompound | List[Edge]):
+    if isinstance(objs, AlgCompound) and objs.dim == 1:
+        edges = objs.edges()
+    elif isinstance(objs, (tuple, list)):
+        edges = objs
+    else:
+        edges = [objs]
+    return Face.make_from_wires(*Wire.combine(edges))
 
 
 class Empty2(AlgCompound):

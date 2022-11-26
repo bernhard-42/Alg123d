@@ -187,13 +187,17 @@ def create_compound(
     planes=None,
     params=None,
 ):
-    objs = objects if isinstance(objects, (list, tuple)) else [objects]
+    if isinstance(objects, AlgCompound) and objects.dim == 1:
+        objs = objects.edges()
+        dim = 1
+    else:
+        objs = objects if isinstance(objects, (list, tuple)) else [objects]
 
-    if dim is None:
-        if part is None:
-            dim = max([o.dim for o in objs])
-        else:
-            dim = part.dim
+        if dim is None:
+            if part is None:
+                dim = max([o.dim for o in objs])
+            else:
+                dim = part.dim
 
     with CTX[dim]() as ctx:
         if part is not None:

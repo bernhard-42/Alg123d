@@ -33,3 +33,16 @@ b = mirror(a, Plane.XZ)
 show(a.edges(), b)
 
 # %%
+
+l = Spline(
+    ((0, 0, 0), (50, 0, 50), (100, 0, 0)),
+    tangents=((1, 0, 0), (1, 0, 0)),
+    tangent_scalars=(0.5, 2),
+)
+show(l, mirror(l, Plane.XY))
+
+# %%
+
+show(l, mirror(l, Plane.YZ))
+
+# %%
