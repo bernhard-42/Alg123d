@@ -115,15 +115,12 @@ r = revolve(s1, Axis.X, -130)
 show(r)
 
 # %%
-from alg123d import *
-from cq_vscode import show, set_defaults
 
-set_defaults(axes=True, axes0=True, transparent=False)
-
-# %%
-
-s = Sphere(1) @ (0.9, 0, 0)
-sections = section(s, [Plane.XZ, Plane.ZY])
+s = Sphere(1) @ (0.9, 0.2, 0)
+sections = section(
+    s, [Workplane.XZ, Workplane.ZY, Workplane(Location((0, 1, 2), (60, 0, 0)))]
+)
 show(s, sections, transparent=True)
+
 
 # %%

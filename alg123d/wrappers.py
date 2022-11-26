@@ -38,8 +38,6 @@ class AlgCompound(bd.Compound):
         self,
         cls,
         part=None,
-        faces=None,
-        planes=None,
         params=None,
     ):
         if params is None:
@@ -48,12 +46,6 @@ class AlgCompound(bd.Compound):
         with bd.BuildPart() as ctx:
             if part is not None:
                 ctx._add_to_context(part)
-
-            if faces is not None:
-                ctx.pending_faces = faces
-
-            if planes is not None:
-                ctx.pending_face_planes = planes
 
             self.wrapped = cls(**params, mode=bd.Mode.PRIVATE).wrapped
 
@@ -154,20 +146,36 @@ class AlgCompound(bd.Compound):
 #
 
 
-def create_compound(cls, objects, ctx_add=None, mode=bd.Mode.PRIVATE, **kwargs):
+def create_compound(
+    cls,
+    objects,
+    part=None,
+    dim=None,
+    faces=None,
+    planes=None,
+    params=None,
+):
     objs = objects if isinstance(objects, (list, tuple)) else [objects]
 
-    if ctx_add is None:
-        dim = max([o.dim for o in objs])
-    else:
-        dim = ctx_add.dim
-
-    if mode is not None:
-        kwargs["mode"] = mode
+    if dim is None:
+        if part is None:
+            dim = max([o.dim for o in objs])
+        else:
+            dim = part.dim
 
     with CTX[dim]() as ctx:
-        if ctx_add is not None:
-            ctx._add_to_context(bd.Compound(ctx_add.wrapped))
-        compound = cls(*objs, **kwargs)
+        if part is not None:
+            ctx._add_to_context(bd.Compound(part.wrapped))
+
+        if faces is not None:
+            ctx.pending_faces = faces
+
+        if planes is not None:
+            ctx.pending_face_planes = planes
+
+        compound = cls(*objs, **params)
+
+        if part is not None:
+            compound = ctx._obj
 
     return AlgCompound(compound, {}, dim)

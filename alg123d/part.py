@@ -1,8 +1,10 @@
 from typing import List
 from dataclasses import dataclass
 import build123d as bd
-from .wrappers import AlgCompound
 from build123d.build_enums import Transition
+from .wrappers import AlgCompound, create_compound
+from .direct_api import Workplane
+from .generics import tupleize
 
 __all__ = [
     "Empty3",
@@ -236,34 +238,30 @@ def extrude(
 
 def loft(sections: List[AlgCompound | bd.Face], ruled: bool = False):
     faces = []
-    for s in sections:
+    for s in tupleize(sections):
         if isinstance(s, bd.Compound):
             faces += s.faces()
         else:
             faces.append(s)
 
-    with bd.BuildPart():
-        compound = bd.Loft(*faces, ruled=ruled)
-
-    return AlgCompound(compound, {}, 3)
+    return create_compound(bd.Loft, faces, dim=3, params=dict(ruled=ruled))
 
 
 def revolve(
-    profiles: List[bd.Face],
+    profiles: List[bd.Compound | bd.Face] | bd.Compound | bd.Face,
     axis: bd.Axis,
     arc: float = 360.0,
 ):
-    for p in profiles:
+    for p in tupleize(profiles):
         faces = []
         if isinstance(p, bd.Compound):
             faces += p.faces()
         else:
             faces.append(p)
 
-    with bd.BuildPart():
-        compound = bd.Revolve(*faces, axis=axis, revolution_arc=arc)
-
-    return AlgCompound(compound, {}, 3)
+    return create_compound(
+        bd.Revolve, faces, dim=3, params=dict(axis=axis, revolution_arc=arc)
+    )
 
 
 def sweep(
@@ -275,28 +273,25 @@ def sweep(
     normal: bd.VectorLike = None,
     binormal: bd.Edge | bd.Wire = None,
 ):
-    with bd.BuildPart():
-        compound = bd.Sweep(
-            *sections,
+    return create_compound(
+        bd.Sweep,
+        sections,
+        params=dict(
             path=path,
             multisection=multisection,
             is_frenet=is_frenet,
             transition=transition,
             normal=normal,
             binormal=binormal,
-        )
-
-    return AlgCompound(compound, {}, 3)
+        ),
+    )
 
 
 def section(
     part: AlgCompound,
-    by: List[bd.Plane],
+    by: List[Workplane],
     height: float = 0.0,
 ):
-    with bd.BuildPart() as ctx:
-        ctx._add_to_context(part)
-        bd.Section(*by, height=height, mode=bd.Mode.INTERSECT)
-        compound = ctx.part
-
-    return AlgCompound(compound, {}, 3)
+    return create_compound(
+        bd.Section, by, part=part, params=dict(height=height, mode=bd.Mode.INTERSECT)
+    )

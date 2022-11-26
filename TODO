@@ -2,19 +2,13 @@ Intrduce negative objects
 
 Generic: 
     BoundingBox (?)
-
+    
 Sketch: 
+9    Understand center option of Polygon
 4    SlotArc
 4    SlotCenterPoint
 4    SlotCenterToCenter
 4    SlotOverall
-
-Part: 
-    Operations: 
-3        Loft
-3        Revolve
-3        Section
-3        Sweep
         
 Line: 
 5    Line
