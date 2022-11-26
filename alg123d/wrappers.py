@@ -18,6 +18,8 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
 __all__ = [
     "AlgCompound",
+    "AlgEdge",
+    "AlgWire",
     "create_compound",
 ]
 
@@ -26,11 +28,20 @@ __all__ = [
 #
 
 
-class AlgCompound(Compound):
-    def __init__(self, compound=None, params=None, dim: int = None):
-        self.wrapped = None if compound is None else compound.wrapped
-        self.dim = dim
-        self._params = [] if params is None else params
+class Mixin:
+    def create_line(self, cls, objects=None, params=None):
+        if params is None:
+            params = {}
+
+        with bd.BuildLine() as ctx:
+            if objects is None:
+                obj = cls(**params, mode=Mode.PRIVATE)
+            else:
+                obj = cls(*objects, **params, mode=Mode.PRIVATE)
+
+        self.wrapped = obj.wrapped
+        self._params = params
+        self.dim = 1
 
     def create_part(
         self,
@@ -62,22 +73,6 @@ class AlgCompound(Compound):
 
         self._params = params
         self.dim = 2
-
-    def create_line(self, cls, objects=None, params=None):
-        if params is None:
-            params = {}
-
-        with bd.BuildLine() as ctx:
-            if objects is None:
-                compound = cls(**params, mode=Mode.PRIVATE)
-            else:
-                compound = cls(*objects, **params, mode=Mode.PRIVATE)
-
-        compound = Compound.make_compound([compound])
-
-        self.wrapped = compound.wrapped
-        self._params = params
-        self.dim = 1
 
     def _place(
         self,
@@ -153,6 +148,33 @@ class AlgCompound(Compound):
         memo[id(self.wrapped)] = bd.downcast(BRepBuilderAPI_Copy(self.wrapped).Shape())
 
         return copy.deepcopy(self, memo)
+
+
+class AlgEdge(Mixin, Edge):  # keep order to overwrite __matmul__
+    def __init__(self, edge=None, params=None, dim: int = None):
+        self.wrapped = None if edge is None else edge.wrapped
+        self.dim = dim
+        self._params = [] if params is None else params
+
+    def __and__(self, position):
+        return self.position_at(position)
+
+
+class AlgWire(Mixin, Wire):  # keep order to overwrite __matmul__
+    def __init__(self, wire=None, params=None, dim: int = None):
+        self.wrapped = None if wire is None else wire.wrapped
+        self.dim = dim
+        self._params = [] if params is None else params
+
+    def __and__(self, position):
+        return self.position_at(position)
+
+
+class AlgCompound(Compound, Mixin):
+    def __init__(self, compound=None, params=None, dim: int = None):
+        self.wrapped = None if compound is None else compound.wrapped
+        self.dim = dim
+        self._params = [] if params is None else params
 
 
 #

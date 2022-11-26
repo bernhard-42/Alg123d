@@ -1,6 +1,6 @@
 from typing import List
 import build123d as bd
-from .wrappers import AlgCompound
+from .wrappers import AlgEdge, AlgWire
 from .direct_api import *
 
 __all__ = [
@@ -21,17 +21,17 @@ __all__ = [
 ]
 
 
-class Empty1(AlgCompound):
+class Empty1(AlgEdge):
     def __init__(self):
         super().__init__(dim=1)
 
 
-class Line(AlgCompound):
+class Line(AlgEdge):
     def __init__(self, start: VectorLike, end: VectorLike):
         self.create_line(bd.Line, objects=[start, end])
 
 
-class Bezier(AlgCompound):
+class Bezier(AlgEdge):
     def __init__(
         self,
         cntl_pts: Iterable[VectorLike],
@@ -40,7 +40,7 @@ class Bezier(AlgCompound):
         self.create_line(bd.Bezier, objects=cntl_pts, params=dict(weights=weights))
 
 
-class PolarLine(AlgCompound):
+class PolarLine(AlgEdge):
     def __init__(
         self,
         start: VectorLike,
@@ -52,13 +52,13 @@ class PolarLine(AlgCompound):
         self.create_line(bd.PolarLine, params=params)
 
 
-class Polyline(AlgCompound):
+class Polyline(AlgWire):
     def __init__(self, pts: List[VectorLike], close: bool = False):
         params = dict(close=close)
         self.create_line(bd.Polyline, objects=pts, params=params)
 
 
-class Spline(AlgCompound):
+class Spline(AlgEdge):
     def __init__(
         self,
         pts: Iterable[VectorLike],
@@ -74,7 +74,7 @@ class Spline(AlgCompound):
         self.create_line(bd.Spline, objects=pts, params=params)
 
 
-class Helix(AlgCompound):
+class Helix(AlgWire):
     def __init__(
         self,
         pitch: float,
@@ -97,7 +97,7 @@ class Helix(AlgCompound):
         self.create_line(bd.Helix, params=params)
 
 
-class CenterArc(AlgCompound):
+class CenterArc(AlgEdge):
     def __init__(
         self,
         center: VectorLike,
@@ -111,7 +111,7 @@ class CenterArc(AlgCompound):
         self.create_line(bd.CenterArc, params=params)
 
 
-class EllipticalCenterArc(AlgCompound):
+class EllipticalCenterArc(AlgEdge):
     def __init__(
         self,
         center: VectorLike,
@@ -134,7 +134,7 @@ class EllipticalCenterArc(AlgCompound):
         self.create_line(bd.EllipticalCenterArc, params=params)
 
 
-class RadiusArc(AlgCompound):
+class RadiusArc(AlgEdge):
     def __init__(
         self,
         start_point: VectorLike,
@@ -145,7 +145,7 @@ class RadiusArc(AlgCompound):
         self.create_line(bd.RadiusArc, params=params)
 
 
-class SagittaArc(AlgCompound):
+class SagittaArc(AlgEdge):
     def __init__(
         self,
         start_point: VectorLike,
@@ -156,7 +156,7 @@ class SagittaArc(AlgCompound):
         self.create_line(bd.SagittaArc, params=params)
 
 
-class TangentArc(AlgCompound):
+class TangentArc(AlgEdge):
     def __init__(
         self,
         *pts: VectorLike,
@@ -170,12 +170,12 @@ class TangentArc(AlgCompound):
         self.create_line(bd.TangentArc, objects=pts, params=params)
 
 
-class ThreePointArc(AlgCompound):
+class ThreePointArc(AlgEdge):
     def __init__(self, pts: Iterable[VectorLike]):
         self.create_line(bd.ThreePointArc, objects=pts)
 
 
-class JernArc(AlgCompound):
+class JernArc(AlgEdge):
     def __init__(
         self,
         start: VectorLike,

@@ -29,6 +29,13 @@ show(l)
 # %%
 # Spline
 
+l = Spline(
+    ((0, 0, 0), (50, 0, 50), (100, 0, 0)),
+    tangents=((1, 0, 0), (1, 0, 0)),
+    tangent_scalars=(0.5, 2),
+)
+
+show(l)
 
 # %%
 # Line
@@ -49,14 +56,27 @@ show(l)
 # %%
 # RadiusArc
 
+l = RadiusArc((1, 2, 3), (1, 1, 1), 1.2)
+show(l)
+
 # %%
 # SagittaArc
+
+l = SagittaArc((1, 2, 3), (1, 1, 1), 1.5)
+show(l)
 
 # %%
 # TangentArc
 
+l = TangentArc((1, 2, 3), (1, 1, 1))
+show(l)
+
 # %%
 # ThreePointArc
+
+pts = (1, 2, 3), (1, 1, 1), (2, 0, 0)
+l = ThreePointArc(pts)
+show(l, *[Vertex(*p) for p in pts])
 
 # %%
 # JernArc
