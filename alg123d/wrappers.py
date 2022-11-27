@@ -1,4 +1,4 @@
-import copy
+from __future__ import annotations
 
 import build123d as bd
 from .direct_api import *
@@ -6,13 +6,6 @@ from .direct_api import *
 from OCP.BRepBuilderAPI import (  # pyright: ignore[reportMissingImports]
     BRepBuilderAPI_Copy,
 )
-
-Obj1d = Compound | Wire | Edge
-Obj2d = Compound | Face
-Obj3d = Compound | Solid
-Obj12d = Obj1d | Obj2d
-Obj23d = Obj2d | Obj3d
-Obj123d = Obj1d | Obj2d | Obj3d
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
@@ -27,42 +20,22 @@ __all__ = [
 
 
 class AlgCompound(Compound):
-    def __init__(self, compound=None, params=None, dim: int = None):
+    def __init__(self, compound=None, dim: int = None):
         self.wrapped = None if compound is None else compound.wrapped
         self.dim = dim
-        self._params = [] if params is None else params
 
     def create_line(self, cls, objects=None, params=None):
         if params is None:
             params = {}
 
-        with bd.BuildLine() as ctx:
+        with bd.BuildLine():
             if objects is None:
                 obj = cls(**params, mode=Mode.PRIVATE)
             else:
                 obj = cls(*objects, **params, mode=Mode.PRIVATE)
 
         self.wrapped = Compound.make_compound(obj.edges()).wrapped
-        self._params = params
         self.dim = 1
-
-    def create_part(
-        self,
-        cls,
-        part=None,
-        params=None,
-    ):
-        if params is None:
-            params = {}
-
-        with bd.BuildPart() as ctx:
-            if part is not None:
-                ctx._add_to_context(part)
-
-            self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
-
-        self._params = params
-        self.dim = 3
 
     def create_sketch(self, cls, objects=None, params=None):
         if params is None:
@@ -73,16 +46,20 @@ class AlgCompound(Compound):
                 self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
             else:
                 self.wrapped = cls(*objects, **params, mode=Mode.PRIVATE).wrapped
-
-        self._params = params
         self.dim = 2
 
-    def _place(
-        self,
-        mode: Mode,
-        obj: Obj23d,
-        at: Location = None,
-    ):
+    def create_part(self, cls, part=None, params=None):
+        if params is None:
+            params = {}
+
+        with bd.BuildPart() as ctx:
+            if part is not None:
+                ctx._add_to_context(part)
+
+            self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
+        self.dim = 3
+
+    def _place(self, mode: Mode, obj: AlgCompound, at: Location = None):
         if at is None:
             located_obj = obj
             loc = obj.location
@@ -106,8 +83,7 @@ class AlgCompound(Compound):
         else:
             if self.dim == 1:
                 if mode == Mode.ADD:
-                    wire = self.fuse(located_obj).clean()
-                    return AlgCompound(wire, {}, self.dim)
+                    compound = self.fuse(located_obj).clean()
                 else:
                     raise RuntimeError("Lines can only be added")
             else:
@@ -118,57 +94,50 @@ class AlgCompound(Compound):
                 elif mode == Mode.INTERSECT:
                     compound = self.intersect(located_obj).clean()
 
-                return AlgCompound(compound, {}, self.dim)
+        return AlgCompound(compound, self.dim)
 
-    def __add__(self, other: Obj23d):
+    def __add__(self, other: AlgCompound):
         return self._place(Mode.ADD, other)
 
-    def __sub__(self, other: Obj23d):
+    def __sub__(self, other: AlgCompound):
         return self._place(Mode.SUBTRACT, other)
 
-    def __and__(self, other: Obj23d):
+    def __and__(self, other: AlgCompound):
         return self._place(Mode.INTERSECT, other)
 
-    def __matmul__(self, obj):
-        if isinstance(obj, Location):
+    def __matmul__(self, obj: Union[float, AlgCompound]):
+        if isinstance(obj, (int, float)):
+            if self.dim == 1:
+                return Wire.make_wire(self.edges()).position_at(obj)
+            else:
+                raise TypeError("Only lines can access positions")
+
+        elif isinstance(obj, Location):
             loc = obj
+
         elif isinstance(obj, tuple):
             loc = Location(obj)
+
         elif isinstance(obj, Workplane):
             loc = obj.to_location()
+
         else:
             raise ValueError(f"Cannot multiply with {obj}")
 
         return self.located(loc)
-
-    def __repr__(self):
-        def r2(v):
-            return tuple([round(e, 2) for e in v])
-
-        p = ""
-        for k, v in self._params.items():
-            p += f"{k}={v},"
-
-        loc_str = f"position={r2(self.location.position)}, rotation={r2(self.location.orientation)}"
-        return f"{self.__class__.__name__}({p}); loc=({loc_str}); dim={self.dim}"
-
-    def copy(self):
-        memo = {}
-        memo[id(self.wrapped)] = bd.downcast(BRepBuilderAPI_Copy(self.wrapped).Shape())
-
-        return copy.deepcopy(self, memo)
-
-    def __call__(self, position):
-        if self.dim == 1:
-            return Wire.make_wire(self.edges()).position_at(position)
-        else:
-            raise TypeError(f"unsupported operand type(s)")
 
     def __mod__(self, position):
         if self.dim == 1:
             return Wire.make_wire(self.edges()).tangent_at(position)
         else:
             raise TypeError(f"unsupported operand type(s)")
+
+    def __repr__(self):
+        def r2(v):
+            return tuple([round(e, 2) for e in v])
+
+        loc_str = f"position={r2(self.location.position)}, rotation={r2(self.location.orientation)}"
+        return f"obj={self.__class__.__name__}; loc=({loc_str}); dim={self.dim}"
 
 
 #
@@ -177,13 +146,7 @@ class AlgCompound(Compound):
 
 
 def create_compound(
-    cls,
-    objects,
-    part=None,
-    dim=None,
-    faces=None,
-    planes=None,
-    params=None,
+    cls, objects, part=None, dim=None, faces=None, planes=None, params=None
 ):
     if isinstance(objects, AlgCompound) and objects.dim == 1:
         objs = objects.edges()
@@ -212,4 +175,4 @@ def create_compound(
         if part is not None:
             compound = ctx._obj
 
-    return AlgCompound(compound, {}, dim)
+    return AlgCompound(compound, dim)
