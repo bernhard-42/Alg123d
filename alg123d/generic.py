@@ -1,7 +1,7 @@
 from typing import List, Tuple
 import build123d as bd
 from .direct_api import *
-from .wrappers import create_compound, AlgCompound, Obj12d, Obj123d
+from .wrappers import create_compound, AlgCompound
 
 __all__ = [
     "tupleize",
@@ -49,14 +49,14 @@ def fillet(
 
 
 def mirror(
-    objects: List[Obj12d] | Obj12d,
+    objects: List[AlgCompound] | AlgCompound,
     about: Plane = Plane.XZ,
 ):
     return create_compound(bd.Mirror, objects, params=dict(about=about))
 
 
 def offset(
-    objects: List[Obj123d] | Obj123d,
+    objects: List[AlgCompound] | AlgCompound,
     amount: float,
     openings: Face | list[Face] = None,
     kind: Kind = Kind.ARC,
@@ -74,7 +74,7 @@ def scale(objects: Shape, by: float | Tuple[float, float, float]):
 
 
 def split(
-    objects: List[Obj123d] | Obj123d,
+    objects: List[AlgCompound] | AlgCompound,
     by: Plane = Plane.XZ,
     keep: Keep = Keep.TOP,
 ):
