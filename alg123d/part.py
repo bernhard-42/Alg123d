@@ -220,7 +220,6 @@ def extrude(
         if until_part is not None:
             ctx._add_to_context(until_part)
 
-        # with bd.Locations(Location()):
         compound = bd.Extrude(
             amount=amount,
             until=until,
