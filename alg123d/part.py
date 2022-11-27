@@ -2,7 +2,7 @@ from typing import List
 import build123d as bd
 from .wrappers import AlgCompound, create_compound
 from .direct_api import *
-from .generics import tupleize
+from .generic import tupleize
 
 __all__ = [
     "Empty3",
