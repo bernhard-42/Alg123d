@@ -201,7 +201,7 @@ class Bore(AlgCompound):
 
 def extrude(
     to_extrude: Compound,
-    amount: float,
+    amount: float = None,
     until: Until = None,
     until_part: Compound = None,
     both: bool = False,
