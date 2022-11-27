@@ -3,9 +3,6 @@ from __future__ import annotations
 import build123d as bd
 from .direct_api import *
 
-from OCP.BRepBuilderAPI import (  # pyright: ignore[reportMissingImports]
-    BRepBuilderAPI_Copy,
-)
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
