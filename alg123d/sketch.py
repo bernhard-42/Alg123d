@@ -27,7 +27,8 @@ def make_face(objs: AlgCompound | List[Edge]):
         edges = objs
     else:
         edges = [objs]
-    return Face.make_from_wires(*Wire.combine(edges))
+
+    return AlgCompound.make_compound([Face.make_from_wires(*Wire.combine(edges))], 2)
 
 
 class Empty2(AlgCompound):
