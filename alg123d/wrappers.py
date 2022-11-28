@@ -21,6 +21,10 @@ class AlgCompound(Compound):
         self.wrapped = None if compound is None else compound.wrapped
         self.dim = dim
 
+    @classmethod
+    def make_compound(cls, objs: Shape, dim):
+        return cls(Compound.make_compound(objs), dim)
+
     def create_line(self, cls, objects=None, params=None):
         if params is None:
             params = {}
