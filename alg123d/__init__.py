@@ -13,3 +13,10 @@ CM = 10 * MM
 M = 1000 * MM
 IN = 25.4 * MM
 FT = 12 * IN
+
+try:
+    from cq_vscode import show, show_object, set_defaults, reset_show
+
+    print("Loaded show, show_object, set_defaults, reset_show")
+except:
+    ...
