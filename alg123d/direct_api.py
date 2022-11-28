@@ -4,6 +4,13 @@ from build123d.direct_api import *
 from build123d.build_enums import *
 
 
+def tupleize(arg):
+    if isinstance(arg, (tuple, list)):
+        return tuple(arg)
+    else:
+        return (arg,)
+
+
 class Workplane(Plane):
     @classmethod
     @property
