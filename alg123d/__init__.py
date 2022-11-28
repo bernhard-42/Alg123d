@@ -7,3 +7,9 @@ from .generic import *
 from .part import *
 from .sketch import *
 from .line import *
+
+MM = 1
+CM = 10 * MM
+M = 1000 * MM
+IN = 25.4 * MM
+FT = 12 * IN
