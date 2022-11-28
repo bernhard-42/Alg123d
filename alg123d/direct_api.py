@@ -112,6 +112,9 @@ class Workplane(Plane):
 
             super().__init__(origin=origin, x_dir=x_dir, z_dir=z_dir)
 
+        elif isinstance(args[0], Compound) and hasattr(args[0], "location"):
+            self.__init__(args[0].location)
+
         else:
             super().__init__(*args, **kwargs)
 
