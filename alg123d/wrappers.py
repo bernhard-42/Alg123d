@@ -60,9 +60,6 @@ class AlgCompound(Compound):
             self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
         self.dim = 3
 
-    def workplanes(self):
-        return [Workplane(f) for f in self.faces()]
-
     def _place(self, mode: Mode, obj: AlgCompound, at: Location = None):
         if at is None:
             located_obj = obj
