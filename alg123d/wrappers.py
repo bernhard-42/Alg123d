@@ -33,7 +33,7 @@ class AlgCompound(Compound):
             if objects is None:
                 obj = cls(**params, mode=Mode.PRIVATE)
             else:
-                obj = cls(*objects, **params, mode=Mode.PRIVATE)
+                obj = cls(*list(objects), **params, mode=Mode.PRIVATE)
 
         self.wrapped = Compound.make_compound(obj.edges()).wrapped
         self.dim = 1
@@ -46,7 +46,7 @@ class AlgCompound(Compound):
             if objects is None:
                 self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
             else:
-                self.wrapped = cls(*objects, **params, mode=Mode.PRIVATE).wrapped
+                self.wrapped = cls(*list(objects), **params, mode=Mode.PRIVATE).wrapped
         self.dim = 2
 
     def create_part(self, cls, part=None, params=None):
@@ -153,7 +153,12 @@ def create_compound(
         objs = objects.edges()
         dim = 1
     else:
-        objs = objects if isinstance(objects, (list, tuple)) else [objects]
+        if isinstance(objects, (list, tuple)):
+            objs = objects
+        elif isinstance(objects, filter):
+            objs = list(objects)
+        else:
+            objs = [objects]
 
         if dim is None:
             if part is None:
