@@ -2,7 +2,7 @@ setup.py
 alg123d/__init__.py
 alg123d/common.py
 alg123d/direct_api.py
-alg123d/generics.py
+alg123d/generic.py
 alg123d/line.py
 alg123d/part.py
 alg123d/sketch.py

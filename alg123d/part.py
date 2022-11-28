@@ -228,7 +228,16 @@ def extrude(
             mode=Mode.PRIVATE,
         )
 
-    return AlgCompound(compound, {}, 3)
+    return AlgCompound(compound, 3)
+
+    # faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
+    # return create_compound(
+    #     bd.Extrude,
+    #     part=until_part,
+    #     faces=faces,
+    #     planes=[Plane(face.to_pln()) for face in faces],
+    #     params=dict(amount=amount, both=both, taper=taper),
+    # )
 
 
 def loft(sections: List[AlgCompound | Face], ruled: bool = False):

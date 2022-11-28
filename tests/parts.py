@@ -7,6 +7,16 @@ centered = (False, False, False)
 
 # %%
 
+import cadquery as cq
+
+arch = cq.Workplane(origin=(20, 0, 0)).circle(2).revolve(180, (-20, 0, 0), (-20, -1, 0))
+result = arch.center(-20, 0).workplane().rect(20, 4)
+face = arch.faces().val()
+result = result.extrude(face)
+show(result)
+
+# %%
+
 show(Box(1, 2, 3))
 
 # %%
@@ -81,24 +91,9 @@ show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=centered).edges()
 
 # %%
 
-plane = Workplane.ZX
+s = Circle(1) + Circle(0.5) @ (0.9, 0) + Circle(0.5) @ (-0.7, 0) - Circle(0.5)
 
-rotations = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
-
-s = Empty3()
-for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
-    # on plane, located to grid position, and finally rotated
-    c_plane = plane * outer_loc * rotations[i]
-    s += Circle(1) @ c_plane
-
-    for loc in PolarLocations(0.8, (i + 3) * 2):
-        # Use polar locations on c_plane
-        s -= Rectangle(0.1, 0.3) @ (c_plane * loc)
-
-e = extrude(s, 0.3)
-
-show(e)
-
+show(extrude(s, 0.1))
 # loft
 
 # %%
@@ -143,4 +138,27 @@ sections = section(
 show(s, sections, transparent=True)
 
 
+# %%
+
+import build123d as bd
+
+with bd.BuildPart() as bp:
+    with bd.Locations(bd.Rotation(0, 180, 0)):
+        with bd.BuildSketch() as sk:
+            with bd.Locations((20, 0, 0)):
+                bd.Circle(2)
+        bd.Revolve(axis=bd.Axis.Y, revolution_arc=180)
+        with bd.BuildSketch():
+            bd.Rectangle(20, 4)
+        bd.Extrude(amount=22)
+        # bd.Extrude(until=bd.Until.NEXT)
+show(bp)
+# %%
+
+c = Circle(2) * (20, 0, 0)
+a = revolve(c, Axis.Y, 180) * Rotation(0, 180, 0)
+r = Rectangle(20, 4)
+a += extrude(r, 22)
+show(r, a)
+# %%
 # %%

@@ -1,4 +1,4 @@
-from typing import overload, List
+from typing import overload, List, Optional
 from OCP.gp import gp_Pln  # pyright: ignore[reportMissingImports]
 from build123d.direct_api import *
 from build123d.build_enums import *
@@ -284,3 +284,136 @@ def top_plane(c: Compound) -> Workplane:
 def bottom_plane(c: Compound) -> Workplane:
     """Bottom workplanes"""
     return Workplane(bottom_face(c))
+
+
+def _extrude(
+    faces: List[Face],
+    amount: Optional[float] = None,
+    z_dir: Vector = None,
+    both: bool = False,
+    taper: Optional[float] = None,
+    up_to: Optional[Compound | Face] = None,
+    up_to_index: Optional[int] = None,
+) -> Solid | Compound:
+    def get_faces(face, eDir, direction, both=False):
+        """
+        Utility function to make the code further below more clean and tidy
+        Performs some test and raise appropriate error when no Faces are found for extrusion
+        """
+        facesList = self.findSolid().facesIntersectedByLine(
+            face.Center(), eDir, direction=direction
+        )
+        if len(facesList) == 0 and both:
+            raise ValueError(
+                "Couldn't find a face to extrude/cut to for at least one of the two required directions of extrusion/cut."
+            )
+
+        if len(facesList) == 0:
+            # if we don't find faces in the workplane normal direction we try the other
+            # direction (as the user might have created a workplane with wrong orientation)
+            facesList = self.findSolid().facesIntersectedByLine(
+                face.Center(), eDir.multiply(-1.0), direction=direction
+            )
+            if len(facesList) == 0:
+                raise ValueError(
+                    "Couldn't find a face to extrude/cut to. Check your workplane orientation."
+                )
+        return facesList
+
+    # check for nested geometry and tapered extrusion
+    for face in faces:
+        if taper and face.inner_wires():
+            raise ValueError("Inner wires not allowed with tapered extrusion")
+
+    taper = 0.0 if taper is None else taper
+
+    # compute extrusion vector and extrude
+    if z_dir is None:
+        if isinstance(up_to, Face):
+            e_dir = Workplane(up_to).z_dir
+        else:
+            e_dir = Workplane(up_to.location).z_dir
+    else:
+        e_dir = z_dir.normalized()
+
+    if amount is not None:
+        e_dir = e_dir.multiply(amount)
+
+    to_fuse = []
+
+    if up_to is not None:
+        res: Solid = up_to.solids()[0]
+        for face in faces:
+            if isinstance(up_to, Compound):
+                face_list = get_faces(face, e_dir, "AlongAxis", both=both)
+                if res.isInside(face.outer_wire().center()) and up_to_index == 0:
+                    up_to_index = 1  # extrude until next face outside the solid
+
+                limit_face = face_list[up_to_index]
+            else:
+                limit_face = up_to
+
+            res = res.dprism(None, [face], taper=taper, up_to_face=limit_face)
+
+            if both:
+                face_list2 = get_faces(
+                    face, e_dir.multiply(-1.0), "AlongAxis", both=both
+                )
+                if res.isInside(face.outer_wire().center()) and up_to_index == 0:
+                    up_to_index = 1  # extrude until next face outside the solid
+
+                limit_face2 = face_list2[up_to_index]
+                res = res.dprism(
+                    None,
+                    [face],
+                    taper=taper,
+                    up_to_face=limit_face2,
+                )
+
+    else:
+        for face in faces:
+            res = Solid.extrude_linear(face, e_dir, taper=taper)
+            to_fuse.append(res)
+
+            if both:
+                res = Solid.extrude_linear(face, e_dir.multiply(-1.0), taper=taper)
+                to_fuse.append(res)
+
+    return res if up_to is not None else Compound.makeCompound(to_fuse)
+
+
+def extrude(
+    objs: List[Face | Compound] | Face | Compound,
+    until: int | float | Until,
+    up_to: Face | Compound = None,
+    both: bool = False,
+    taper: Optional[float] = None,
+    z_dir: Vector = None,
+) -> Compound:
+
+    faces = objs.faces() if isinstance(objs, Compound) else objs
+
+    if isinstance(until, Until) and isinstance(up_to, Compound):
+        face_index = 0 if until == Until.NEXT else 1
+        r = _extrude(
+            faces,
+            None,
+            z_dir=z_dir,
+            both=both,
+            taper=taper,
+            up_to=up_to,
+            up_to_index=face_index,
+        )
+
+    elif isinstance(up_to, Face):
+        r = _extrude(faces, None, z_dir=z_dir, both=both, taper=taper, up_to=up_to)
+
+    elif isinstance(until, (int, float)):
+        r = _extrude(faces, until, both=both, taper=taper)
+
+    else:
+        raise ValueError(
+            f"Do not know how to handle combination of until type {type(until)} and up_to {type(up_to)}"
+        )
+
+    return Compound(r, 3)
