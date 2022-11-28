@@ -205,13 +205,19 @@ def extrude(
     until_part: Compound = None,
     both: bool = False,
     taper: float = 0.0,
+    plane=None,
 ):
     with bd.BuildPart() as ctx:
         # store to_extrude's faces in context
         ctx.pending_faces = (
             [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
         )
-        ctx.pending_face_planes = [Plane(face.to_pln()) for face in ctx.pending_faces]
+        if plane is None:
+            ctx.pending_face_planes = [
+                Plane(face.to_pln()) for face in ctx.pending_faces
+            ]
+        else:
+            ctx.pending_face_planes = [plane]
 
         if len(ctx.pending_faces) == 0:
             raise RuntimeError(f"No faces found in {to_extrude}")
