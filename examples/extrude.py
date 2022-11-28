@@ -1,4 +1,5 @@
 from alg123d import *
+from alg123d import Shortcuts as S
 
 # simple
 
@@ -18,7 +19,7 @@ both = extrude(
 
 multiple = Box(10, 10, 10)
 t = Empty2()
-for plane in multiple.workplanes():
+for plane in S.workplanes(multiple.faces()):
     for loc in GridLocations(5, 5, 2, 2):
         t += Text("Ω", fontsize=3, halign=Halign.CENTER, valign=Valign.CENTER) @ (
             plane * loc
@@ -29,13 +30,13 @@ multiple = multiple + extrude(t, amount=1)
 
 rect = Rectangle(7, 7)
 single_multiple = Box(10, 10, 10)
-for loc in single_multiple.workplanes():
+for loc in S.workplanes(single_multiple.faces()):
     single_multiple -= extrude(rect.faces()[0], amount=-2) @ loc
 
 # Non-planar surface
 non_planar = Cylinder(10, 20, centered=(True, False, True)) @ Rotation(90, 0, 0)
 non_planar &= Box(10, 10, 10, centered=(True, True, False))
-non_planar = extrude(bottom_face(non_planar), amount=2, plane=Workplane(non_planar))
+non_planar = extrude(S.bottom_face(non_planar), amount=2, plane=Workplane(non_planar))
 
 # Taper Extrude and Extrude to "next" while creating a Cherry MX key cap
 # See: https://www.cherrymx.de/en/dev.html
