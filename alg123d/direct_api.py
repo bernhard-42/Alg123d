@@ -2,15 +2,11 @@ from build123d.direct_api import *
 from build123d.build_enums import *
 
 
-def __plane_mul__(self, loc) -> Plane:
-    if not isinstance(loc, Location):
-        raise RuntimeError(
-            "Planes can only be multiplied with Locations to relocate them"
-        )
-    return as_plane(self.to_location() * loc)
-
-
-Plane.__mul__ = __plane_mul__
+def tupleize(arg):
+    if isinstance(arg, (tuple, list)):
+        return tuple(arg)
+    else:
+        return (arg,)
 
 
 def as_plane(obj):
@@ -35,8 +31,17 @@ def as_planes(objs):
     return [as_plane(obj) for obj in objs]
 
 
-def tupleize(arg):
-    if isinstance(arg, (tuple, list)):
-        return tuple(arg)
-    else:
-        return (arg,)
+def __plane_mul__(self, loc) -> Plane:
+    if not isinstance(loc, Location):
+        raise RuntimeError(
+            "Planes can only be multiplied with Locations to relocate them"
+        )
+    return as_plane(self.to_location() * loc)
+
+
+def __neg__axis__(self):
+    return self.reverse()
+
+
+Plane.__mul__ = __plane_mul__
+Axis.__neg__ = __neg__axis__
