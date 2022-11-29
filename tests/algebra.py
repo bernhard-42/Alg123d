@@ -42,7 +42,7 @@ show(e)
 
 plane = Plane((20, 0, 0))
 c = Circle(2) @ plane
-a = revolve(c, Axis.Y, 180) @ Rotation(0, 180, 0)
+a = revolve(c, -Axis.Y, 180)
 r = Rectangle(20, 4)
 e = extrude(r, until_part=a, until=Until.NEXT)
 show(e)

@@ -25,41 +25,36 @@ except:
 
 class Shortcuts:
     @staticmethod
-    def top_solid(c: Compound, x=0, y=0, z=0) -> Face:
+    def top_solid(c: Compound, axis=Axis.Z) -> Face:
         """Topsolid"""
-        axis = Axis.Z if x == 0 and y == 0 and z == 0 else Axis((0, 0, 0), (x, y, z))
         return c.solids().sort_by(axis)[-1]
 
     @staticmethod
-    def top_solids(c: Compound, x=0, y=0, z=0) -> ShapeList:
+    def top_solids(c: Compound, axis=Axis.Z) -> ShapeList:
         """Top solids"""
-        axis = Axis.Z if x == 0 and y == 0 and z == 0 else Axis((0, 0, 0), (x, y, z))
         return c.solids().group_by(axis)[-1]
 
     @staticmethod
-    def top_face(c: Compound, x=0, y=0, z=0) -> Face:
+    def top_face(c: Compound, axis=Axis.Z) -> Face:
         """Top face"""
-        axis = Axis.Z if x == 0 and y == 0 and z == 0 else Axis((0, 0, 0), (x, y, z))
         return c.faces().sort_by(axis)[-1]
 
     @staticmethod
-    def top_faces(c: Compound, x=0, y=0, z=0) -> ShapeList:
+    def top_faces(c: Compound, axis=Axis.Z) -> ShapeList:
         """Top faces"""
-        axis = Axis.Z if x == 0 and y == 0 and z == 0 else Axis((0, 0, 0), (x, y, z))
         return c.faces().group_by(axis)[-1]
 
     @staticmethod
-    def top_plane(c: Compound, x=0, y=0, z=0) -> Plane:
+    def top_plane(c: Compound, axis=Axis.Z) -> Plane:
         """Top workplanes"""
-        return as_plane(Shortcuts.top_face(c, x=x, y=y, z=z))
+        return as_plane(Shortcuts.top_face(c, axis))
 
     @staticmethod
-    def top_planes(c: Compound, x=0, y=0, z=0) -> List[Plane]:
+    def top_planes(c: Compound, axis=Axis.Z) -> List[Plane]:
         """Top workplanes"""
-        return [as_plane(f) for f in Shortcuts.top_faces(c, x=x, y=y, z=z)]
+        return [as_plane(f) for f in Shortcuts.top_faces(c, axis)]
 
     @staticmethod
-    def top_edges(c: Compound, x=0, y=0, z=0) -> ShapeList:
+    def top_edges(c: Compound, axis=Axis.Z) -> ShapeList:
         """Top edges"""
-        axis = Axis.Z if x == 0 and y == 0 and z == 0 else Axis((0, 0, 0), (x, y, z))
         return c.edges().group_by(axis)[-1]
