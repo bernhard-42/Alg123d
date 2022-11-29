@@ -132,9 +132,7 @@ show(r)
 # %%
 
 s = Sphere(1) @ (0.9, 0.2, 0)
-sections = section(
-    s, [Workplane.XZ, Workplane.ZY, Workplane(Location((0, 1, 2), (60, 0, 0)))]
-)
+sections = section(s, [Plane.XZ, Plane.ZY, Plane(Location((0, 1, 2), (60, 0, 0)))])
 show(s, sections, transparent=True)
 
 
@@ -155,8 +153,8 @@ with bd.BuildPart() as bp:
 show(bp)
 # %%
 
-c = Circle(2) * (20, 0, 0)
-a = revolve(c, Axis.Y, 180) * Rotation(0, 180, 0)
+c = Circle(2) @ (20, 0, 0)
+a = revolve(c, Axis.Y, 180) @ Rotation(0, 180, 0)
 r = Rectangle(20, 4)
 a += extrude(r, 22)
 show(r, a)

@@ -67,7 +67,7 @@ class AlgCompound(Compound):
         else:
             if isinstance(at, Location):
                 loc = at
-            elif isinstance(at, Workplane):
+            elif isinstance(at, Plane):
                 loc = at.to_location()
             elif isinstance(at, tuple):
                 loc = Location(at)
@@ -119,7 +119,7 @@ class AlgCompound(Compound):
         elif isinstance(obj, tuple):
             loc = Location(obj)
 
-        elif isinstance(obj, Workplane):
+        elif isinstance(obj, Plane):
             loc = obj.to_location()
 
         else:

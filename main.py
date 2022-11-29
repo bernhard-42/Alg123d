@@ -9,7 +9,7 @@ pts = [(0, 1), (1, 0), (1, 1), (0, 1)]
 show(Polygon(pts))
 
 # %%
-plane = Workplane.ZX
+plane = Plane.ZX
 
 cyl = Cylinder(1, 0.5)
 box = Box(0.3, 0.3, 0.5)

@@ -298,7 +298,7 @@ def sweep(
 
 def section(
     part: AlgCompound,
-    by: List[Workplane],
+    by: List[Plane],
     height: float = 0.0,
 ):
     return create_compound(

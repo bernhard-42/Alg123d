@@ -11,7 +11,7 @@ l7 = Line((0.0692, 0.7808), (0.0000, 0.9167))
 r1 = RadiusArc(l1 @ 1, l2 @ 0, 0.0271)
 r2 = TangentArc(l2 @ 1, l3 @ 0, tangent=l2 % 1)
 r3 = SagittaArc(l3 @ 1, l4 @ 0, 0.003)
-r4 = ThreePointArc((l4 @ 1, (l4 @ 1 + l5 @ 0) * 0.5 + Vector(-0.002, -0.002), l5 @ 0))
+r4 = ThreePointArc(l4 @ 1, (l4 @ 1 + l5 @ 0) * 0.5 + Vector(-0.002, -0.002), l5 @ 0)
 r5 = TangentArc(l6 @ 1, l7 @ 0, tangent=l6 % 1)
 s = Spline((l5 @ 1, l6 @ 0), tangents=(l5 % 1, l6 % 0), tangent_scalars=(2, 2))
 

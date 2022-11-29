@@ -53,30 +53,38 @@ show(l)
 
 l = EllipticalCenterArc((0, 0, 0), 1, 2, 15, 260, AngularDirection.COUNTER_CLOCKWISE)
 show(l)
+
+# %% 
+
+p1, p2, p3 = (1, 2, 3), (1, 1, 1), (2, 0, 0)
+v1, v2, v3 = Vertex(*p1), Vertex(*p2), Vertex(*p3)
+
 # %%
 # RadiusArc
 
-l = RadiusArc((1, 2, 3), (1, 1, 1), 1.2)
-show(l)
+l = RadiusArc(p1, p2, 1.2)
+show(v1, v2, l)
 
 # %%
 # SagittaArc
 
-l = SagittaArc((1, 2, 3), (1, 1, 1), 1.5)
-show(l)
+l = SagittaArc(p1, p2, 1.5)
+show(l, v1, v2)
 
 # %%
 # TangentArc
 
-l = TangentArc((1, 2, 3), (1, 1, 1))
-show(l)
+t = (0, -1, 1)
+l = TangentArc(p1, p2, tangent=t)
+
+p4 = [x + y for x, y in zip(p1, t)]
+show(l, v1, v2, Vertex(1, 1, 4), Line(p1, p4))
 
 # %%
 # ThreePointArc
 
-pts = (1, 2, 3), (1, 1, 1), (2, 0, 0)
-l = ThreePointArc(pts)
-show(l, *[Vertex(*p) for p in pts])
+l = ThreePointArc(p1, p2, p3)
+show(l, v1, v2, v3)
 
 # %%
 # JernArc

@@ -159,7 +159,8 @@ class SagittaArc(AlgCompound):
 class TangentArc(AlgCompound):
     def __init__(
         self,
-        *pts: VectorLike,
+        start_point: VectorLike,
+        end_point: VectorLike,
         tangent: VectorLike,
         tangent_from_first: bool = True,
     ):
@@ -167,12 +168,12 @@ class TangentArc(AlgCompound):
             tangent=tangent,
             tangent_from_first=tangent_from_first,
         )
-        self.create_line(bd.TangentArc, objects=pts, params=params)
+        self.create_line(bd.TangentArc, objects=[start_point, end_point], params=params)
 
 
 class ThreePointArc(AlgCompound):
-    def __init__(self, pts: Iterable[VectorLike]):
-        self.create_line(bd.ThreePointArc, objects=pts)
+    def __init__(self, p1: VectorLike, p2: VectorLike, p3: VectorLike):
+        self.create_line(bd.ThreePointArc, objects=(p1, p2, p3))
 
 
 class JernArc(AlgCompound):

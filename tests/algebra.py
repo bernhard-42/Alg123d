@@ -4,7 +4,7 @@ from cq_vscode import show, set_defaults
 set_defaults(axes=True, axes0=True, transparent=False)
 
 # %%
-plane = Workplane.ZX
+plane = Plane.ZX
 
 cyl = Cylinder(1, 0.5)
 box = Box(0.3, 0.3, 0.5)
@@ -21,7 +21,7 @@ show(p, p.faces().group_by(Axis.Y)[0], transparent=True)
 
 # %%
 
-plane = Workplane.ZX
+plane = Plane.ZX
 
 rotations = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
@@ -40,7 +40,7 @@ show(e)
 
 # %%
 
-plane = Workplane((20, 0, 0))
+plane = Plane((20, 0, 0))
 c = Circle(2) @ plane
 a = revolve(c, Axis.Y, 180) @ Rotation(0, 180, 0)
 r = Rectangle(20, 4)
