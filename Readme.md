@@ -4,7 +4,7 @@
 
 `class AlgCompound(Compound)` with one additional property `a.dim in [1,2,3]`
 
-## Algebraic definitions
+## Algebraic definition
 
 ### Objects and object arithmetic
 
@@ -42,11 +42,11 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 **Intersect objects**
 
-$\:|: A^n, A^n \rightarrow A^n$ with $a, b \rightarrow a \: | \: b$ 
+$| : A^n, A^n \rightarrow A^n$ with $a, b \rightarrow a | b$ 
 
-$b \: | \: a :=$ `a.intersect(b)` for $n=2,3$
+$b | a :=$ `a.intersect(b)` for $n=2,3$
 
-Note: $a \: | \: b = (a + b) - (a - b) - (b - a)$
+Note: $a | b = (a + b) - (a - b) - (b - a)$
 
 ### Locations and location arithmentic
 
