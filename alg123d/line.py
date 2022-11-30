@@ -35,7 +35,7 @@ class Bezier(AlgCompound):
     def __init__(
         self,
         cntl_pts: Iterable[VectorLike],
-        weights: list[float] = None,
+        weights: List[float] = None,
     ):
         self.create_line(bd.Bezier, objects=cntl_pts, params=dict(weights=weights))
 

@@ -9,12 +9,6 @@ from .part import *
 from .sketch import *
 from .line import *
 
-MM = 1
-CM = 10 * MM
-M = 1000 * MM
-IN = 25.4 * MM
-FT = 12 * IN
-
 try:
     from cq_vscode import show, show_object, set_defaults, reset_show
 
@@ -25,36 +19,53 @@ except:
 
 class Shortcuts:
     @staticmethod
-    def top_solid(c: Compound, axis=Axis.Z) -> Face:
-        """Topsolid"""
-        return c.solids().sort_by(axis)[-1]
+    def planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]:
+        return [Plane(obj) for obj in objs]
 
     @staticmethod
-    def top_solids(c: Compound, axis=Axis.Z) -> ShapeList:
-        """Top solids"""
-        return c.solids().group_by(axis)[-1]
+    def min_solid(a: Compound, axis=Axis.Z) -> Solid:
+        return a.solids().sort_by(axis)[0]
 
     @staticmethod
-    def top_face(c: Compound, axis=Axis.Z) -> Face:
-        """Top face"""
-        return c.faces().sort_by(axis)[-1]
+    def max_solid(a: Compound, axis=Axis.Z) -> Solid:
+        return a.solids().sort_by(axis)[-1]
 
     @staticmethod
-    def top_faces(c: Compound, axis=Axis.Z) -> ShapeList:
-        """Top faces"""
-        return c.faces().group_by(axis)[-1]
+    def min_solids(a: Compound, axis=Axis.Z) -> ShapeList:
+        return a.solids().group_by(axis)[0]
 
     @staticmethod
-    def top_plane(c: Compound, axis=Axis.Z) -> Plane:
-        """Top workplanes"""
-        return as_plane(Shortcuts.top_face(c, axis))
+    def max_solids(a: Compound, axis=Axis.Z) -> ShapeList:
+        return a.solids().group_by(axis)[-1]
 
     @staticmethod
-    def top_planes(c: Compound, axis=Axis.Z) -> List[Plane]:
-        """Top workplanes"""
-        return [as_plane(f) for f in Shortcuts.top_faces(c, axis)]
+    def min_face(a: Compound, axis=Axis.Z) -> Face:
+        return a.faces().sort_by(axis)[0]
 
     @staticmethod
-    def top_edges(c: Compound, axis=Axis.Z) -> ShapeList:
-        """Top edges"""
-        return c.edges().group_by(axis)[-1]
+    def max_face(a: Compound, axis=Axis.Z) -> Face:
+        return a.faces().sort_by(axis)[-1]
+
+    @staticmethod
+    def min_faces(a: Compound, axis=Axis.Z) -> ShapeList:
+        return a.faces().group_by(axis)[0]
+
+    @staticmethod
+    def max_faces(a: Compound, axis=Axis.Z) -> ShapeList:
+        return a.faces().group_by(axis)[-1]
+
+    @staticmethod
+    def min_edge(a: Compound, axis=Axis.Z) -> Edge:
+        return a.edges().sort_by(axis)[0]
+
+    @staticmethod
+    def max_edge(a: Compound, axis=Axis.Z) -> Edge:
+        return a.edges().sort_by(axis)[-1]
+
+    @staticmethod
+    def min_edges(a: Compound, axis=Axis.Z) -> ShapeList:
+        return a.edges().group_by(axis)[0]
+
+    @staticmethod
+    def max_edges(a: Compound, axis=Axis.Z) -> ShapeList:
+        return a.edges().group_by(axis)[-1]

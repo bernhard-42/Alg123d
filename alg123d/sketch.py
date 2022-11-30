@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple, Union
 import build123d as bd
 from .wrappers import AlgCompound
 from .direct_api import *
@@ -20,7 +20,7 @@ __all__ = [
 ]
 
 
-def make_face(objs: AlgCompound | List[Edge]):
+def make_face(objs: Union[AlgCompound, List[Edge]]):
     if isinstance(objs, AlgCompound) and objs.dim == 1:
         edges = objs.edges()
     elif isinstance(objs, (tuple, list)):
@@ -40,7 +40,7 @@ class Circle(AlgCompound):
     def __init__(
         self,
         radius: float,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
     ):
         params = dict(
             radius=radius,
@@ -54,7 +54,7 @@ class Ellipse(AlgCompound):
         self,
         x_radius: float,
         y_radius: float,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
     ):
         params = dict(
             x_radius=x_radius,
@@ -69,7 +69,7 @@ class Rectangle(AlgCompound):
         self,
         width: float,
         height: float,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
     ):
         params = dict(
             width=width,
@@ -83,7 +83,7 @@ class Polygon(AlgCompound):
     def __init__(
         self,
         pts: List[VectorLike],
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
     ):
         params = dict(
             centered=centered,
@@ -96,7 +96,7 @@ class RegularPolygon(AlgCompound):
         self,
         radius: float,
         side_count: int,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
     ):
         params = dict(
             radius=radius,
@@ -140,7 +140,7 @@ class Trapezoid(AlgCompound):
         height: float,
         left_side_angle: float,
         right_side_angle: float = None,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
     ):
         params = dict(
             width=width,

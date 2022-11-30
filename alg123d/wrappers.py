@@ -6,10 +6,7 @@ from .direct_api import *
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
-__all__ = [
-    "AlgCompound",
-    "create_compound",
-]
+__all__ = ["AlgCompound", "create_compound"]
 
 #
 # Algebra operations enhanced Compound

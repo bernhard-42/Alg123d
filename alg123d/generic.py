@@ -1,17 +1,9 @@
-from typing import List, Tuple
+from typing import List, Tuple, Union
 import build123d as bd
 from .direct_api import *
 from .wrappers import create_compound, AlgCompound
 
-__all__ = [
-    "tupleize",
-    "chamfer",
-    "fillet",
-    "mirror",
-    "offset",
-    "scale",
-    "split",
-]
+__all__ = ["tupleize", "chamfer", "fillet", "mirror", "offset", "scale", "split"]
 
 
 #
@@ -21,7 +13,7 @@ __all__ = [
 
 def chamfer(
     part: AlgCompound,
-    objects: List[Edge | Vertex] | Edge | Vertex,
+    objects: Union[List[Union[Edge, Vertex]], Edge, Vertex],
     length: float,
     length2: float = None,
 ):
@@ -35,23 +27,23 @@ def chamfer(
 
 def fillet(
     part: AlgCompound,
-    objects: List[Edge | Vertex] | Edge | Vertex,
+    objects: Union[List[Union[Edge, Vertex]], Edge, Vertex],
     radius: float,
 ):
     return create_compound(bd.Fillet, objects, params=dict(radius=radius), part=part)
 
 
 def mirror(
-    objects: List[AlgCompound] | AlgCompound,
+    objects: Union[List[AlgCompound], AlgCompound],
     about: Plane = Plane.XZ,
 ):
     return create_compound(bd.Mirror, objects, params=dict(about=about))
 
 
 def offset(
-    objects: List[AlgCompound] | AlgCompound,
+    objects: Union[List[AlgCompound], AlgCompound],
     amount: float,
-    openings: Face | list[Face] = None,
+    openings: Union[Face, List[Face]] = None,
     kind: Kind = Kind.ARC,
 ):
     return create_compound(
@@ -59,7 +51,7 @@ def offset(
     )
 
 
-def scale(objects: Shape, by: float | Tuple[float, float, float]):
+def scale(objects: Shape, by: Union[float, Tuple[float, float, float]]):
     if isinstance(by, (list, tuple)) and len(by) == 2:
         by = (*by, 1)
 
@@ -67,7 +59,7 @@ def scale(objects: Shape, by: float | Tuple[float, float, float]):
 
 
 def split(
-    objects: List[AlgCompound] | AlgCompound,
+    objects: Union[List[AlgCompound], AlgCompound],
     by: Plane = Plane.XZ,
     keep: Keep = Keep.TOP,
 ):

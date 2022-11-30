@@ -1,6 +1,13 @@
 from build123d.direct_api import *
 from build123d.build_enums import *
 
+LocationLike = Union[
+    Location,
+    Rotation,
+    Tuple[float, float, Optional[float]],
+    Tuple[Tuple[float, float, Optional[float]], Tuple[float, float, float]],
+]
+
 
 def tupleize(arg):
     if isinstance(arg, (tuple, list)):
@@ -31,7 +38,7 @@ def as_planes(objs):
     return [as_plane(obj) for obj in objs]
 
 
-def __plane_mul__(self, loc) -> Plane:
+def __plane_mul__(self, loc: Location) -> Plane:
     if not isinstance(loc, Location):
         raise RuntimeError(
             "Planes can only be multiplied with Locations to relocate them"

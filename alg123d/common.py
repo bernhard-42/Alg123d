@@ -1,4 +1,5 @@
 import build123d as bd
+from build123d.build_common import MM, CM, M, IN, FT
 from .direct_api import *
 
 __all__ = [
@@ -7,6 +8,11 @@ __all__ = [
     "PolarLocations",
     "GridLocations",
     "HexLocations",
+    "MM",
+    "CM",
+    "M",
+    "IN",
+    "FT",
 ]
 
 
@@ -48,7 +54,7 @@ class GridLocations(LocationList):
         y_spacing: float,
         x_count: int,
         y_count: int,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
         offset: VectorLike = (0, 0),
     ):
         super().__init__(
@@ -62,7 +68,7 @@ class HexLocations(LocationList):
         diagonal: float,
         x_count: int,
         y_count: int,
-        centered: tuple[bool, bool] = (True, True),
+        centered: Tuple[bool, bool] = (True, True),
         offset: VectorLike = (0, 0),
     ):
         super().__init__(bd.HexLocations(diagonal, x_count, y_count, centered, offset))

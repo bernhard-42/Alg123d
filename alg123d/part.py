@@ -33,7 +33,7 @@ class Box(AlgCompound):
         length: float,
         width: float,
         height: float,
-        centered: tuple[bool, bool, bool] = (True, True, True),
+        centered: Tuple[bool, bool, bool] = (True, True, True),
     ):
         params = dict(
             length=length,
@@ -50,7 +50,7 @@ class Cylinder(AlgCompound):
         radius: float,
         height: float,
         arc_size: float = 360,
-        centered: tuple[bool, bool, bool] = (True, True, True),
+        centered: Tuple[bool, bool, bool] = (True, True, True),
     ):
         params = dict(
             radius=radius,
@@ -68,7 +68,7 @@ class Cone(AlgCompound):
         top_radius: float,
         height: float,
         arc_size: float = 360,
-        centered: tuple[bool, bool, bool] = (True, True, True),
+        centered: Tuple[bool, bool, bool] = (True, True, True),
     ):
         params = dict(
             bottom_radius=bottom_radius,
@@ -87,7 +87,7 @@ class Sphere(AlgCompound):
         arc_size1: float = -90,
         arc_size2: float = 90,
         arc_size3: float = 360,
-        centered: tuple[bool, bool, bool] = (True, True, True),
+        centered: Tuple[bool, bool, bool] = (True, True, True),
     ):
         params = dict(
             radius=radius,
@@ -107,7 +107,7 @@ class Torus(AlgCompound):
         minor_start_angle: float = 0,
         minor_end_angle: float = 360,
         major_angle: float = 360,
-        centered: tuple[bool, bool, bool] = (True, True, True),
+        centered: Tuple[bool, bool, bool] = (True, True, True),
     ):
         params = dict(
             major_radius=major_radius,
