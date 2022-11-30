@@ -19,12 +19,12 @@ show(l)
 # PolarLine
 
 l = PolarLine((1, 1, 1), 2, direction=(-1, 1, 1))
-show(l)
+show(Box(2,2,2).edges(), l)
 
 # %%
 
 l = PolarLine((1, 1, 1), 2, angle=25)
-show(l)
+show(Box(2,2,2).edges(), l)
 
 # %%
 # Spline

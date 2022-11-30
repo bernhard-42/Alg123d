@@ -71,31 +71,32 @@ set_defaults(axes=True, axes0=True, transparent=False)
 
 # %%
 
-c = Circle(1) - Rectangle(2, 2) @ (1, 0) - Rectangle(2, 2) @ (0, 0.75)
+c = Circle(1) - Rectangle(2, 2) @ (0.75, 0) - Rectangle(2, 2) @ (0, 0.75)
 arc = c.edges()[0]
 
 s = SlotArc(arc, 0.1)
-show(s)
+show(Rectangle(2, 2).edges(), s)
 
 # %%
 
 s = SlotCenterToCenter(6, 1)
-show(s)
+show(Rectangle(8, 2).edges(), s)
 
 # %%
 
 s = SlotCenterToCenter(6, 1) @ Location((0, 0), 30)
-show(s)
+show(Rectangle(8, 2).edges(), s)
 
 # %%
 
 s = SlotCenterPoint((1, 1), (2, 0), 2)
-show(s)
+show((Rectangle(4, 4) @ (1, 1)).edges(), s)
+
 
 # %%
 
 s = SlotOverall(3, 1)
 
-show(s)
+show(Rectangle(3, 1).edges(), s)
 
 # %%

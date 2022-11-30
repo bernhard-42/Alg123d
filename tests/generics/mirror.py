@@ -26,8 +26,6 @@ show(a.edges(), b)
 
 # %%
 
-# %%
-
 a = Circle(1) @ (4, 2, 0)
 b = mirror(a, Plane.XZ)
 show(a.edges(), b)

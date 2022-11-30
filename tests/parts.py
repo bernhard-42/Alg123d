@@ -132,7 +132,7 @@ show(r)
 # %%
 
 s = Sphere(1) @ (0.9, 0.2, 0)
-sections = section(s, [Plane.XZ, Plane.ZY, Plane(Location((0, 1, 2), (60, 0, 0)))])
+sections = section(s, [Plane.XZ, Plane.ZY, as_plane(Location((0, 1, 2), (60, 0, 0)))])
 show(s, sections, transparent=True)
 
 
