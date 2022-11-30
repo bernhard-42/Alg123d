@@ -27,13 +27,11 @@ with $B^n \subset A^n$
 
 $+: A^n, A^n \rightarrow A^n$  with $a, b \rightarrow a + b$ , for $n=1,2,3$
     
-$a + b :=$ `a.fuse(b)`
+Implementation: $a + b :=$ `a.fuse(b)`
 
 $-: A^n \rightarrow A^n$ with $a \rightarrow -a$ , for $n=1, 2,3$ 
 
-$b := -a$  if `a.cut(b).wrapped == None and b.cut(a).wrapped == None`
-
-Note: The actual implementation does not implement the inverse of an AlgCompound, but defines `a + (-b) = a - b == a.cut(b)`
+Implementation: $a + (-b) = (-b) + a = a - b$ := `a.cut(b)` (implicit definition)
     
 **Abelian groups**
 
@@ -42,9 +40,9 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 **Intersect objects**
 
-$| : A^n, A^n \rightarrow A^n$ with $a, b \rightarrow a | b$ 
+$| : A^n, A^n \rightarrow A^n$ with $a, b \rightarrow a | b$  for $n=2,3$
 
-$b | a :=$ `a.intersect(b)` for $n=2,3$
+Implementation: $b | a :=$ `a.intersect(b)`
 
 Note: $a | b = (a + b) - (a - b) - (b - a)$
 
