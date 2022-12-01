@@ -141,15 +141,14 @@ show(s, sections, transparent=True)
 import build123d as bd
 
 with bd.BuildPart() as bp:
-    with bd.Locations(bd.Rotation(0, 180, 0)):
-        with bd.BuildSketch() as sk:
-            with bd.Locations((20, 0, 0)):
-                bd.Circle(2)
-        bd.Revolve(axis=bd.Axis.Y, revolution_arc=180)
-        with bd.BuildSketch():
-            bd.Rectangle(20, 4)
-        bd.Extrude(amount=22)
-        # bd.Extrude(until=bd.Until.NEXT)
+    with bd.BuildSketch() as sk:
+        with bd.Locations((20, 0, 0)):
+            bd.Circle(2)
+    bd.Revolve(axis=-bd.Axis.Y, revolution_arc=180)
+    with bd.BuildSketch():
+        bd.Rectangle(20, 4)
+    # bd.Extrude(amount=15)
+    bd.Extrude(until=bd.Until.NEXT)
 show(bp)
 # %%
 
