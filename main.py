@@ -1,4 +1,6 @@
 from alg123d import *
+from alg123d import Shortcuts as S
+
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
@@ -40,3 +42,5 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
 
 e = extrude(s, 0.3)
 show(e, reset_camera=False)
+
+# %%
