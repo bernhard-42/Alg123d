@@ -1,8 +1,50 @@
 # Alg123d
 
-## Classes
+## Overview
+### Classes
 
 `class AlgCompound(Compound)` with one additional property `a.dim in [1,2,3]`
+
+### Location handling
+
+Box at `origin = (0,0,0)` without rotation:
+
+```python
+b = Box(1,2,3)
+```
+
+Box at `origin = (0,1,0)` without rotation:
+
+```python
+b = Box(1,2,3) @ Location((0,1,0))
+b = Box(1,2,3) @ (0,1,0)             # shortcut
+```
+
+Box at `origin = (0,0,0)` and `rotation = (0, 100, 45)`:
+
+```python
+b = Box(1,2,3) @ Rotation((0, 100, 45))
+```
+
+Box at `origin = (0,1,0)` and `rotation = (0, 100, 45)`:
+
+```python
+b = Box(1,2,3) @ Location((0,1,0), (0,100,45))
+```
+
+Box on plane `Plane.YZ`:
+
+```python
+b = Box(1,2,3) @ Plane.XZ
+```
+
+Box on plane `Plane.YZ` rotated around `X` by 45°:
+
+```python
+b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
+```
+
+
 
 ## Algebraic definition
 
