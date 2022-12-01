@@ -36,7 +36,7 @@ din = fillet(din, outside_vertices, radius=fillet_radius + thickness)
 
 rail = extrude(din, rail_length)
 
-plane = as_plane(S.max_face(rail, Axis.Y))
+plane = Plane(S.max_face(rail, Axis.Y))
 
 slot_faces = Empty2()
 for loc in GridLocations(0, slot_pitch, 1, rail_length // slot_pitch - 1):

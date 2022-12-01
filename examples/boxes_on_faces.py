@@ -1,7 +1,8 @@
 from alg123d import *
+from alg123d import Shortcuts as S
 
 b = Box(3, 3, 3)
-for plane in as_planes(b.faces()):
+for plane in S.planes(b.faces()):
     b += Box(1, 2, 0.1) @ (plane * Rotation(0, 0, 45))
 
 if "show_object" in locals():

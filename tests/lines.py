@@ -1,3 +1,4 @@
+import math
 from alg123d import *
 from cq_vscode import show, set_defaults
 
@@ -18,13 +19,13 @@ show(l)
 # %%
 # PolarLine
 
-l = PolarLine((1, 1, 1), 2, direction=(-1, 1, 1))
-show(Box(2,2,2).edges(), l)
+l = PolarLine((1, 1, 1), math.sqrt(3), direction=(-1, -1, -1))
+show(Box(1, 1, 1, centered=(False, False, False)), l, transparent=True)
 
 # %%
 
-l = PolarLine((1, 1, 1), 2, angle=25)
-show(Box(2,2,2).edges(), l)
+l = PolarLine((1, 1, 1), math.sqrt(2), angle=225)
+show(Box(1, 1, 1, centered=(False, False, False)), l, transparent=True)
 
 # %%
 # Spline
@@ -54,7 +55,7 @@ show(l)
 l = EllipticalCenterArc((0, 0, 0), 1, 2, 15, 260, AngularDirection.COUNTER_CLOCKWISE)
 show(l)
 
-# %% 
+# %%
 
 p1, p2, p3 = (1, 2, 3), (1, 1, 1), (2, 0, 0)
 v1, v2, v3 = Vertex(*p1), Vertex(*p2), Vertex(*p3)

@@ -15,7 +15,7 @@ show(a)
 # %%
 
 a = Box(1, 2, 3)
-wp = as_plane(S.max_face(a))
+wp = Plane(S.max_face(a))
 for loc in Locations((0.2, 0.2), (-0.2, -0.2)):
     b = CounterBore(a, 0.1, 0.2, 0.1)
     a -= b @ (wp * loc)
@@ -25,7 +25,7 @@ show(a, reset_camera=False)
 # %%
 
 a = Box(1, 2, 3) + Box(1, 1, 3) @ (3, 0)
-for wp in as_planes(S.max_faces(a)):
+for wp in S.planes(S.max_faces(a)):
     for loc in Locations((0.2, 0.2), (-0.2, -0.2)):
         b = CounterSink(a, 0.1, 0.2)
         a -= b @ (wp * loc)
@@ -35,7 +35,7 @@ show(a, reset_camera=False, transparent=True)
 # %%
 
 a = Box(1, 2, 3) + Box(1, 1, 3) @ (3, 0)
-for wp in as_planes(S.max_faces(a, -Axis.Y)):
+for wp in S.planes(S.max_faces(a, -Axis.Y)):
     for loc in Locations((0.2, 0.2), (-0.2, -0.2)):
         b = CounterSink(a, 0.1, 0.2)
         a -= b @ (wp * loc)
@@ -45,7 +45,7 @@ show(a, reset_camera=False, transparent=True)
 # %%
 
 a = Box(1, 2, 3) + Box(1, 1, 3) @ (3, 0)
-for wp in as_planes(S.max_faces(a)):
+for wp in S.planes(S.min_faces(a)):
     for loc in Locations((0.2, 0.2), (-0.2, -0.2)):
         b = CounterBore(a, 0.1, 0.2, 0.1)
         a -= b @ (wp * loc)
