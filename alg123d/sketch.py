@@ -20,16 +20,9 @@ __all__ = [
 ]
 
 
-def make_face(objs: Union[AlgCompound, List[Edge]]):
-    if isinstance(objs, AlgCompound) and objs.dim == 1:
-        edges = objs.edges()
-    elif isinstance(objs, (tuple, list)):
-        edges = objs
-    else:
-        edges = [objs]
-
-    return AlgCompound.make_compound([Face.make_from_wires(*Wire.combine(edges))], 2)
-
+#
+# Objects
+#
 
 class Empty2(AlgCompound):
     def __init__(self):
@@ -204,3 +197,19 @@ class SlotOverall(AlgCompound):
             height=height,
         )
         self.create_sketch(bd.SlotOverall, params=params)
+
+
+#
+# Functions
+#
+
+
+def make_face(objs: Union[AlgCompound, List[Edge]]):
+    if isinstance(objs, AlgCompound) and objs.dim == 1:
+        edges = objs.edges()
+    elif isinstance(objs, (tuple, list)):
+        edges = objs
+    else:
+        edges = [objs]
+
+    return AlgCompound.make_compound([Face.make_from_wires(*Wire.combine(edges))], 2)
