@@ -20,5 +20,4 @@ def __neg__axis__(self):
     return self.reverse()
 
 
-# Plane.__mul__ = __plane_mul__
 Axis.__neg__ = __neg__axis__
