@@ -57,24 +57,6 @@ class AlgCompound(Compound):
             self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
         self.dim = 3
 
-    # def at(self, *objs: LocationLike):
-    #     if len(objs) == 1:
-    #         obj = objs[0]
-    #         if isinstance(obj, Location):
-    #             loc = obj
-    #         elif isinstance(obj, Plane):
-    #             loc = obj.to_location()
-    #         elif isinstance(obj, tuple):
-    #             loc = Location(obj)
-    #         else:
-    #             raise TypeError(f"{type(obj)} is not a valid location")
-    #     elif len(objs) == 2 and all([isinstance(o, tuple)] for o in objs):
-    #         loc = Location(*objs)
-    #     else:
-    #         raise TypeError("Only one ot two args expected")
-
-    #     return self.located(loc)
-
     def _place(self, mode: Mode, obj: AlgCompound, at: Location = None):
         if at is None:
             located_obj = obj
