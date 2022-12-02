@@ -134,27 +134,15 @@ s = Sphere(1) @ (0.9, 0.2, 0)
 sections = section(s, [Plane.XZ, Plane.ZY, Plane(Location((0, 1, 2), (60, 0, 0)))])
 show(s, sections, transparent=True)
 
-
-# %%
-
-import build123d as bd
-
-with bd.BuildPart() as bp:
-    with bd.BuildSketch() as sk:
-        with bd.Locations((20, 0, 0)):
-            bd.Circle(2)
-    bd.Revolve(axis=-bd.Axis.Y, revolution_arc=180)
-    with bd.BuildSketch():
-        bd.Rectangle(20, 4)
-    # bd.Extrude(amount=15)
-    bd.Extrude(until=bd.Until.NEXT)
-show(bp)
 # %%
 
 c = Circle(2) @ (20, 0, 0)
 a = revolve(c, Axis.Y, 180) @ Rotation(0, 180, 0)
-r = Rectangle(20, 4)
-a += extrude(r, 22)
-show(r, a)
+
+r = extrude(Rectangle(20, 4), 22)
+a += AlgCompound((r - a).solids().sort_by()[0], 3)
+
+show(a)
 # %%
+
 # %%

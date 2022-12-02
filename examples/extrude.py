@@ -66,7 +66,9 @@ ribs += Rectangle(0.5 * MM, 17.5 * MM)
 ribs += Circle(radius=5.51 * MM / 2)
 
 # Extrude the mount and ribs to the key cap underside
-key_cap += extrude(ribs @ (0, 0, 4 * MM), until_part=key_cap, until=Until.NEXT)
+# key_cap += extrude(ribs @ (0, 0, 4 * MM), until_part=key_cap, until=Until.NEXT)
+ribs = extrude(ribs @ (0, 0, 4 * MM), 10 * MM)
+key_cap += AlgCompound((ribs - key_cap).solids().sort_by()[0], 3)
 
 # Find the face on the bottom of the ribs to build onto
 rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
