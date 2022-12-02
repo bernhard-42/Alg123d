@@ -1,5 +1,6 @@
 from math import sin, pi
 from alg123d import *
+from alg123d import Shortcuts as S
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
@@ -129,7 +130,7 @@ show(s, sections, transparent=True)
 c = Circle(2) @ (20, 0, 0)
 a = revolve(c, -Axis.Y, 180)
 r = extrude(Rectangle(20, 4), 17.5)
-a += AlgCompound((r - a).solids().sort_by()[0], 3)
+a += S.min_solid(r - a, wrapped=True)
 
 show(a)
 # %%

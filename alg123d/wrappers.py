@@ -14,9 +14,19 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
 
 class AlgCompound(Compound):
-    def __init__(self, compound=None, dim: int = None):
-        self.wrapped = None if compound is None else compound.wrapped
-        self.dim = dim
+    def __init__(self, obj: Union[Compound, Solid, Face, Edge] = None, dim: int = None):
+        if isinstance(obj, Solid):
+            self.dim = 3
+            self.wrapped = Compound.make_compound([obj]).wrapped
+        elif isinstance(obj, Face):
+            self.dim = 2
+            self.wrapped = Compound.make_compound([obj]).wrapped
+        elif isinstance(obj, Edge):
+            self.dim = 1
+            self.wrapped = Compound.make_compound([obj]).wrapped
+        else:
+            self.dim = dim
+            self.wrapped = None if obj is None else obj.wrapped
 
     @classmethod
     def make_compound(cls, objs: Shape, dim):

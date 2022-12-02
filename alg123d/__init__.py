@@ -24,12 +24,14 @@ class Shortcuts:
         return [Plane(obj) for obj in objs]
 
     @staticmethod
-    def min_solid(a: Compound, axis=Axis.Z) -> Solid:
-        return a.solids().sort_by(axis)[0]
+    def min_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Solid]:
+        obj = a.solids().sort_by(axis)[0]
+        return AlgCompound(obj) if wrapped else obj
 
     @staticmethod
-    def max_solid(a: Compound, axis=Axis.Z) -> Solid:
-        return a.solids().sort_by(axis)[-1]
+    def max_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Solid]:
+        obj = a.solids().sort_by(axis)[-1]
+        return AlgCompound(obj) if wrapped else obj
 
     @staticmethod
     def min_solids(a: Compound, axis=Axis.Z) -> ShapeList:
@@ -40,12 +42,14 @@ class Shortcuts:
         return a.solids().group_by(axis)[-1]
 
     @staticmethod
-    def min_face(a: Compound, axis=Axis.Z) -> Face:
-        return a.faces().sort_by(axis)[0]
+    def min_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Face]:
+        obj = a.faces().sort_by(axis)[0]
+        return AlgCompound(obj) if wrapped else obj
 
     @staticmethod
-    def max_face(a: Compound, axis=Axis.Z) -> Face:
-        return a.faces().sort_by(axis)[-1]
+    def max_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Face]:
+        obj = a.faces().sort_by(axis)[-1]
+        return AlgCompound(obj) if wrapped else obj
 
     @staticmethod
     def min_faces(a: Compound, axis=Axis.Z) -> ShapeList:
@@ -56,12 +60,14 @@ class Shortcuts:
         return a.faces().group_by(axis)[-1]
 
     @staticmethod
-    def min_edge(a: Compound, axis=Axis.Z) -> Edge:
-        return a.edges().sort_by(axis)[0]
+    def min_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Edge]:
+        obj = a.edges().sort_by(axis)[0]
+        return AlgCompound(obj) if wrapped else obj
 
     @staticmethod
-    def max_edge(a: Compound, axis=Axis.Z) -> Edge:
-        return a.edges().sort_by(axis)[-1]
+    def max_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Edge]:
+        obj = a.edges().sort_by(axis)[-1]
+        return AlgCompound(obj) if wrapped else obj
 
     @staticmethod
     def min_edges(a: Compound, axis=Axis.Z) -> ShapeList:
