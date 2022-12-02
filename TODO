@@ -1,4 +1,5 @@
+1 Move tupelize into utils.py
+2 Check use of LocationLike
 1 Last object
-2 Add old extrude for the time being
 2 Line: Helix broken?
 3 Generic: BoundingBox (?)
