@@ -70,7 +70,6 @@ key_cap += extrude(ribs @ (0, 0, 4 * MM), until_part=key_cap, until=Until.NEXT)
 
 # Find the face on the bottom of the ribs to build onto
 rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
-show(key_cap, rib_bottom)
 
 
 # Add the switch socket

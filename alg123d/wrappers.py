@@ -57,36 +57,16 @@ class AlgCompound(Compound):
             self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
         self.dim = 3
 
-    def _place(self, mode: Mode, obj: AlgCompound, at: Location = None):
+    def _place(self, mode: Mode, obj: AlgCompound):
         if not (obj.dim == 0 or self.dim == 0 or self.dim == obj.dim):
             raise RuntimeError(
                 f"Cannot combine obercts of different dimensionality: {self.dim} and {obj.dim} "
             )
 
-        if obj.dim == 0:
-            located_obj = obj
-            loc = Location()
-
-        elif at is None:
-            located_obj = obj
-            loc = obj.location
-
-        else:
-            if isinstance(at, Location):
-                loc = at
-            elif isinstance(at, Plane):
-                loc = at.to_location()
-            elif isinstance(at, tuple):
-                loc = Location(at)
-            else:
-                raise ValueError(f"{at } is no location or plane")
-
-            located_obj = obj.located(loc)
-
         if self.dim == 0:  # Cover addition of Empty with another object
             if mode == Mode.ADD:
-                compound = located_obj
-                self.dim = located_obj.dim
+                compound = obj
+                self.dim = obj.dim  # take over dimensionality of other operand
             else:
                 raise RuntimeError("Can only add to empty object")
         elif obj.dim == 0:  # Cover operation with Empty object
@@ -94,16 +74,16 @@ class AlgCompound(Compound):
         else:
             if self.dim == 1:
                 if mode == Mode.ADD:
-                    compound = self.fuse(located_obj).clean()
+                    compound = self.fuse(obj).clean()
                 else:
                     raise RuntimeError("Lines can only be added")
             else:
                 if mode == Mode.ADD:
-                    compound = self.fuse(located_obj).clean()
+                    compound = self.fuse(obj).clean()
                 elif mode == Mode.SUBTRACT:
-                    compound = self.cut(located_obj).clean()
+                    compound = self.cut(obj).clean()
                 elif mode == Mode.INTERSECT:
-                    compound = self.intersect(located_obj).clean()
+                    compound = self.intersect(obj).clean()
 
         return AlgCompound(compound, self.dim)
 
