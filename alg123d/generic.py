@@ -3,7 +3,7 @@ import build123d as bd
 from .direct_api import *
 from .wrappers import create_compound, AlgCompound
 
-__all__ = ["tupleize", "chamfer", "fillet", "mirror", "offset", "scale", "split"]
+__all__ = ["chamfer", "fillet", "mirror", "offset", "scale", "split"]
 
 
 #
