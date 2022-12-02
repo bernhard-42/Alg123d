@@ -4,7 +4,6 @@ from .wrappers import AlgCompound, create_compound
 from .direct_api import *
 
 __all__ = [
-    "Empty3",
     "Box",
     "Cylinder",
     "Cone",
@@ -24,11 +23,6 @@ __all__ = [
 #
 # Objects
 #
-
-
-class Empty3(AlgCompound):
-    def __init__(self):
-        super().__init__(dim=3)
 
 
 class Box(AlgCompound):

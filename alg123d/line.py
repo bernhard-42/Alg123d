@@ -4,7 +4,6 @@ from .wrappers import AlgCompound
 from .direct_api import *
 
 __all__ = [
-    "Empty1",
     "Line",
     "Bezier",
     "PolarLine",
@@ -23,11 +22,6 @@ __all__ = [
 #
 # Objects
 #
-
-
-class Empty1(AlgCompound):
-    def __init__(self):
-        super().__init__(dim=1)
 
 
 class Line(AlgCompound):

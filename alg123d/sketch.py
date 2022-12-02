@@ -4,7 +4,6 @@ from .wrappers import AlgCompound
 from .direct_api import *
 
 __all__ = [
-    "Empty2",
     "Circle",
     "Ellipse",
     "Rectangle",
@@ -23,11 +22,6 @@ __all__ = [
 #
 # Objects
 #
-
-
-class Empty2(AlgCompound):
-    def __init__(self):
-        super().__init__(dim=2)
 
 
 class Circle(AlgCompound):

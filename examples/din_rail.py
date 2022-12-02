@@ -38,10 +38,10 @@ rail = extrude(din, rail_length)
 
 plane = Plane(S.max_face(rail, Axis.Y))
 
-slot_faces = Empty2()
+slot_faces = Empty()
 for loc in GridLocations(0, slot_pitch, 1, rail_length // slot_pitch - 1):
     slot_faces += SlotOverall(slot_length, slot_width) @ (plane * loc)
-
+show(rail, slot_faces)
 slots = extrude(slot_faces, -height)
 
 rail -= slots

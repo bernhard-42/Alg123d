@@ -3,10 +3,10 @@ from __future__ import annotations
 import build123d as bd
 from .direct_api import *
 
+__all__ = ["Empty", "AlgCompound", "create_compound"]
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
-__all__ = ["AlgCompound", "create_compound"]
 
 #
 # Algebra operations enhanced Compound
@@ -58,9 +58,19 @@ class AlgCompound(Compound):
         self.dim = 3
 
     def _place(self, mode: Mode, obj: AlgCompound, at: Location = None):
-        if at is None:
+        if not (obj.dim == 0 or self.dim == 0 or self.dim == obj.dim):
+            raise RuntimeError(
+                f"Cannot combine obercts of different dimensionality: {self.dim} and {obj.dim} "
+            )
+
+        if obj.dim == 0:
+            located_obj = obj
+            loc = Location()
+
+        elif at is None:
             located_obj = obj
             loc = obj.location
+
         else:
             if isinstance(at, Location):
                 loc = at
@@ -73,11 +83,14 @@ class AlgCompound(Compound):
 
             located_obj = obj.located(loc)
 
-        if self.wrapped is None:
+        if self.dim == 0:  # Cover addition of Empty with another object
             if mode == Mode.ADD:
                 compound = located_obj
+                self.dim = located_obj.dim
             else:
                 raise RuntimeError("Can only add to empty object")
+        elif obj.dim == 0:  # Cover operation with Empty object
+            compound = self
         else:
             if self.dim == 1:
                 if mode == Mode.ADD:
@@ -136,6 +149,11 @@ class AlgCompound(Compound):
 
         loc_str = f"position={r2(self.location.position)}, rotation={r2(self.location.orientation)}"
         return f"obj={self.__class__.__name__}; loc=({loc_str}); dim={self.dim}"
+
+
+class Empty(AlgCompound):
+    def __init__(self):
+        super().__init__(dim=0)
 
 
 #

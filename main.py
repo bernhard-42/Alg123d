@@ -5,13 +5,12 @@ from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
-
 # %%
 pts = [(0, 1), (1, 0), (1, 1), (0, 1)]
 show(Polygon(pts))
 
-# %%
 plane = Plane.ZX
+# %%
 
 cyl = Cylinder(1, 0.5)
 box = Box(0.3, 0.3, 0.5)
@@ -32,7 +31,7 @@ show(p, p.faces().group_by(Axis.Y)[0], transparent=True)
 
 locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s = Empty3()
+s = Empty()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = plane * outer_loc * locs[i]
     s += Circle(1) @ c_plane
@@ -42,5 +41,35 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
 
 e = extrude(s, 0.3)
 show(e, reset_camera=False)
+
+# %%
+
+show(Empty() + Box(1, 2, 3))
+# %%
+
+show(Box(1, 2, 3) + Empty())
+
+# %%
+
+show(Box(2, 3, 1) - Empty())
+
+# %%
+
+show(Box(3, 2, 1) & Empty())
+
+# %%
+
+show(Empty() + Rectangle(1, 1))
+# %%
+
+show(Rectangle(1, 2) + Empty())
+
+# %%
+
+show(Rectangle(2, 2) - Empty())
+
+# %%
+
+show(Rectangle(2, 1) & Empty())
 
 # %%

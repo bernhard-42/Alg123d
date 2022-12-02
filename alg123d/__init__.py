@@ -3,6 +3,7 @@ from build123d.direct_api import *
 from build123d.build_enums import *
 
 from .direct_api import *
+from .wrappers import AlgCompound, Empty
 from .common import *
 from .generic import *
 from .part import *

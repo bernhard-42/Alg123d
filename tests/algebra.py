@@ -25,7 +25,7 @@ plane = Plane.ZX
 
 rotations = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s = Empty3()
+s = Empty()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     # on plane, located to grid position, and finally rotated
     c_plane = plane * outer_loc * rotations[i]
@@ -46,5 +46,45 @@ a = revolve(c, -Axis.Y, 180)
 r = Rectangle(20, 4)
 e = extrude(r, until_part=a, until=Until.NEXT)
 show(e)
+
+# %%
+
+# %%
+
+show(Empty() + Box(1, 1, 1))
+# %%
+
+show(Box(1, 2, 3) + Empty())
+
+# %%
+
+show(Box(2, 3, 1) - Empty())
+
+# %%
+
+show(Box(3, 2, 1) & Empty())
+
+# %%
+
+show(Empty() + Rectangle(1, 1))
+# %%
+
+show(Rectangle(1, 2) + Empty())
+
+# %%
+
+show(Rectangle(2, 2) - Empty())
+
+# %%
+
+show(Rectangle(2, 1) & Empty())
+
+# %%
+
+show(Empty() + RegularPolygon(2, 3))
+
+# %%
+
+show(RegularPolygon(2, 4) + Empty())
 
 # %%
