@@ -14,10 +14,3 @@ def tupleize(arg):
         return tuple(arg)
     else:
         return (arg,)
-
-
-def __neg__axis__(self):
-    return self.reverse()
-
-
-Axis.__neg__ = __neg__axis__
