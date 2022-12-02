@@ -127,8 +127,11 @@ class AlgCompound(Compound):
         def r2(v):
             return tuple([round(e, 2) for e in v])
 
-        loc_str = f"position={r2(self.location.position)}, rotation={r2(self.location.orientation)}"
-        return f"obj={self.__class__.__name__}; loc=({loc_str}); dim={self.dim}"
+        if self.dim == 0:
+            loc_str = "None"
+        else:
+            loc_str = f"(position={r2(self.location.position)}, rotation={r2(self.location.orientation)})"
+        return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
 
 
 class Empty(AlgCompound):
