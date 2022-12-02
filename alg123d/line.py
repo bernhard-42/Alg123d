@@ -20,6 +20,10 @@ __all__ = [
     "JernArc",
 ]
 
+#
+# Objects
+#
+
 
 class Empty1(AlgCompound):
     def __init__(self):

@@ -54,9 +54,12 @@ class GridLocations(LocationList):
         y_spacing: float,
         x_count: int,
         y_count: int,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
         offset: VectorLike = (0, 0),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         super().__init__(
             bd.GridLocations(x_spacing, y_spacing, x_count, y_count, centered, offset)
         )
@@ -68,7 +71,10 @@ class HexLocations(LocationList):
         diagonal: float,
         x_count: int,
         y_count: int,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
         offset: VectorLike = (0, 0),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         super().__init__(bd.HexLocations(diagonal, x_count, y_count, centered, offset))

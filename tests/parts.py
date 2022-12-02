@@ -3,7 +3,6 @@ from alg123d import *
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
-centered = (False, False, False)
 
 # %%
 
@@ -21,7 +20,7 @@ show(Box(1, 2, 3))
 
 # %%
 
-show(Box(1, 2, 3, centered=centered))
+show(Box(1, 2, 3, centered=False))
 
 # %%
 
@@ -29,7 +28,7 @@ show(Cylinder(1, 2))
 
 # %%
 
-show(Cylinder(1, 2, centered=centered))
+show(Cylinder(1, 2, centered=False))
 
 # %%
 
@@ -37,7 +36,7 @@ show(Cylinder(1, 2).edges(), Cylinder(1, 2, 75))
 
 # %%
 
-show(Cylinder(1, 2, centered=centered).edges(), Cylinder(1, 2, 75, centered=centered))
+show(Cylinder(1, 2, centered=False).edges(), Cylinder(1, 2, 75, centered=False))
 
 # %%
 
@@ -53,7 +52,7 @@ show(Cone(1, 0, 2))
 
 # %%
 
-show(Cone(1, 0, 2, centered=centered))
+show(Cone(1, 0, 2, centered=False))
 
 # %%
 
@@ -66,8 +65,8 @@ show(Sphere(1, arc_size2=45, arc_size3=75))
 # %%
 
 show(
-    Sphere(1, centered=centered).faces(),
-    Sphere(1, arc_size2=45, arc_size3=75, centered=centered),
+    Sphere(1, centered=False).faces(),
+    Sphere(1, arc_size2=45, arc_size3=75, centered=False),
     transparent=True,
 )
 
@@ -77,7 +76,7 @@ show(Torus(1, 0.2))
 
 # %%
 
-show(Torus(1, 0.2, centered=centered))
+show(Torus(1, 0.2, centered=False))
 
 # %%
 
@@ -87,7 +86,7 @@ show(
 
 # %%
 
-show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=centered).edges())
+show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=False).edges())
 
 # %%
 

@@ -24,6 +24,7 @@ __all__ = [
 # Objects
 #
 
+
 class Empty2(AlgCompound):
     def __init__(self):
         super().__init__(dim=2)
@@ -33,8 +34,11 @@ class Circle(AlgCompound):
     def __init__(
         self,
         radius: float,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         params = dict(
             radius=radius,
             centered=centered,
@@ -47,8 +51,11 @@ class Ellipse(AlgCompound):
         self,
         x_radius: float,
         y_radius: float,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         params = dict(
             x_radius=x_radius,
             y_radius=y_radius,
@@ -62,8 +69,11 @@ class Rectangle(AlgCompound):
         self,
         width: float,
         height: float,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         params = dict(
             width=width,
             height=height,
@@ -76,8 +86,11 @@ class Polygon(AlgCompound):
     def __init__(
         self,
         pts: List[VectorLike],
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         params = dict(
             centered=centered,
         )
@@ -89,8 +102,11 @@ class RegularPolygon(AlgCompound):
         self,
         radius: float,
         side_count: int,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         params = dict(
             radius=radius,
             side_count=side_count,
@@ -133,8 +149,11 @@ class Trapezoid(AlgCompound):
         height: float,
         left_side_angle: float,
         right_side_angle: float = None,
-        centered: Tuple[bool, bool] = (True, True),
+        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 2
+
         params = dict(
             width=width,
             height=height,

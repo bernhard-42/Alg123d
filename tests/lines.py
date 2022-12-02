@@ -20,12 +20,12 @@ show(l)
 # PolarLine
 
 l = PolarLine((1, 1, 1), math.sqrt(3), direction=(-1, -1, -1))
-show(Box(1, 1, 1, centered=(False, False, False)), l, transparent=True)
+show(Box(1, 1, 1, centered=False), l, transparent=True)
 
 # %%
 
 l = PolarLine((1, 1, 1), math.sqrt(2), angle=225)
-show(Box(1, 1, 1, centered=(False, False, False)), l, transparent=True)
+show(Box(1, 1, 1, centered=False), l, transparent=True)
 
 # %%
 # Spline

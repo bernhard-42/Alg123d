@@ -37,8 +37,11 @@ class Box(AlgCompound):
         length: float,
         width: float,
         height: float,
-        centered: Tuple[bool, bool, bool] = (True, True, True),
+        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 3
+
         params = dict(
             length=length,
             width=width,
@@ -54,8 +57,11 @@ class Cylinder(AlgCompound):
         radius: float,
         height: float,
         arc_size: float = 360,
-        centered: Tuple[bool, bool, bool] = (True, True, True),
+        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 3
+
         params = dict(
             radius=radius,
             height=height,
@@ -72,8 +78,11 @@ class Cone(AlgCompound):
         top_radius: float,
         height: float,
         arc_size: float = 360,
-        centered: Tuple[bool, bool, bool] = (True, True, True),
+        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 3
+
         params = dict(
             bottom_radius=bottom_radius,
             top_radius=top_radius,
@@ -91,8 +100,11 @@ class Sphere(AlgCompound):
         arc_size1: float = -90,
         arc_size2: float = 90,
         arc_size3: float = 360,
-        centered: Tuple[bool, bool, bool] = (True, True, True),
+        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 3
+
         params = dict(
             radius=radius,
             arc_size1=arc_size1,
@@ -111,8 +123,11 @@ class Torus(AlgCompound):
         minor_start_angle: float = 0,
         minor_end_angle: float = 360,
         major_angle: float = 360,
-        centered: Tuple[bool, bool, bool] = (True, True, True),
+        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
     ):
+        if isinstance(centered, bool):
+            centered = (centered,) * 3
+
         params = dict(
             major_radius=major_radius,
             minor_radius=minor_radius,

@@ -1,4 +1,6 @@
-1 Add old extrude for the time being
-1 Line: Helix broken?
-2 Generic: BoundingBox (?)
+1 Can there be one Empty with dim=0?
+1 Remove "at" param from _place
 2 Last object
+3 Add old extrude for the time being
+3 Line: Helix broken?
+4 Generic: BoundingBox (?)
