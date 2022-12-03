@@ -5,9 +5,14 @@ from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
-r = Rectangle(1, 2)
-e = extrude(r, 0.1, both=True)
-show(e)
+a = Box(1, 2, 3)
+l, f = a.edges(), a.faces()
+a -= CounterBore(a, 0.2, 0.3, 0.3) @ Plane(S.max_face(a))
+
+new_edges = S.diff(l, a.edges())
+new_faces = S.diff(f, a.faces())
+show(a, *new_edges, *new_faces, transparent=True)
+
 # %%
 
 plan = Rectangle(18 * MM, 18 * MM)
