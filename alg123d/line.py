@@ -78,19 +78,17 @@ class Helix(AlgCompound):
         pitch: float,
         height: float,
         radius: float,
-        center: VectorLike = (0, 0, 0),
         direction: VectorLike = (0, 0, 1),
         cone_angle: float = 0,
-        lefhand: bool = False,
+        lefthand: bool = False,
     ):
         params = dict(
             pitch=pitch,
             height=height,
             radius=radius,
-            center=center,
             direction=direction,
             cone_angle=cone_angle,
-            lefhand=lefhand,
+            lefhand=lefthand,
         )
         self.create_line(bd.Helix, params=params)
 

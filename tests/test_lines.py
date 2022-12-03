@@ -47,8 +47,9 @@ show(l)
 # %%
 # Helix
 
-l = Helix(75, 150, 15, center=(75, 40, 15), direction=(1, 0, 0))
+l = Helix(75, 150, 15, lefthand=True)
 show(l)
+
 # %%
 # EllipticalCenterArc
 
