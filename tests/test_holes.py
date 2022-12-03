@@ -1,5 +1,5 @@
 from alg123d import *
-from alg123d import Shortcuts as S
+from alg123d.utils import Shortcuts as S
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=True)

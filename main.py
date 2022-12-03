@@ -42,7 +42,8 @@ socket -= Rectangle(4.1 * MM, 1.17 * MM)
 socket -= Rectangle(1.17 * MM, 4.1 * MM)
 key_cap += extrude(socket @ plane, amount=3.5 * MM)
 
-show(key_cap)
+show(key_cap, transparent=True)
+
 # %%
 pts = [(0, 1), (1, 0), (1, 1), (0, 1)]
 show(Polygon(pts))
@@ -82,7 +83,7 @@ show(e, reset_camera=False)
 
 # %%
 
-show(Empty() + Box(1, 2, 3))
+show(Empty() + Box(1, 1, 1))
 # %%
 
 show(Box(1, 2, 3) + Empty())

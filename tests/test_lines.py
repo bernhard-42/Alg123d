@@ -60,7 +60,6 @@ show(l)
 p1, p2, p3 = (1, 2, 3), (1, 1, 1), (2, 0, 0)
 v1, v2, v3 = Vertex(*p1), Vertex(*p2), Vertex(*p3)
 
-# %%
 # RadiusArc
 
 l = RadiusArc(p1, p2, 1.2)
