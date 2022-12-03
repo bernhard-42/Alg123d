@@ -1,5 +1,5 @@
 from alg123d import *
-from alg123d import Shortcuts as S
+from alg123d.utils import Shortcuts as S
 
 from cq_vscode import show, set_defaults
 
@@ -31,7 +31,7 @@ ribs += Rectangle(0.5 * MM, 17.5 * MM)
 ribs += Circle(radius=5.51 * MM / 2)
 
 ribs = extrude(ribs @ (0, 0, 4), 10)
-key_cap += AlgCompound((ribs - key_cap).solids().sort_by()[0], 3)
+key_cap += S.min_solid(ribs - key_cap, wrapped=True)
 
 # Find the face on the bottom of the ribs to build onto
 rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
