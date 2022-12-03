@@ -1,4 +1,5 @@
 from alg123d import *
+from alg123d.utils import Shortcuts as S
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
@@ -40,12 +41,13 @@ show(e)
 
 # %%
 
-plane = Plane((20, 0, 0))
-c = Circle(2) @ plane
+
+c = Circle(2) @ (20, 0, 0)
 a = revolve(c, -Axis.Y, 180)
-r = Rectangle(20, 4)
-e = extrude(r, until_part=a, until=Until.NEXT)
-show(e)
+r = extrude(Rectangle(20, 4), 17.5)
+a += S.min_solid(r - a, wrapped=True)
+
+show(a)
 
 # %%
 

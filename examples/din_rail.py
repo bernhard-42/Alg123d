@@ -1,5 +1,5 @@
 from alg123d import *
-from alg123d import Shortcuts as S
+from alg123d.utils import Shortcuts as S
 
 # 35x7.5mm DIN Rail Dimensions
 overall_width, top_width, height, thickness, fillet_radius = 35, 27, 7.5, 1, 0.8

@@ -215,48 +215,17 @@ class Bore(AlgCompound):
 def extrude(
     to_extrude: Compound,
     amount: float = None,
-    until: Until = None,
-    until_part: Compound = None,
     both: bool = False,
     taper: float = 0.0,
-    plane=None,
 ):
-    with bd.BuildPart() as ctx:
-        # store to_extrude's faces in context
-        ctx.pending_faces = (
-            [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
-        )
-        if plane is None:
-            ctx.pending_face_planes = [
-                Plane(face.to_pln()) for face in ctx.pending_faces
-            ]
-        else:
-            ctx.pending_face_planes = [plane]
-
-        if len(ctx.pending_faces) == 0:
-            raise RuntimeError(f"No faces found in {to_extrude}")
-
-        if until_part is not None:
-            ctx._add_to_context(until_part)
-
-        compound = bd.Extrude(
-            amount=amount,
-            until=until,
-            both=both,
-            taper=taper,
-            mode=Mode.PRIVATE,
-        )
-
-    return AlgCompound(compound, 3)
-
-    # faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
-    # return create_compound(
-    #     bd.Extrude,
-    #     part=until_part,
-    #     faces=faces,
-    #     planes=[Plane(face.to_pln()) for face in faces],
-    #     params=dict(amount=amount, both=both, taper=taper),
-    # )
+    faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
+    return create_compound(
+        bd.Extrude,
+        dim=3,
+        faces=faces,
+        planes=[Plane(face) for face in faces],
+        params=dict(amount=amount, both=both, taper=taper),
+    )
 
 
 def loft(sections: List[AlgCompound | Face], ruled: bool = False):

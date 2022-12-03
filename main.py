@@ -5,7 +5,9 @@ from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
-
+r = Rectangle(1, 2)
+e = extrude(r, 0.1, both=True)
+show(e)
 # %%
 
 plan = Rectangle(18 * MM, 18 * MM)

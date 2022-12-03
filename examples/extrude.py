@@ -1,5 +1,5 @@
 from alg123d import *
-from alg123d import Shortcuts as S
+from alg123d.utils import Shortcuts as S
 
 # simple
 
@@ -36,9 +36,7 @@ for loc in S.planes(single_multiple.faces()):
 # Non-planar surface
 non_planar = Cylinder(10, 20, centered=(True, False, True)) @ Rotation(90, 0, 0)
 non_planar &= Box(10, 10, 10, centered=(True, True, False))
-non_planar = extrude(
-    S.max_face(non_planar, -Axis.Z), amount=2, plane=Plane(non_planar.location)
-)
+non_planar = extrude(S.min_face(non_planar), 2)
 
 # Taper Extrude and Extrude to "next" while creating a Cherry MX key cap
 # See: https://www.cherrymx.de/en/dev.html

@@ -1,5 +1,5 @@
 from alg123d import *
-from alg123d import Shortcuts as S
+from alg123d.utils import Shortcuts as S
 
 b = Box(3, 3, 3)
 for plane in S.planes(b.faces()):
@@ -7,5 +7,3 @@ for plane in S.planes(b.faces()):
 
 if "show_object" in locals():
     show_object(b)
-
-# %%

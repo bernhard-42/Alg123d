@@ -155,24 +155,27 @@ class Empty(AlgCompound):
 
 
 def create_compound(
-    cls, objects, part=None, dim=None, faces=None, planes=None, params=None
+    cls, objects=None, part=None, dim=None, faces=None, planes=None, params=None
 ):
-    if isinstance(objects, AlgCompound) and objects.dim == 1:
-        objs = objects.edges()
-        dim = 1
+    if objects is None:
+        objs = None
     else:
-        if isinstance(objects, (list, tuple)):
-            objs = objects
-        elif isinstance(objects, filter):
-            objs = list(objects)
+        if isinstance(objects, AlgCompound) and objects.dim == 1:
+            objs = objects.edges()
+            dim = 1
         else:
-            objs = [objects]
-
-        if dim is None:
-            if part is None:
-                dim = max([o.dim for o in objs])
+            if isinstance(objects, (list, tuple)):
+                objs = objects
+            elif isinstance(objects, filter):
+                objs = list(objects)
             else:
-                dim = part.dim
+                objs = [objects]
+
+            if dim is None:
+                if part is None:
+                    dim = max([o.dim for o in objs])
+                else:
+                    dim = part.dim
 
     with CTX[dim]() as ctx:
         if part is not None:
@@ -184,7 +187,7 @@ def create_compound(
         if planes is not None:
             ctx.pending_face_planes = planes
 
-        compound = cls(*objs, **params)
+        compound = cls(**params) if objs is None else cls(*objs, **params)
 
         if part is not None:
             compound = ctx._obj
