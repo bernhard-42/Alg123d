@@ -1,18 +1,9 @@
 from math import sin, pi
 from alg123d import *
+from alg123d import Shortcuts as S
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
-
-# %%
-
-import cadquery as cq
-
-arch = cq.Workplane(origin=(20, 0, 0)).circle(2).revolve(180, (-20, 0, 0), (-20, -1, 0))
-result = arch.center(-20, 0).workplane().rect(20, 4)
-face = arch.faces().val()
-result = result.extrude(face)
-show(result)
 
 # %%
 
@@ -137,12 +128,9 @@ show(s, sections, transparent=True)
 # %%
 
 c = Circle(2) @ (20, 0, 0)
-a = revolve(c, Axis.Y, 180) @ Rotation(0, 180, 0)
-
-r = extrude(Rectangle(20, 4), 22)
-a += AlgCompound((r - a).solids().sort_by()[0], 3)
+a = revolve(c, -Axis.Y, 180)
+r = extrude(Rectangle(20, 4), 17.5)
+a += S.min_solid(r - a, wrapped=True)
 
 show(a)
-# %%
-
 # %%
