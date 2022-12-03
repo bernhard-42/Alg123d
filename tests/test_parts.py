@@ -1,6 +1,6 @@
 from math import sin, pi
 from alg123d import *
-from alg123d.utils import Shortcuts as S
+import alg123d.shortcuts as S
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)

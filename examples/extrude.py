@@ -1,5 +1,5 @@
 from alg123d import *
-from alg123d.utils import Shortcuts as S
+import alg123d.shortcuts as S
 
 # simple
 
