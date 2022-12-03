@@ -1,4 +1,2 @@
-1 Generic: BoundingBox (?)
-2 Last object
-3 extrude_until_next and extrude_until_last (shortcut)
-3 allow coexistence of build123d and alg123d (shortcut)
+1 extrude_until_next and extrude_until_last (shortcut)
+1 allow coexistence of build123d and alg123d (shortcut)
