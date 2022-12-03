@@ -1,25 +1,4 @@
-1 Line: Helix broken?
+1 Generic: BoundingBox (?)
 2 Last object
-3 Generic: BoundingBox (?)
 3 extrude_until_next and extrude_until_last (shortcut)
 3 allow coexistence of build123d and alg123d (shortcut)
-
-
-# from alg123d import *
-# import numpy as np
-# from OCP.BRepAdaptor import BRepAdaptor_CompCurve
-
-
-# def discretize_wire(wire: Wire, num=100):
-
-#     if not isinstance(wire, cq.Wire):
-#         raise TypeError("Only wires supported")
-
-#     c = BRepAdaptor_CompCurve(wire.wrapped)
-#     points = np.array(
-#         [
-#             [c.Value(u).X(), c.Value(u).Y(), c.Value(u).Z()]
-#             for u in np.linspace(c.FirstParameter(), c.LastParameter(), num)
-#         ]
-#     )
-#     return points
