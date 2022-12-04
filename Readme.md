@@ -79,15 +79,15 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 **Intersect objects**
 
-$\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ for $n=2,3$
+$\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
-Implementation: $b \\& a :=$ `a.intersect(b)`
+Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
 
 Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
 
 ### Locations and location arithmentic
 
-$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in R \land a,b,c \in R\rbrace$ with $a,b,c$ being angles in degrees
+$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in \\R \land a,b,c \in R\rbrace$ with $a,b,c$ being angles in degrees
 
 For $n = 1, 2, 3$:
 
