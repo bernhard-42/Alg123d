@@ -67,11 +67,11 @@ with $B^n \subset A^n$
 
 $+: A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a + b$ , for $n=1,2,3$
 
-Implementation: $a + b :=$ `a.fuse(b)`
+$\\;\\;\\;\\;\\;$ Implementation: $a + b :=$ `a.fuse(b)`
 
 $-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
 
-Implementation: $b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
+$\\;\\;\\;\\;\\;$ Implementation: $b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
 
 **Abelian groups**
 
@@ -81,7 +81,7 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
-$\\;\\;\\;\\;$ Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
+$\\;\\;\\;\\;\\;$ Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
 
 Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
 
