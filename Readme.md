@@ -79,9 +79,9 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 **Intersect objects**
 
-$\\& : A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a | b$ for $n=2,3$
+$\\& : A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a \\& b$ for $n=2,3$
 
-Implementation: $b \& a :=$ `a.intersect(b)`
+Implementation: $b \\& a :=$ `a.intersect(b)`
 
 Note: $a \\& b = (a + b) - (a - b) - (b - a)$
 
