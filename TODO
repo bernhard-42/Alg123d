@@ -1,2 +1,3 @@
-1 extrude_until_next and extrude_until_last (shortcut)
-1 allow coexistence of build123d and alg123d (shortcut)
+1 allow coexistence of build123d and alg123d
+2 split offset in offset (2d) and shell (3d)
+2 extrude_until_next and extrude_until_last (shortcut)
