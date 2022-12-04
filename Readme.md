@@ -67,15 +67,15 @@ with $B^n \subset A^n$
 
 $+: A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a + b$ , for $n=1,2,3$
 
-$\\;\\;\\;\\;\\; a + b :=$ `a.fuse(b)`
+$\\;\\;\\;\\;\\;\\; a + b :=$ `a.fuse(b)`
 
 $-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
 
-$\\;\\;\\;\\;\\; b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
+$\\;\\;\\;\\;\\;\\; b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
 
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
-$\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$ )
+$\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$ )
 
 **Abelian groups**
 
