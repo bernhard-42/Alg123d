@@ -87,7 +87,7 @@ Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
 
 ### Locations and location arithmentic
 
-$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in \\R \land a,b,c \in R\rbrace$ with $a,b,c$ being angles in degrees
+$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in R \land a,b,c \in R\rbrace$ with $a,b,c$ being angles in degrees
 
 For $n = 1, 2, 3$:
 
@@ -105,6 +105,6 @@ $P  := \lbrace$ `Plane` $(o,x,z): o,x,z ∈ R^3 \land \|x\| = \|z\| = 1\rbrace$
 
 For $n = 1, 2, 3$:
 
-$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
-
 $*: P \times L \rightarrow P$ (locate plane $p \in P$ at location $l \in L$, i.e. `Plane(p.to_location() * l)`)
+
+$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
