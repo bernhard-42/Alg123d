@@ -268,6 +268,7 @@ def sweep(
     return create_compound(
         bd.Sweep,
         sections,
+        dim=3,
         params=dict(
             path=path,
             multisection=multisection,
