@@ -83,7 +83,7 @@ $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , fo
 
 $\\;\\;\\;\\;\\;$ Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
 
-Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
+$\\;\\;\\;\\;\\;$ Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
 
 ### Locations, planes and location arithmentic
 
