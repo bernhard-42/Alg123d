@@ -65,7 +65,7 @@ with $B^n \subset A^n$
 
 **Operations:**
 
-$+: A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a + b$ , for $n=1,2,3$
+$\\!\\!+: A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a + b$ , for $n=1,2,3$
 
 Implementation: $a + b :=$ `a.fuse(b)`
 
@@ -105,6 +105,6 @@ $P  := \lbrace$ `Plane` $(o,x,z): o,x,z ∈ R^3 \land \|x\| = \|z\| = 1\rbrace$
 
 For $n = 1, 2, 3$:
 
-$@: A^n \time P \rightarrow A^n$ (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
+$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
 
 $*: P \times L \rightarrow P$ (locate plane $p \in P$ at location $l \in L$, i.e. `Plane(p.to_location() * l)`)
