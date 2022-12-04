@@ -49,9 +49,9 @@ b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
 
 ### Objects and object arithmetic
 
-$A^n$ is the set of all AlgCompounds `a` with `a.dim = n` for $n = 1,2,3$
+$A^n$ is the set of all `AlgCompounds a` with `a.dim = n` for $n = 1,2,3$
 
-$e_n$ := `Empty` , for $n = 1,2,3$ , are AlgCompounds `a` with `a.dim = n` and `a.wrapped = None`
+$e_n$ := `Empty` , for $n = 1,2,3$ , are `AlgCompounds a` with `a.dim = n` and `a.wrapped = None`
 
 **Sets of predefined basic shapes:**
 
