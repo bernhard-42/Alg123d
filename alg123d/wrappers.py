@@ -190,6 +190,9 @@ def create_compound(
         compound = cls(**params) if objs is None else cls(*objs, **params)
 
         if part is not None:
-            compound = ctx._obj
+            if len(list(ctx._obj)) == 1 and isinstance(ctx._obj, Compound):
+                compound = list(ctx._obj)[0]
+            else:
+                compound = ctx._obj
 
     return AlgCompound(compound, dim)
