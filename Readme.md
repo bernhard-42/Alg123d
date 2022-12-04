@@ -81,7 +81,7 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
-Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
+$\\;\\;\\;\\;$ Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
 
 Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
 
@@ -107,4 +107,4 @@ For $n = 1, 2, 3$:
 
 $@: A^n \times L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
 
-$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
+$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ on a plane $p \in P$, i.e. `a.located(p.to_location())`)
