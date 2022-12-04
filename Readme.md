@@ -65,11 +65,11 @@ with $B^n \subset A^n$
 
 **Operations:**
 
-$\\;\\;+: A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a + b$ , for $n=1,2,3$
+$+: A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a + b$ , for $n=1,2,3$
 
 Implementation: $a + b :=$ `a.fuse(b)`
 
-$-: A^n \rightarrow A^n$ with $a \rightarrow -a$ , for $n=1, 2,3$
+$-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
 
 Implementation: $a + (-b) = (-b) + a = a - b$ := `a.cut(b)` (implicit definition)
 
@@ -79,11 +79,11 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 **Intersect objects**
 
-$\\& : A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a \\& b$ for $n=2,3$
+$\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ for $n=2,3$
 
 Implementation: $b \\& a :=$ `a.intersect(b)`
 
-Note: $a \\& b = (a + b) - (a - b) - (b - a)$
+Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
 
 ### Locations and location arithmentic
 
