@@ -51,7 +51,7 @@ b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
 
 $A^n$ is the set of all AlgCompounds `a` with `a.dim = n` for $n = 1,2,3$
 
-$e_n$ := `Empty` are AlgCompounds `a` with `a.dim = n` and `a.wrapped = None` for $n = 1,2,3$
+$e_n$ := `Empty` , for $n = 1,2,3$ , are AlgCompounds `a` with `a.dim = n` and `a.wrapped = None`
 
 **Sets of predefined basic shapes:**
 
