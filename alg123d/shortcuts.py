@@ -15,9 +15,9 @@ def planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]:
 
 
 def diff(l1: List[Shape], l2: List[Shape]) -> ShapeList:
-    d1 = [hash(o) for o in l1]
-    d2 = {hash(o): o for o in l2 if hash(o) not in d1}
-    return ShapeList(d2.values())
+    d2 = [hash(o) for o in l2]
+    d1 = {hash(o): o for o in l1 if hash(o) not in d2}
+    return ShapeList(d1.values())
 
 
 def min_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Solid]:
