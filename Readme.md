@@ -81,9 +81,7 @@ $( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
-$\\;\\;\\;\\;\\;$ Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)`
-
-$\\;\\;\\;\\;\\;$ Note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$
+$\\;\\;\\;\\;\\;$ Implementation: $a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$ )
 
 ### Locations, planes and location arithmentic
 
