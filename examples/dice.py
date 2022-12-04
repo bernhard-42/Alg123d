@@ -7,13 +7,13 @@ dist = 0.9
 eye_radius = 0.23
 eye_offset = 0.15
 
-eyes = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
+eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
 
 
-def add_eyes(face, ind):
+def eyes(face, ind):
     p = Plane(face) * Location((0, 0, eye_offset))  # eye_offset above plane
     rv = Empty()
-    for loc in [eyes[i] for i in ind]:
+    for loc in [eye_locs[i] for i in ind]:
         rv += Sphere(eye_radius) @ (p * loc)
     return rv
 
@@ -31,7 +31,7 @@ sides = [
 ]
 
 for side in sides:
-    dice -= add_eyes(*side)
+    dice -= eyes(*side)
 
 
 if "show_object" in locals():

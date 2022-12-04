@@ -5,6 +5,51 @@ from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
+
+import build123d as bd
+
+with bd.BuildPart() as flange:
+    with bd.BuildSketch(Plane.XZ):
+        with bd.BuildLine() as l:
+            bd.Polyline((-2, 5), (-12, 5), (-12, 10), (10, 10))
+            bd.Offset(amount=1)
+        bd.MakeFace()
+    bd.Extrude(amount=10, both=True)
+
+    with bd.BuildSketch() as obj_under_test:
+        bd.Rectangle(8, 8)
+    bd.Extrude(amount=5)
+    s = flange.solids(bd.Select.LAST)
+show(flange, *s, reset_camera=False)
+# %%
+
+with bd.BuildPart() as flange:
+    with bd.BuildSketch(Plane.XZ):
+        with bd.BuildLine() as l:
+            bd.Polyline((-2, 5), (-12, 5), (-12, 10), (10, 10))
+            bd.Offset(amount=1)
+        bd.MakeFace()
+    bd.Extrude(amount=10, both=True)
+
+with bd.BuildPart() as ex:
+    with bd.BuildSketch() as obj_under_test:
+        bd.Rectangle(8, 8)
+    bd.Extrude(amount=20)  # (1) extrude beyond top face
+
+with bd.BuildPart() as ex2:
+    bd.Add(ex.part)
+    bd.Add(
+        flange.part, mode=bd.Mode.SUBTRACT
+    )  # (2) subtract flange from the extruded solid
+
+with bd.BuildPart() as flange2:
+    bd.Add(ex2.solids().sort_by()[0])  # and the take the bottom solid and add flange
+    bd.Add(flange.part)
+
+show(flange2)
+
+
+# %%
 a = Box(1, 2, 3)
 l, f = a.edges(), a.faces()
 a -= CounterBore(a, 0.2, 0.3, 0.3) @ Plane(S.max_face(a))
