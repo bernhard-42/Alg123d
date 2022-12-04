@@ -71,7 +71,7 @@ Implementation: $a + b :=$ `a.fuse(b)`
 
 $-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
 
-Implementation: $a + (-b) = (-b) + a = a - b$ := `a.cut(b)` (implicit definition)
+Implementation: $b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
 
 **Abelian groups**
 
@@ -93,11 +93,11 @@ For $n = 1, 2, 3$:
 
 $*: L \times L \rightarrow L$ (multiply two locations $l_1, l_2 \in L$, i.e. `l1 * l2`)
 
-$*: A^n \times L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
+$@: A^n \times L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
 
-**Neutral element**: $l_0 \in L$: `Location()`
+Neutral element: $l_0 \in L$: `Location()`
 
-**Inverse element**: $l^{-1} \in L$: `l.inverse()`
+Inverse element: $l^{-1} \in L$: `l.inverse()`
 
 ### Planes and placing on planes:
 
