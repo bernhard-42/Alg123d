@@ -72,3 +72,21 @@ def min_edges(a: Compound, axis=Axis.Z) -> ShapeList:
 
 def max_edges(a: Compound, axis=Axis.Z) -> ShapeList:
     return a.edges().group_by(axis)[-1]
+
+
+def min_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Vertex]:
+    obj = a.vertices().sort_by(axis)[0]
+    return AlgCompound(obj) if wrapped else obj
+
+
+def max_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Vertex]:
+    obj = a.vertices().sort_by(axis)[-1]
+    return AlgCompound(obj) if wrapped else obj
+
+
+def min_vertices(a: Compound, axis=Axis.Z) -> ShapeList:
+    return a.vertices().group_by(axis)[0]
+
+
+def max_vertices(a: Compound, axis=Axis.Z) -> ShapeList:
+    return a.vertices().group_by(axis)[-1]
