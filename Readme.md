@@ -1,6 +1,7 @@
 # Alg123d
 
 ## Overview
+
 ### Classes
 
 `class AlgCompound(Compound)` with one additional property `a.dim in [1,2,3]`
@@ -44,8 +45,6 @@ Box on plane `Plane.YZ` rotated around `X` by 45°:
 b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
 ```
 
-
-
 ## Algebraic definition
 
 ### Objects and object arithmetic
@@ -56,7 +55,7 @@ $e_1$ := `Empty1`, $e_2$ := `Empty2`, $e_3$ := `Empty3` are AlgCompounds `a` wit
 
 **Sets of predefined basic shapes:**
 
-$B^3 := \lbrace$`Empty3`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$ 
+$B^3 := \lbrace$`Empty3`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$
 
 $B^2 := \lbrace$`Empty2`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`$\rbrace$
 
@@ -64,46 +63,41 @@ $B^1 := \lbrace$`Empty1`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, 
 
 with $B^n \subset A^n$
 
-
 **Operations:**
 
-$+: A^n, A^n \rightarrow A^n$  with $a, b \rightarrow a + b$ , for $n=1,2,3$
-    
+$+: A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a + b$ , for $n=1,2,3$
+
 Implementation: $a + b :=$ `a.fuse(b)`
 
-$-: A^n \rightarrow A^n$ with $a \rightarrow -a$ , for $n=1, 2,3$ 
+$-: A^n \rightarrow A^n$ with $a \rightarrow -a$ , for $n=1, 2,3$
 
 Implementation: $a + (-b) = (-b) + a = a - b$ := `a.cut(b)` (implicit definition)
-    
+
 **Abelian groups**
 
-$( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$ 
-
+$( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
 
 **Intersect objects**
 
-$| : A^n, A^n \rightarrow A^n$ with $a, b \rightarrow a | b$  for $n=2,3$
+$\\& : A^n \times A^n \rightarrow A^n$ with $a, b \rightarrow a | b$ for $n=2,3$
 
-Implementation: $b | a :=$ `a.intersect(b)`
+Implementation: $b \& a :=$ `a.intersect(b)`
 
-Note: $a | b = (a + b) - (a - b) - (b - a)$
+Note: $a \\& b = (a + b) - (a - b) - (b - a)$
 
 ### Locations and location arithmentic
 
 $L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in R \land a,b,c \in R\rbrace$ with $a,b,c$ being angles in degrees
 
-
-
 For $n = 1, 2, 3$:
 
-$*: L,L \rightarrow L$   (multiply two locations $l_1, l_2 \in L$, i.e. `l1 * l2`)
+$*: L \times L \rightarrow L$ (multiply two locations $l_1, l_2 \in L$, i.e. `l1 * l2`)
 
-$*: A^n,L \rightarrow A^n$  (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
+$*: A^n \time L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
 
 **Neutral element**: $l_0 \in L$: `Location()`
 
 **Inverse element**: $l^{-1} \in L$: `l.inverse()`
-
 
 ### Planes and placing on planes:
 
@@ -111,7 +105,6 @@ $P  := \lbrace$ `Plane` $(o,x,z): o,x,z ∈ R^3 \land \|x\| = \|z\| = 1\rbrace$
 
 For $n = 1, 2, 3$:
 
-$@: A^n,P \rightarrow A^n$  (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
+$@: A^n \time P \rightarrow A^n$ (locate an object $a \in A^n$ at location of plane $p \in P$, i.e. `a.located(p.to_location())`)
 
-$*: P,L \rightarrow P$   (locate plane $p \in P$ at location $l \in L$, i.e. `Plane(p.to_location() * l)`)
-
+$*: P \times L \rightarrow P$ (locate plane $p \in P$ at location $l \in L$, i.e. `Plane(p.to_location() * l)`)
