@@ -51,15 +51,15 @@ b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
 
 $A^n$ is the set of all AlgCompounds `a` with `a.dim = n` for $n = 1,2,3$
 
-$e_1$ := `Empty1`, $e_2$ := `Empty2`, $e_3$ := `Empty3` are AlgCompounds `a` with `a.dim = n` and `a.wrapped = None` for $n = 1,2,3$
+$e_n$ := `Empty` are AlgCompounds `a` with `a.dim = n` and `a.wrapped = None` for $n = 1,2,3$
 
 **Sets of predefined basic shapes:**
 
-$B^3 := \lbrace$`Empty3`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$
+$B^3 := \lbrace$`Empty`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$
 
-$B^2 := \lbrace$`Empty2`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`$\rbrace$
+$B^2 := \lbrace$`Empty`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`$\rbrace$
 
-$B^1 := \lbrace$`Empty1`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`$\rbrace$
+$B^1 := \lbrace$`Empty`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`$\rbrace$
 
 with $B^n \subset A^n$
 
@@ -79,7 +79,9 @@ $\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b
 
 **Abelian groups**
 
-$( A^n, e_n, +, -)$ is an abelian group for $n=1,2,3$
+$( A^n, e_n, +, -)$ is an abelian group for $n=2,3$
+
+$( A^1, e_1, +)$ is an abelian semigroup
 
 ### Locations, planes and location arithmentic
 
