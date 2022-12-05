@@ -2,7 +2,6 @@ from alg123d import *
 from cq_vscode import show, set_defaults
 
 set_defaults(axes=True, axes0=True, transparent=False)
-centered = (False, False)
 
 # %%
 
@@ -10,7 +9,7 @@ show(Circle(1))
 
 # %%
 
-show(Circle(1, centered=centered))
+show(Circle(1, centered=False))
 
 # %%
 
@@ -18,7 +17,7 @@ show(Ellipse(1, 2))
 
 # %%
 
-show(Ellipse(1, 2, centered=centered))
+show(Ellipse(1, 2, centered=False))
 
 # %%
 
@@ -30,7 +29,7 @@ show(Rectangle(1, 2))
 
 # %%
 
-show(Rectangle(1, 2, centered=centered))
+show(Rectangle(1, 2, centered=False))
 
 # %%
 
@@ -39,7 +38,7 @@ show(Polygon(pts))
 
 # %%
 
-show(Polygon(pts, centered=centered))
+show(Polygon(pts, centered=False))
 
 # %%
 
@@ -56,7 +55,7 @@ show(Trapezoid(1, 2, 80), Rectangle(1, 2).edges())
 # %%
 
 
-show(Trapezoid(1, 2, 80, centered=centered), Rectangle(1, 2, centered=centered).edges())
+show(Trapezoid(1, 2, 80, centered=False), Rectangle(1, 2, centered=False).edges())
 
 # %%
 
