@@ -82,12 +82,13 @@ class Polygon(AlgCompound):
         pts: List[VectorLike],
         # centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 2
+        # if isinstance(centered, bool):
+        #     centered = (centered,) * 2
 
         # params = dict(
         #     centered=centered,
         # )
+        params = {}
         self.create_sketch(bd.Polygon, objects=pts, params=params)
 
 
