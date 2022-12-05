@@ -1,26 +1,9 @@
 from alg123d import *
 import alg123d.shortcuts as S
-
-from cq_vscode import show, set_defaults
-
-set_defaults(axes=True, axes0=True, transparent=False)
-
-
 import build123d as bd
+import cadquery as cq
 
-with bd.BuildPart() as flange:
-    with bd.BuildSketch(Plane.XZ):
-        with bd.BuildLine() as l:
-            bd.Polyline((-2, 5), (-12, 5), (-12, 10), (10, 10))
-            bd.Offset(amount=1)
-        bd.MakeFace()
-    bd.Extrude(amount=10, both=True)
 
-    with bd.BuildSketch() as obj_under_test:
-        bd.Rectangle(8, 8)
-    bd.Extrude(amount=5)
-    s = flange.solids(bd.Select.LAST)
-show(flange, *s, reset_camera=False)
 # %%
 
 with bd.BuildPart() as flange:

@@ -134,3 +134,22 @@ a += S.min_solid(r - a, wrapped=True)
 
 show(a)
 # %%
+
+c = Circle(2) @ (20, 0, 0)
+a = revolve(c, -Axis.Y, 180)
+a = extrude_until(Rectangle(20, 4), a)
+
+show(a)
+# %%
+
+pts = [(-2, 5), (-12, 5), (-12, 10), (10, 10)]
+l = offset(Polyline(pts), 1)
+f = make_face(l) @ Plane.XZ
+flange = extrude(f, 10, both=True) @ Rotation(10, 20, -30)
+
+rect = Rectangle(8, 8) @ Rotation(0, 10, 0)
+flange = extrude_until(rect.faces()[0], flange)
+
+show(rect, flange)
+
+# %%
