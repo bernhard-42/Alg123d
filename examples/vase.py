@@ -21,7 +21,7 @@ outline += Polyline(
 )
 profile = make_face(outline)
 vase = revolve(profile, axis=Axis.Y)
-vase = offset(vase, openings=S.max_face(vase, Axis.Y), amount=-1)
+vase = shell(vase, openings=S.max_face(vase, Axis.Y), amount=-1)
 
 top_edges = vase.edges().filter_by_position(Axis.Y, 60, 62).filter_by(GeomType.CIRCLE)
 vase = fillet(vase, top_edges, radius=0.25)

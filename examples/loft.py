@@ -10,7 +10,7 @@ for i in range(slice_count + 1):
 
 art = loft(art)
 top_bottom = art.faces().filter_by(GeomType.PLANE)
-art = offset(art, openings=top_bottom, amount=0.5)
+art = shell(art, openings=top_bottom, amount=0.5)
 
 reset_show()
 if "show_object" in locals():
