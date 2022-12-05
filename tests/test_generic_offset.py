@@ -1,9 +1,45 @@
 from alg123d import *
+import alg123d.shortcuts as S
 from cq_vscode import show, set_defaults
 
-set_defaults(
-    axes=True, axes0=True, transparent=True, grid=(True, True, True)
-)
+set_defaults(axes=True, axes0=True, transparent=True, grid=(True, True, True))
+
+# %%
+
+# Offset line
+
+p = Polyline([(-2, 5), (-12, 5), (-12, 10), (10, 10)])
+o = offset(p, 1)
+show(o, p @ (0, -15, 0))
+
+
+# %%
+
+# Offset face
+
+f = Rectangle(10, 20)
+o = offset(f, 1)
+show(f, o @ (15, 0, 0))
+
+# %%
+
+# Offset solid
+
+b = Box(10, 20, 15)
+o = offset(b, 1)
+show(b, o @ (15, 0, 0), transparent=True)
+
+# %%
+b = Box(10, 20, 15)
+o = offset(b, 1) - b
+show(b, o @ (15, 0, 0), transparent=True)
+
+# %%
+# Offset solid
+
+b = Box(10, 20, 15)
+o = offset(b, -1)
+show(b, o @ (15, 0, 0), transparent=True)
 
 # %%
 
@@ -33,7 +69,7 @@ b = Box(1, 2, 3)
 
 openings = b.faces().sort_by()[-1]
 
-o = offset(b, 0.1, openings)
+o = shell(b, 0.1, openings)
 
 show(b.edges(), o, transparent=False)
 
@@ -41,28 +77,16 @@ show(b.edges(), o, transparent=False)
 
 openings = (b.faces().sort_by()[-1], b.faces().sort_by()[0])
 
-o = offset(b, 0.1, openings)
+o = shell(b, 0.1, openings)
 
 show(b.edges(), o, transparent=False)
 
 # %%
 
-openings = b.faces().sort_by()[-1]
+openings = S.max_face(b)
 
-o = offset(b, -0.1, openings)
+o = shell(b, -0.1, openings)
 
 show(b.edges(), o, transparent=False)
-
-# %%
-
-o = offset(b, -0.1)
-
-show(b.edges(), o)
-
-# %%
-
-o = offset(b, 0.1)
-
-show(b.edges(), o)
 
 # %%

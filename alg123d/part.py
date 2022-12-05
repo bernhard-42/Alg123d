@@ -20,6 +20,7 @@ __all__ = [
     "revolve",
     "sweep",
     "section",
+    "shell",
 ]
 
 #
@@ -301,4 +302,15 @@ def section(
 ):
     return create_compound(
         bd.Section, by, part=part, params=dict(height=height, mode=Mode.INTERSECT)
+    )
+
+
+def shell(
+    objects: Union[List[AlgCompound], AlgCompound],
+    amount: float,
+    openings: Union[Face, List[Face]] = None,
+    kind: Kind = Kind.ARC,
+):
+    return create_compound(
+        bd.Offset, objects, params=dict(amount=amount, openings=openings, kind=kind)
     )

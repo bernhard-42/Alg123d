@@ -43,12 +43,16 @@ def mirror(
 def offset(
     objects: Union[List[AlgCompound], AlgCompound],
     amount: float,
-    openings: Union[Face, List[Face]] = None,
     kind: Kind = Kind.ARC,
 ):
-    return create_compound(
-        bd.Offset, objects, params=dict(amount=amount, openings=openings, kind=kind)
-    )
+    result = create_compound(bd.Offset, objects, params=dict(amount=amount, kind=kind))
+    if isinstance(objects, AlgCompound) and objects.dim == 3:
+        if amount > 0:
+            return result + objects
+        else:
+            return objects - result
+    else:
+        return result
 
 
 def scale(objects: Shape, by: Union[float, Tuple[float, float, float]]):
