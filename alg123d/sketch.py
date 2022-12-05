@@ -80,14 +80,14 @@ class Polygon(AlgCompound):
     def __init__(
         self,
         pts: List[VectorLike],
-        centered: Union[bool, Tuple[bool, bool]] = (True, True),
+        # centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
         if isinstance(centered, bool):
             centered = (centered,) * 2
 
-        params = dict(
-            centered=centered,
-        )
+        # params = dict(
+        #     centered=centered,
+        # )
         self.create_sketch(bd.Polygon, objects=pts, params=params)
 
 

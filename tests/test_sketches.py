@@ -38,7 +38,7 @@ show(Polygon(pts))
 
 # %%
 
-show(Polygon(pts, centered=False))
+# show(Polygon(pts, centered=False))
 
 # %%
 
