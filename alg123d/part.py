@@ -243,7 +243,7 @@ def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgComp
     return min_solid(ex, axis, wrapped=True) + limit
 
 
-def loft(sections: List[AlgCompound | Face], ruled: bool = False):
+def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False):
     faces = []
     for s in tupleize(sections):
         if isinstance(s, Compound):
@@ -255,7 +255,7 @@ def loft(sections: List[AlgCompound | Face], ruled: bool = False):
 
 
 def revolve(
-    profiles: List[Compound | Face] | Compound | Face,
+    profiles: Union[List[Union[Compound, Face]], Compound, Face],
     axis: Axis,
     arc: float = 360.0,
 ):
@@ -272,13 +272,13 @@ def revolve(
 
 
 def sweep(
-    sections: List[Face | Compound],
-    path: Edge | Wire = None,
+    sections: List[Union[Face, Compound]],
+    path: Union[Edge, Wire] = None,
     multisection: bool = False,
     is_frenet: bool = False,
     transition: Transition = Transition.TRANSFORMED,
     normal: VectorLike = None,
-    binormal: Edge | Wire = None,
+    binormal: Union[Edge, Wire] = None,
 ):
     return create_compound(
         bd.Sweep,

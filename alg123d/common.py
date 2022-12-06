@@ -29,7 +29,7 @@ class LocationList:
 
 
 class Locations(LocationList):
-    def __init__(self, *pts: VectorLike | Vertex | Location):
+    def __init__(self, *pts: Union[VectorLike, Vertex, Location]):
         super().__init__(bd.Locations(*pts))
 
 

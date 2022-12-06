@@ -120,7 +120,7 @@ class Text(AlgCompound):
         font_style: FontStyle = FontStyle.REGULAR,
         halign: Halign = Halign.LEFT,
         valign: Valign = Valign.CENTER,
-        path: Edge | Wire = None,
+        path: Union[Edge, Wire] = None,
         position_on_path: float = 0.0,
     ):
         params = dict(
@@ -162,7 +162,7 @@ class Trapezoid(AlgCompound):
 class SlotArc(AlgCompound):
     def __init__(
         self,
-        arc: Edge | Wire,
+        arc: Union[Edge, Wire],
         height: float,
     ):
         params = dict(
