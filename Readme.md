@@ -4,11 +4,11 @@
 
 `class AlgCompound(build123d.Compound)`
 
-### Additional properties:
+**Additional properties:**
 
 - `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part
 
-### Additional user facing operators:
+**Additional user facing operators:**
 
 - `+`: `(AlgCompound, AlgCompound) -> AlgCompound`: Fuse two objects
 - `-`: `(AlgCompound, AlgCompound) -> AlgCompound`: Cut first object with second object
@@ -25,16 +25,32 @@ Another important operator is used from build123d:
 - `*`: `(Location, Location) -> Location`: Multiple (concatenate) two locations
 - `*`: `(Plane, Location) -> Plane`: Change location of a plane
 
-### Objects:
+**Objects:**
 
 - 3-dim: {`Empty`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`}
 - 2-dim: {`Empty`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`}
 - 1-dim: {`Empty`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`}
 
-### Functions:
+**Functions:**
 
 - 3-dim: {`extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`}
 - 2-dim: {`make_face`}
+
+**Shortcuts:**
+
+- `planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]`
+    Transform a mixed list of planes, faces and locations to a list of planes
+
+- `diff(l1: List[Shape], l2: List[Shape]) -> ShapeList`
+    Get the difference of two ShapeLists. Use case: `last = obj.faces(); obj = func(obj); diff = S.diff(obj.faces(), last)`
+
+For `<shape>` in `face`, `edge`, `vertex` and `<shapes>` in `faces`, `edges`, `vertices` get the minimum or maximim shape in axis direction
+- `min_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
+- `max_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
+
+For `<shape>` in `face`, `edge`, `vertex` and `<shapes>` in `faces`, `edges`, `vertices` get the minimum or maximim gropu of shapes in axis direction:
+- `min_<shape>(a: Compound, axis=Axis.Z) -> ShapeList`
+- `max_<shape>(a: Compound, axis=Axis.Z) -> ShapeList`
 
 ## Usage
 
