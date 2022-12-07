@@ -94,42 +94,42 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
 
 ### Location handling
 
-Box at `origin = (0,0,0)` without rotation:
+- Box at `origin = (0,0,0)` without rotation:
 
-```python
-b = Box(1,2,3)
-```
+    ```python
+    b = Box(1,2,3)
+    ```
 
-Box at `origin = (0,1,0)` without rotation:
+- Box at `origin = (0,1,0)` without rotation:
 
-```python
-b = Box(1,2,3) @ Location((0,1,0))
-b = Box(1,2,3) @ (0,1,0)             # shortcut
-```
+    ```python
+    b = Box(1,2,3) @ Location((0,1,0))
+    b = Box(1,2,3) @ (0,1,0)             # shortcut
+    ```
 
-Box at `origin = (0,0,0)` with `rotation = (0, 100, 45)`:
+- Box at `origin = (0,0,0)` with `rotation = (0, 100, 45)`:
 
-```python
-b = Box(1,2,3) @ Rotation((0, 100, 45))
-```
+    ```python
+    b = Box(1,2,3) @ Rotation((0, 100, 45))
+    ```
 
-Box at `origin = (0,1,0)` with `rotation = (0, 100, 45)`:
+- Box at `origin = (0,1,0)` with `rotation = (0, 100, 45)`:
 
-```python
-b = Box(1,2,3) @ Location((0,1,0), (0,100,45))
-```
+    ```python
+    b = Box(1,2,3) @ Location((0,1,0), (0,100,45))
+    ```
 
-Box on plane `Plane.YZ`:
+- Box on plane `Plane.YZ`:
 
-```python
-b = Box(1,2,3) @ Plane.XZ
-```
+    ```python
+    b = Box(1,2,3) @ Plane.XZ
+    ```
 
-Box on plane `Plane.YZ` rotated around `X` by 45°:
+- Box on plane `Plane.YZ` rotated around `X` by 45°:
 
-```python
-b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
-```
+    ```python
+    b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
+    ```
 
 ### Example
 
