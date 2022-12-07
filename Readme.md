@@ -2,19 +2,13 @@
 
 ## Overview
 
-### Classes
-
 `class AlgCompound(build123d.Compound)`
 
-#### Additional properties:
+### Additional properties:
 
-- `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`:
-    - `0`: Empty element
-    - `1`: Lines
-    - `2`: Sketches
-    - `3`: Parts
+- `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part
 
-#### Additional user facing operators:
+### Additional user facing operators:
 
 - `+`: `(AlgCompound, AlgCompound) -> AlgCompound`: Fuse two objects
 - `-`: `(AlgCompound, AlgCompound) -> AlgCompound`: Cut first object with second object
@@ -31,60 +25,44 @@ Another important operator is used from build123d:
 - `*`: `(Location, Location) -> Location`: Multiple (concatenate) two locations
 - `*`: `(Plane, Location) -> Plane`: Change location of a plane
 
-### 3-dim objects (parts)
+### Objects:
 
-- `Box(length: float, width: float, height: float, centered: bool | Tuple[bool, bool, bool] = (True, True, True))`
-- `Cylinder(radius: float, height: float, arc_size: float = 360, centered: [bool | Tuple[bool, bool, bool] = (True, True, True))`
-- `Cone(bottom_radius: float, top_radius: float, height: float, arc_size: float = 360, centered: bool | Tuple[bool, bool, bool] = (True, True, True))`
-- `Sphere(radius: float, arc_size1: float = -90, arc_size2: float = 90, arc_size3: float = 360, centered: bool | Tuple[bool, bool, bool] = (True, True, True))`
-- `Torus(major_radius: float, minor_radius: float, minor_start_angle: float = 0, minor_end_angle: float = 360, major_angle: float = 360, centered: bool | Tuple[bool, bool, bool] = (True, True, True))`
-- `Wedge(dx: float, dy: float, dz: float, xmin: float, zmin: float, xmax: float, zmax: float)`
-- `CounterBore(part: AlgCompound, radius: float, counter_bore_radius: float, counter_bore_depth: float, depth: float = None)`
-- `CounterSink(part: AlgCompound, radius: float, counter_sink_radius: float, counter_sink_angle: float = 82, depth: float = None)`
-- `Bore(part: AlgCompound, radius: float, depth: float = None)`
-### 3-dim functions
+- 3-dim: {`Empty`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`}
+- 2-dim: {`Empty`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`}
+- 1-dim: {`Empty`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`}
 
-- `extrude(to_extrude: Compound, amount: float = None, both: bool = False, taper: float = 0.0)`
-- `extrude_until(face: Face|AlgCompound, limit: AlgCompound) -> AlgCompound`
-- `loft(sections: List[AlgCompound | Face], ruled: bool = False)`
-- `revolve(profiles: List[Compound | Face] | Compound | Face, axis: Axis, arc: float = 360.0)`
-- `sweep(sections: List[Compound | Face], path: Edge | Wire = None, multisection: bool = False, is_frenet: bool = False, transition: Transition = Transition.TRANSFORMED, normal: Union[Vector, tuple[float, float], tuple[float, float, float]] = None, binormal: Edge | Wire = None)`
-- `section(part: AlgCompound, by: List[Plane], height: float = 0.0)`
-- `shell(objects: List[AlgCompound] | AlgCompound], amount: float, openings: Face | List[Face] = None, kind: Kind = Kind.ARC)`
+### Functions:
 
-### 2-dim objects (sketches)
-- `Circle(radius: float, centered: bool | Tuple[bool, bool] = (True, True))`
-- `Ellipse(x_radius: float, y_radius: float, centered: bool | Tuple[bool, bool] = (True, True))`
-- `Rectangle(width: float, height: float, centered: bool | Tuple[bool, bool] = (True, True))`
-- `Polygon(pts: List[Vector | tuple[float, float] | tuple[float, float, float]])`
-- `RegularPolygon(radius: float, side_count: int, centered: bool | Tuple[bool, bool] = (True, True))`
-- `Text(txt: str, fontsize: float, font: str = 'Arial', font_path: str = None, font_style: FontStyle = FontStyle.REGULAR, halign: Halign = Halign.LEFT, valign: Valign = Valign.CENTER, path: Edge | Wire = None, position_on_path: float = 0.0)`
-- `Trapezoid(width: float, height: float, left_side_angle: float, right_side_angle: float = None, centered: bool | Tuple[bool, bool] = (True, True))`
-- `SlotArc(arc: Edge | Wire, height: float)`
-- `SlotCenterPoint(center: Vector | tuple[float, float] | tuple[float, float, float], point: Vector | tuple[float, float] | tuple[float, float, float], height: float)`
-- `SlotCenterToCenter(center_separation: float, height: float)`
-- `SlotOverall(width: float, height: float)`
+- 3-dim: {`extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`}
+- 2-dim: {`make_face`}
 
-### 2-dim functions
-- `make_face(objs: AlgCompound, | List[Edge])`
+## Usage
 
-### 1-dim objects (lines)
+### Object creation
 
-- `Line(start: Vector | tuple[float, float] | tuple[float, float, float], end: Vector | tuple[float, float] | tuple[float, float, float])`
-- `Bezier(cntl_pts: Iterable[Vector | tuple[float, float] | tuple[float, float, float]], weights: List[float] = None)`
-- `PolarLine(start: Vector | tuple[float, float] | tuple[float, float, float], length: float, angle: float = None, direction: Vector | tuple[float, float] | tuple[float, float, float] = None)`
-- `Polyline(pts: List[Vector | tuple[float, float] | tuple[float, float, float]], close: bool = False)`
-- `Spline(pts: Iterable[Vector | tuple[float, float] | tuple[float, float, float]], tangents: Iterable[Vector | tuple[float, float] | tuple[float, float, float]] = None, tangent_scalars: Iterable[float] = None, periodic: bool = False)`
-- `Helix(pitch: float, height: float, radius: float, direction: Vector | tuple[float, float] | tuple[float, float, float] = (0, 0, 1), cone_angle: float = 0, lefthand: bool = False)`
-- `CenterArc(center: Vector | tuple[float, float] | tuple[float, float, float], radius: float, start_angle: float, arc_size: float)`
-- `EllipticalCenterArc(center: Vector | tuple[float, float] | tuple[float, float, float], x_radius: float, y_radius: float, start_angle: float = 0.0, end_angle: float = 90.0, angular_direction: build123d.build_enums.AngularDirection = <AngularDirection.COUNTER_CLOCKWISE>, plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00)))`
-- `RadiusArc(start_point: Vector | tuple[float, float] | tuple[float, float, float], end_point: Vector | tuple[float, float] | tuple[float, float, float], radius: float)`
-- `SagittaArc(start_point: Vector | tuple[float, float] | tuple[float, float, float], end_point: Vector | tuple[float, float] | tuple[float, float, float], sagitta: float)`
-- `TangentArc(start_point: Vector | tuple[float, float] | tuple[float, float, float], end_point: Vector | tuple[float, float] | tuple[float, float, float], tangent: Union[Vector, tuple[float, float], tuple[float, float, float]], tangent_from_first: bool = True)`
-- `ThreePointArc(p1: Vector | tuple[float, float] | tuple[float, float, float], p2: Vector | tuple[float, float] | tuple[float, float, float], p3: Vector | tuple[float, float] | tuple[float, float, float])`
-- `JernArc(start: Vector | tuple[float, float] | tuple[float, float, float], tangent: Vector | tuple[float, float] | tuple[float, float, float], radius: float, arc_size: float, plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00)))`
+```python
+b = Box(1,2,3)
+```
+is an `AlgCompound` placed on the `XY` plane. It can be immediately shown.
 
+### Object arithmetic
 
+- Fusing a box and a cylinder:
+
+    ```python
+    f = Box(1,2,3) + Cylinder(0.2, 5)
+    ```
+
+- Cutting a cylinder from a box
+
+    ```python
+    f = Box(1,2,3) - Cylinder(0.2, 5)
+    ```
+- Interseting a box and a cylinder
+
+    ```python
+    f = Box(1,2,3) & Cylinder(0.2, 5)
+    ```
 
 ### Location handling
 
@@ -101,13 +79,13 @@ b = Box(1,2,3) @ Location((0,1,0))
 b = Box(1,2,3) @ (0,1,0)             # shortcut
 ```
 
-Box at `origin = (0,0,0)` and `rotation = (0, 100, 45)`:
+Box at `origin = (0,0,0)` with `rotation = (0, 100, 45)`:
 
 ```python
 b = Box(1,2,3) @ Rotation((0, 100, 45))
 ```
 
-Box at `origin = (0,1,0)` and `rotation = (0, 100, 45)`:
+Box at `origin = (0,1,0)` with `rotation = (0, 100, 45)`:
 
 ```python
 b = Box(1,2,3) @ Location((0,1,0), (0,100,45))
@@ -124,6 +102,41 @@ Box on plane `Plane.YZ` rotated around `X` by 45°:
 ```python
 b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
 ```
+
+### Example
+
+```python
+plane = Plane.ZX
+
+# Four rotations around Y
+rotations = [Rotation(0, a, 0) for a in (0, 45, 90, 135)]
+
+# initialize result with "zero"
+s = Empty()  
+
+# get four locations on a grid 
+for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):  
+
+    # move the ZX plane to one of the four grid locations and rotate it aropund Y
+    c_plane = plane * outer_loc * rotations[i]
+    
+    # Create a circle and place it the c_plane.
+    # Fuse the result with s (hence we need to initiailize s with Empty for the first loop)
+    s += Circle(1) @ c_plane
+    
+    # Get a different amount of polar locations per loop
+    for loc in PolarLocations(0.8, (i + 3) * 2):
+    
+        # place the polar location onto the c_plane
+        # and create a rectangle at this location
+        # cut the rectangle from s
+        s -= Rectangle(0.1, 0.3) @ (c_plane * loc)
+
+# Finally extrude each rotated circle with cuts in the circle normal direction
+e = extrude(s, 0.3)
+```
+
+![Example][./images/example.png]
 
 ## Algebraic definition
 
@@ -186,3 +199,303 @@ For $n = 1, 2, 3$:
 $@: A^n \times L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
 
 $@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ on a plane $p \in P$, i.e. `a.located(p.to_location())`)
+
+
+## API
+
+### 3-dim objects (parts)
+
+```python
+Box(
+    length: float, 
+    width: float, 
+    height: float, 
+    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+    )
+
+Cylinder(
+    radius: float, 
+    height: float, 
+    arc_size: float = 360, 
+    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+)
+
+Cone(
+    bottom_radius: float, 
+    top_radius: float, 
+    height: float, 
+    arc_size: float = 360, 
+    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+)
+
+Sphere(
+    radius: float, 
+    arc_size1: float = -90, 
+    arc_size2: float = 90, 
+    arc_size3: float = 360, 
+    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+)
+
+Torus(
+    major_radius: float, 
+    minor_radius: float, 
+    minor_start_angle: float = 0, 
+    minor_end_angle: float = 360, 
+    major_angle: float = 360, 
+    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+)
+
+Wedge(
+    dx: float, 
+    dy: float, 
+    dz: float, 
+    xmin: float, 
+    zmin: float, 
+    xmax: float, 
+    zmax: float
+)
+
+CounterBore(
+    part: AlgCompound, 
+    radius: float, 
+    counter_bore_radius: float, 
+    counter_bore_depth: float, 
+    depth: float = None
+)
+
+CounterSink(
+    part: AlgCompound, 
+    radius: float, 
+    counter_sink_radius: float, 
+    counter_sink_angle: float = 82, 
+    depth: float = None
+)
+
+Bore(
+    part: AlgCompound, 
+    radius: float, 
+    depth: float = None
+)
+```
+### 3-dim functions
+
+```python
+extrude(
+    to_extrude: Compound, 
+    amount: float = None, 
+    both: bool = False, 
+    taper: float = 0.0
+) -> AlgCompound
+
+extrude_until(
+    face: Face | AlgCompound, 
+    limit: AlgCompound
+    taper: float = 0.0
+) -> AlgCompound
+
+loft(
+    sections: List[AlgCompound | Face], 
+    ruled: bool = False
+) -> AlgCompound
+
+revolve(
+    profiles: List[Compound | Face] | Compound | Face, 
+    axis: Axis, 
+    arc: float = 360.0
+) -> AlgCompound
+
+sweep(
+    sections: List[Compound | Face], 
+    path: Edge | Wire = None, 
+    multisection: bool = False, 
+    is_frenet: bool = False, 
+    transition: Transition = Transition.TRANSFORMED, 
+    normal: Union[Vector, tuple[float, float], tuple[float, float, float]] = None, 
+    binormal: Edge | Wire = None
+) -> AlgCompound
+
+section(
+    part: AlgCompound, 
+    by: List[Plane], 
+    height: float = 0.0
+) -> AlgCompound
+
+shell(
+    objects: List[AlgCompound] | AlgCompound], 
+    amount: float, 
+    openings: Face | List[Face] = None, 
+    kind: Kind = Kind.ARC
+)  -> AlgCompound
+```
+
+### 2-dim objects (sketches)
+
+```python
+Circle(
+    radius: float, 
+    centered: bool | Tuple[bool, bool] = (True, True)
+)
+
+Ellipse(
+    x_radius: float, 
+    y_radius: float, 
+    centered: bool | Tuple[bool, bool] = (True, True)
+)
+
+Rectangle(
+    width: float, 
+    height: float, 
+    centered: bool | Tuple[bool, bool] = (True, True)
+)
+
+Polygon(
+    pts: List[Vector | tuple[float, float] | tuple[float, float, float]]
+    )
+
+RegularPolygon(
+    radius: float, 
+    side_count: int, 
+    centered: bool | Tuple[bool, bool] = (True, True)
+)
+
+Text(
+    txt: str, 
+    fontsize: float, 
+    font: str = 'Arial', 
+    font_path: str = None, 
+    font_style: FontStyle = FontStyle.REGULAR, 
+    halign: Halign = Halign.LEFT, 
+    valign: Valign = Valign.CENTER, 
+    path: Edge | Wire = None, 
+    position_on_path: float = 0.0
+)
+
+Trapezoid(
+    width: float, 
+    height: float, 
+    left_side_angle: float, 
+    right_side_angle: float = None, 
+    centered: bool | Tuple[bool, bool] = (True, True)
+)
+
+SlotArc(
+    arc: Edge | Wire, 
+    height: float
+)
+
+SlotCenterPoint(
+    center: Vector | tuple[float, float] | tuple[float, float, float], 
+    point: Vector | tuple[float, float] | tuple[float, float, float], 
+    height: float
+)
+
+SlotCenterToCenter(
+    center_separation: float, 
+    height: float
+)
+
+SlotOverall(
+    width: float, 
+    height: float
+)
+```
+
+### 2-dim functions
+
+```python
+make_face(
+    objs: AlgCompound, | List[Edge]
+)  -> AlgCompound
+```
+
+### 1-dim objects (lines)
+
+```python
+Line(
+    start: Vector | tuple[float, float] | tuple[float, float, float], 
+    end: Vector | tuple[float, float] | tuple[float, float, float]
+)
+
+Bezier(
+    cntl_pts: Iterable[Vector | tuple[float, float] | tuple[float, float, float]], 
+    weights: List[float] = None
+)
+
+PolarLine(
+    start: Vector | tuple[float, float] | tuple[float, float, float], 
+    length: float, 
+    angle: float = None, 
+    direction: Vector | tuple[float, float] | tuple[float, float, float] = None
+)
+
+Polyline(
+    pts: List[Vector | tuple[float, float] | tuple[float, float, float]], 
+    close: bool = False
+)
+
+Spline(
+    pts: Iterable[Vector | tuple[float, float] | tuple[float, float, float]], 
+    tangents: Iterable[Vector | tuple[float, float] | tuple[float, float, float]] = None, 
+    tangent_scalars: Iterable[float] = None, 
+    periodic: bool = False
+)
+
+Helix(
+    pitch: float, 
+    height: float, 
+    radius: float, 
+    direction: Vector | tuple[float, float] | tuple[float, float, float] = (0, 0, 1), 
+    cone_angle: float = 0, 
+    lefthand: bool = False
+)
+
+CenterArc(
+    center: Vector | tuple[float, float] | tuple[float, float, float], 
+    radius: float, 
+    start_angle: float, 
+    arc_size: float
+)
+
+EllipticalCenterArc(
+    center: Vector | tuple[float, float] | tuple[float, float, float], 
+    x_radius: float, 
+    y_radius: float, 
+    start_angle: float = 0.0, 
+    end_angle: float = 90.0, 
+    angular_direction: AngularDirection = AngularDirection.COUNTER_CLOCKWISE, 
+    plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00))
+)
+
+RadiusArc(
+    start_point: Vector | tuple[float, float] | tuple[float, float, float], 
+    end_point: Vector | tuple[float, float] | tuple[float, float, float], 
+    radius: float
+)
+
+SagittaArc(
+    start_point: Vector | tuple[float, float] | tuple[float, float, float], 
+    end_point: Vector | tuple[float, float] | tuple[float, float, float], 
+    sagitta: float
+)
+
+TangentArc(
+    start_point: Vector | tuple[float, float] | tuple[float, float, float], 
+    end_point: Vector | tuple[float, float] | tuple[float, float, float], 
+    tangent: Union[Vector, tuple[float, float], tuple[float, float, float]], 
+    tangent_from_first: bool = True
+)
+
+ThreePointArc(
+    p1: Vector | tuple[float, float] | tuple[float, float, float], 
+    p2: Vector | tuple[float, float] | tuple[float, float, float], 
+    p3: Vector | tuple[float, float] | tuple[float, float, float]
+)
+
+JernArc(
+    start: Vector | tuple[float, float] | tuple[float, float, float], 
+    tangent: Vector | tuple[float, float] | tuple[float, float, float], 
+    radius: float, 
+    arc_size: float, 
+    plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00))
+)
+```
