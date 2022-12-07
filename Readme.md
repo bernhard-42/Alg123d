@@ -550,13 +550,13 @@ $\\;\\;\\;\\;\\;\\; a + b :=$ `a.fuse(b)`
 
 $-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
 
-$\\;\\;\\;\\;\\;\\; b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
+$\\;\\;\\;\\;\\;\\; a + (-b)$ := `a.cut(b)` (implicit definition)
 
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
 $\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) + (-(a + (-b)) - (b + (-a)))$ )
 
-Note: $a - b$ as an implicit definition cannot be compared to the real number  - c) \ne a - b + c \\;$ since $-$ is not associative (only $+$ is)!
+Note: The implementation `a - b = a.cut(b)` needs to be read as $a + (-b)$ since the group does not have a binary $-$ operation. As such, $a - (b - c) = a + -(b + -c)) \ne a - b + c$
 
 **Abelian groups**
 
