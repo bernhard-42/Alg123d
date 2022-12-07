@@ -35,4 +35,4 @@ for side in sides:
 
 
 if "show_object" in locals():
-    show_object(dice, "dice", options={"color": "lightgrey"})
+    show_object(dice, "dice", options={"color": "silver"})
