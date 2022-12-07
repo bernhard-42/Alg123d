@@ -229,7 +229,7 @@ $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , fo
 
 $\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$ )
 
-Note: $a - (b - c) \ne a - b + c \;$ since $-$ is not associative (only $+$ is)!
+Note: $a - (b - c) \ne a - b + c \\;$ since $-$ is not associative (only $+$ is)!
 
 **Abelian groups**
 
