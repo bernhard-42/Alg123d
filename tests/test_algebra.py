@@ -31,6 +31,7 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     # on plane, located to grid position, and finally rotated
     c_plane = plane * outer_loc * rotations[i]
     s += Circle(1) @ c_plane
+    
     for loc in PolarLocations(0.8, (i + 3) * 2):
         # Use polar locations on c_plane
         s -= Rectangle(0.1, 0.3) @ (c_plane * loc)
