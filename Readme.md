@@ -225,6 +225,8 @@ $-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
 
 $\\;\\;\\;\\;\\;\\; b + (-a) = (-a) + b = b - a$ := `b.cut(a)` (implicit definition)
 
+$\\;\\;\\;\\;\\;\\; a - (b - c) \ne a- b + c$ since $-$ is not associative (only `+` is)
+
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
 $\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) - (a - b) - (b - a)$ )
