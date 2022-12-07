@@ -40,28 +40,14 @@ Another important operator is used from build123d:
 
 Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the namespace:
 
-- Transform a mixed list of planes, faces and locations to a list of planes
-    
-    `S.planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]`
-    
-- Get the difference of two ShapeLists 
-
-    `S.diff(l1: List[Shape], l2: List[Shape]) -> ShapeList`
+- Transform a mixed list of planes, faces and locations to a list of planes: `S.planes`
+- Get the difference of two ShapeLists: `S.diff`
     
     Use case: `last = obj.faces(); obj = func(obj); diff = S.diff(obj.faces(), last)`
     
+- Get minimum or maximim shape in axis direction: `S.min_<shape>` and `S.max_<shape>` (for `<shape>` in `solid`, `face`, `edge`, `vertex`)
 
-- For `<shape>` in `solid`, `face`, `edge`, `vertex` get the minimum or maximim shape in axis direction
-    
-    `S.min_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
-    
-    `S.max_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
-
-- For `<shapes>` in `solids`, `faces`, `edges`, `vertices` get the minimum or maximum group of shapes in axis direction:
-    
-    `S.min_<shapes>(a: Compound, axis=Axis.Z) -> ShapeList`
-
-    `S.max_<shapes>(a: Compound, axis=Axis.Z) -> ShapeList`
+- Get the minimum or maximum group of shapes in axis direction: `S.min_<shapes>` and `S.max_<shapes>` (for `<shapes>` in `solids`, `faces`, `edges`, `vertices`)
 
 ## Usage
 
@@ -526,4 +512,32 @@ JernArc(
     arc_size: float, 
     plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00))
 )
+```
+
+### Shortcuts
+
+Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the namespace:
+
+```python
+    S.planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]
+
+    S.diff(l1: List[Shape], l2: List[Shape]) -> ShapeList
+
+    S.min_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Solid>]
+    S.max_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Solid>]
+    S.min_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Face>]
+    S.max_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Face>]
+    S.min_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Edge>]
+    S.max_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Edge>]
+    S.min_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Vertex>]
+    S.max_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Vertex>]
+
+    S.min_solids(a: Compound, axis=Axis.Z) -> ShapeList
+    S.max_solids(a: Compound, axis=Axis.Z) -> ShapeList
+    S.min_faces(a: Compound, axis=Axis.Z) -> ShapeList
+    S.max_faces(a: Compound, axis=Axis.Z) -> ShapeList
+    S.min_edges(a: Compound, axis=Axis.Z) -> ShapeList
+    S.max_edges(a: Compound, axis=Axis.Z) -> ShapeList
+    S.min_vertices(a: Compound, axis=Axis.Z) -> ShapeList
+    S.max_vertices(a: Compound, axis=Axis.Z) -> ShapeList
 ```
