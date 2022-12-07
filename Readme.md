@@ -136,7 +136,7 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
 e = extrude(s, 0.3)
 ```
 
-![Example][./images/example.png]
+![Example](./images/example.png)
 
 ## Algebraic definition
 
