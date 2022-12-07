@@ -70,7 +70,8 @@ Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the
 ```python
 b = Box(1,2,3)
 ```
-is an `AlgCompound` placed on the `XY` plane. It can be immediately shown.
+
+is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgCompund`s do not have any location or rotation paramater. They will be relocated with the `@` operator (see below) which will then be reflected in the `location` property of the underlying `build123d.Compound`.
 
 ### Object arithmetic
 
