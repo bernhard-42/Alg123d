@@ -40,24 +40,28 @@ Another important operator is used from build123d:
 
 Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the namespace:
 
-Transform a mixed list of planes, faces and locations to a list of planes
+- Transform a mixed list of planes, faces and locations to a list of planes
     
-- `planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]`
+    `S.planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]`
     
-Get the difference of two ShapeLists 
+- Get the difference of two ShapeLists 
 
-- `diff(l1: List[Shape], l2: List[Shape]) -> ShapeList`
+    `S.diff(l1: List[Shape], l2: List[Shape]) -> ShapeList`
     
     Use case: `last = obj.faces(); obj = func(obj); diff = S.diff(obj.faces(), last)`
     
 
-For `<shape>` in `solid`, `face`, `edge`, `vertex` get the minimum or maximim shape in axis direction
-- `min_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
-- `max_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
+- For `<shape>` in `solid`, `face`, `edge`, `vertex` get the minimum or maximim shape in axis direction
+    
+    `S.min_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
+    
+    `S.max_<shape>(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Shape>]`
 
-For `<shapes>` in `solids`, `faces`, `edges`, `vertices` get the minimum or maximum group of shapes in axis direction:
-- `min_<shapes>(a: Compound, axis=Axis.Z) -> ShapeList`
-- `max_<shapes>(a: Compound, axis=Axis.Z) -> ShapeList`
+- For `<shapes>` in `solids`, `faces`, `edges`, `vertices` get the minimum or maximum group of shapes in axis direction:
+    
+    `S.min_<shapes>(a: Compound, axis=Axis.Z) -> ShapeList`
+
+    `S.max_<shapes>(a: Compound, axis=Axis.Z) -> ShapeList`
 
 ## Usage
 
