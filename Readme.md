@@ -556,13 +556,14 @@ $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , fo
 
 $\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) + (-(a + (-b)) - (b + (-a)))$ )
 
-Note: The implementation `a - b = a.cut(b)` needs to be read as $a + (-b)$ since the group does not have a binary $-$ operation. As such, $a - (b - c) = a + -(b + -c)) \ne a - b + c$
 
 **Abelian groups**
 
 $( A^n, e_n, +, -)$ is an abelian group for $n=2,3$
 
 $( A^1, e_1, +)$ is an abelian semigroup
+
+Note: The implementation `a - b = a.cut(b)` needs to be read as $a + (-b)$ since the group does not have a binary $-$ operation. As such, $a - (b - c) = a + -(b + -c)) \ne a - b + c$
 
 ### Locations, planes and location arithmentic
 
