@@ -554,7 +554,7 @@ $\\;\\;\\;\\;\\;\\; b + (-a)$ := `b.cut(a)` (implicit definition)
 
 $\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
 
-$\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) + (-(a + (-b)) - (b + (-a)))$ )
+$\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) + -(a + (-b)) + -(b + (-a))$ )
 
 
 **Abelian groups**
