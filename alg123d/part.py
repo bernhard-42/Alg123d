@@ -221,13 +221,18 @@ def extrude(
     taper: float = 0.0,
 ):
     faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
-    return create_compound(
+    compound = create_compound(
         bd.Extrude,
         dim=3,
         faces=faces,
         planes=[Plane(face) for face in faces],
         params=dict(amount=amount, both=both, taper=taper),
     )
+    if both:
+        solids = list(compound)
+        return AlgCompound(solids[0].fuse(solids[1]).clean(), 3)
+    else:
+        return compound
 
 
 def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgCompound:
