@@ -20,73 +20,93 @@ def diff(l1: List[Shape], l2: List[Shape]) -> ShapeList:
     return ShapeList(d1.values())
 
 
-def min_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Solid]:
+def min_shape(
+    s: ShapeList, axis: Axis = Axis.Z
+) -> Union[Solid, Face, Wire, Edge, Vertex]:
+    return s.sort_by(axis)[0]
+
+
+def max_shape(
+    s: ShapeList, axis: Axis = Axis.Z
+) -> Union[Solid, Face, Wire, Edge, Vertex]:
+    return s.sort_by(axis)[-1]
+
+
+def min_solid(
+    a: Compound, axis: Axis = Axis.Z, wrapped: bool = False
+) -> Union[Compound, Solid]:
     obj = a.solids().sort_by(axis)[0]
     return AlgCompound(obj) if wrapped else obj
 
 
-def max_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Solid]:
+def max_solid(
+    a: Compound, axis: Axis = Axis.Z, wrapped: bool = False
+) -> Union[Compound, Solid]:
     obj = a.solids().sort_by(axis)[-1]
     return AlgCompound(obj) if wrapped else obj
 
 
-def min_solids(a: Compound, axis=Axis.Z) -> ShapeList:
+def min_solids(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.solids().group_by(axis)[0]
 
 
-def max_solids(a: Compound, axis=Axis.Z) -> ShapeList:
+def max_solids(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.solids().group_by(axis)[-1]
 
 
-def min_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Face]:
+def min_face(a: Compound, axis: Axis = Axis.Z, wrapped=False) -> Union[Compound, Face]:
     obj = a.faces().sort_by(axis)[0]
     return AlgCompound(obj) if wrapped else obj
 
 
-def max_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Face]:
+def max_face(a: Compound, axis: Axis = Axis.Z, wrapped=False) -> Union[Compound, Face]:
     obj = a.faces().sort_by(axis)[-1]
     return AlgCompound(obj) if wrapped else obj
 
 
-def min_faces(a: Compound, axis=Axis.Z) -> ShapeList:
+def min_faces(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.faces().group_by(axis)[0]
 
 
-def max_faces(a: Compound, axis=Axis.Z) -> ShapeList:
+def max_faces(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.faces().group_by(axis)[-1]
 
 
-def min_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Edge]:
+def min_edge(a: Compound, axis: Axis = Axis.Z, wrapped=False) -> Union[Compound, Edge]:
     obj = a.edges().sort_by(axis)[0]
     return AlgCompound(obj) if wrapped else obj
 
 
-def max_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Edge]:
+def max_edge(a: Compound, axis: Axis = Axis.Z, wrapped=False) -> Union[Compound, Edge]:
     obj = a.edges().sort_by(axis)[-1]
     return AlgCompound(obj) if wrapped else obj
 
 
-def min_edges(a: Compound, axis=Axis.Z) -> ShapeList:
+def min_edges(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.edges().group_by(axis)[0]
 
 
-def max_edges(a: Compound, axis=Axis.Z) -> ShapeList:
+def max_edges(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.edges().group_by(axis)[-1]
 
 
-def min_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Vertex]:
+def min_vertex(
+    a: Compound, axis: Axis = Axis.Z, wrapped=False
+) -> Union[Compound, Vertex]:
     obj = a.vertices().sort_by(axis)[0]
     return AlgCompound(obj) if wrapped else obj
 
 
-def max_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, Vertex]:
+def max_vertex(
+    a: Compound, axis: Axis = Axis.Z, wrapped=False
+) -> Union[Compound, Vertex]:
     obj = a.vertices().sort_by(axis)[-1]
     return AlgCompound(obj) if wrapped else obj
 
 
-def min_vertices(a: Compound, axis=Axis.Z) -> ShapeList:
+def min_vertices(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.vertices().group_by(axis)[0]
 
 
-def max_vertices(a: Compound, axis=Axis.Z) -> ShapeList:
+def max_vertices(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return a.vertices().group_by(axis)[-1]
