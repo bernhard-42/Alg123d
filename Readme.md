@@ -41,11 +41,22 @@ Another important operator is used from build123d:
 Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the namespace:
 
 - Transform a mixed list of planes, faces and locations to a list of planes: `S.planes`
+
 - Get the difference of two ShapeLists: `S.diff`
     
-    Use case: `last = obj.faces(); obj = func(obj); diff = S.diff(obj.faces(), last)`
+    Use case: Get the edges, faces, solids created by the last transformation
+
+    ```python
+    last = obj.faces()
+    obj = my_transformation(obj)
+    diff = S.diff(obj.faces(), last)
+    ```
     
+- Get the minimum or maximum element of a Shapelist in axis direction: `S.sort_min` and `S.sort_max`
+
 - Get minimum or maximim shape in axis direction: `S.min_<shape>` and `S.max_<shape>` (for `<shape>` in `solid`, `face`, `edge`, `vertex`)
+
+- Get the minimum or maximum group of a Shapelist in axis direction: `S.group_min` and `S.group_max`
 
 - Get the minimum or maximum group of shapes in axis direction: `S.min_<shapes>` and `S.max_<shapes>` (for `<shapes>` in `solids`, `faces`, `edges`, `vertices`)
 
