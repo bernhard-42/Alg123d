@@ -29,8 +29,15 @@ class AlgCompound(Compound):
             self.wrapped = None if obj is None else obj.wrapped
 
     @classmethod
-    def make_compound(cls, objs: Shape, dim):
-        return cls(Compound.make_compound(objs), dim)
+    def make_compound(cls, objs: Shape, dim=None):
+        compound = Compound.make_compound(objs)
+        if dim is None:
+            dims = {"Solid": 3, "Face": 2, "Wire": 1, "Edge": 1}
+            if hasattr(objs[0], "ShapeType"):
+                dim = dims[objs[0].ShapeType()]
+            else:
+                dim = dims[objs[0].shape_type()]
+        return cls(compound, dim)
 
     def create_line(self, cls, objects=None, params=None):
         if params is None:
