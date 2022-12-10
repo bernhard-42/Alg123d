@@ -3,13 +3,47 @@ import alg123d.shortcuts as S
 import build123d as bd
 import cadquery as cq
 
+# %%
+r = Rectangle(1, 2)
+b = extrude(r, 1, both=True)
+# %%
+
+c = cq.Workplane("XZ").circle(1).extrude(1)
+s = c.solids()
+f = c.faces()
+e = c.edges()
+
+a = S.from_cq(c)
+a3 = S.from_cq(s)
+a2 = S.from_cq(f)
+a1 = S.from_cq(e)
+
+print(a3.dim)
+print(a2.dim)
+print(a1.dim)
+show(a, a1, a2, a3)
+
+# %%
+
+
+a = Cylinder(1, 1) @ Plane.XZ
+s = a.solids()
+f = a.faces()
+e = a.edges()
+
+c = S.to_cq(a)
+c3 = S.to_cq(s)
+c2 = S.to_cq(f)
+c1 = S.to_cq(e)
+
+show(c3, c2, c1, show_parent=False)
 
 # %%
 
 with bd.BuildPart() as flange:
     with bd.BuildSketch(Plane.XZ):
         with bd.BuildLine() as l:
-            bd.Polyline((-2, 5), (-12, 5), (-12, 10), (10, 10))
+            p = bd.Polyline((-2, 5), (-12, 5), (-12, 10), (10, 10))
             bd.Offset(amount=1)
         bd.MakeFace()
     bd.Extrude(amount=10, both=True)
@@ -285,5 +319,93 @@ with bd.BuildPart() as result:
     bd.Add(bp.part)
 
 show(result)
+
+# %%
+set_defaults(reset_camera=False)
+with bd.BuildSketch() as s:
+    r = bd.Rectangle(1, 2)
+    bd.Offset(amount=0.1, mode=bd.Mode.SUBTRACT)  # Fails with s.sketch.faces == []
+# show(s, r.located(Location((1.5, 0, 0))))
+print(list(s.sketch) == [])
+
+# %%
+
+with bd.BuildSketch() as s:
+    r = bd.Rectangle(1, 2)
+    bd.Offset(amount=-0.1, mode=bd.Mode.SUBTRACT)  # ok, face with holoe
+show(s, r.located(Location((1.5, 0, 0))))
+
+# %%
+
+with bd.BuildSketch() as s:
+    r = bd.Rectangle(1, 2)
+    bd.Offset(amount=0.1, mode=bd.Mode.ADD)  # ok, larger face, same as mode=REPLACE
+show(s, r.located(Location((1.5, 0, 0))))
+
+# %%
+with bd.BuildSketch() as s:
+    r = bd.Rectangle(1, 2)
+    bd.Offset(amount=-0.1, mode=bd.Mode.ADD)  # useless
+show(s, r.located(Location((1.5, 0, 0))))
+
+# %%
+with bd.BuildSketch() as s:
+    r = bd.Rectangle(1, 2)
+    bd.Offset(amount=0.1, mode=bd.Mode.REPLACE)  # ok, larger face, same as mode=ADD
+show(s, r.located(Location((1.5, 0, 0))))
+
+# %%
+with bd.BuildSketch() as s:
+    r = bd.Rectangle(1, 2)
+    bd.Offset(amount=-0.1, mode=bd.Mode.REPLACE)  # ok, smaller face
+show(s, r.located(Location((1.5, 0, 0))))
+
+# %%
+
+
+# %%
+
+with bd.BuildPart() as p:
+    b = bd.Box(1, 2, 3)
+    bd.Offset(amount=0.1, mode=bd.Mode.SUBTRACT)  # useless
+b.locate(Location((1.5, 0, 0)))
+show(p, b)
+
+# %%
+
+with bd.BuildPart() as p:
+    b = bd.Box(1, 2, 3)
+    bd.Offset(amount=-0.1, mode=bd.Mode.SUBTRACT)  # ok, smaller box
+b.locate(Location((1.5, 0, 0)))
+show(p, b)
+
+# %%
+
+with bd.BuildPart() as p:
+    b = bd.Box(1, 2, 3)
+    bd.Offset(amount=0.1, mode=bd.Mode.ADD)  # ok, larger box
+b.locate(Location((1.5, 0, 0)))
+show(p, b)
+
+# %%
+with bd.BuildPart() as p:
+    b = bd.Box(1, 2, 3)
+    bd.Offset(amount=-0.1, mode=bd.Mode.ADD)  # useless
+b.locate(Location((1.5, 0, 0)))
+show(p, b)
+
+# %%
+with bd.BuildPart() as p:
+    b = bd.Box(1, 2, 3)
+    bd.Offset(amount=0.1, mode=bd.Mode.REPLACE)  # ok, larger hollow box
+b.locate(Location((1.5, 0, 0)))
+show(p, b)
+
+# %%
+with bd.BuildPart() as p:
+    b = bd.Box(1, 2, 3)
+    bd.Offset(amount=-0.1, mode=bd.Mode.REPLACE)  # ok, same box, but hollow
+b.locate(Location((1.5, 0, 0)))
+show(p, b)
 
 # %%
