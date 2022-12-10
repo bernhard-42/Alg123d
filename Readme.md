@@ -83,7 +83,7 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
     ```python
     f = Box(1,2,3) - Cylinder(0.2, 5)
     ```
-- Interseting a box and a cylinder
+- Intersecting a box and a cylinder
 
     ```python
     f = Box(1,2,3) & Cylinder(0.2, 5)
