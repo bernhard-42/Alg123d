@@ -505,6 +505,9 @@ Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the
 
     S.diff(l1: List[Shape], l2: List[Shape]) -> ShapeList
 
+    sort_min(s: ShapeList, axis: Axis = Axis.Z) -> Union[Solid, Face, Wire, Edge, Vertex]
+    sort_max(s: ShapeList, axis: Axis = Axis.Z) -> Union[Solid, Face, Wire, Edge, Vertex]
+
     S.min_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Solid>]
     S.max_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Solid>]
     S.min_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Face>]
@@ -513,6 +516,9 @@ Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the
     S.max_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Edge>]
     S.min_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Vertex>]
     S.max_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Vertex>]
+
+    group_min(s: ShapeList, axis: Axis = Axis.Z) -> ShapeList
+    group_max(s: ShapeList, axis: Axis = Axis.Z) -> ShapeList
 
     S.min_solids(a: Compound, axis=Axis.Z) -> ShapeList
     S.max_solids(a: Compound, axis=Axis.Z) -> ShapeList

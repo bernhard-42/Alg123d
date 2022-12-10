@@ -46,26 +46,14 @@ class Base:
         for name, pos in self.base_hinges.items():
             last = base.edges()
             base -= (
-                Cylinder(
-                    diam / 2 + tol,
-                    thickness,
-                    centered=(True, True, False),
-                )
-                @ pos
+                Cylinder(diam / 2 + tol, thickness, centered=(True, True, False)) @ pos
             )
-            self.base_edges[name] = S.min_shape(S.diff(base.edges(), last))
+            self.base_edges[name] = S.sort_min(S.diff(base.edges(), last))
 
         for name, pos in self.stand_holes.items():
             last = base.edges()
-            base -= (
-                Box(
-                    width / 2 + 2 * tol,
-                    thickness + 2 * tol,
-                    5 * thickness,
-                )
-                @ pos
-            )
-            self.stand_edges[name] = S.min_shapes(S.diff(base.edges(), last))
+            base -= Box(width / 2 + 2 * tol, thickness + 2 * tol, 5 * thickness) @ pos
+            self.stand_edges[name] = S.group_min(S.diff(base.edges(), last))
 
         self.obj = base
         return base
@@ -80,7 +68,9 @@ class Base:
             for name, edge in self.stand_edges.items()
         }
         m.update(m2)
-        m["base"] = Mate(S.max_face(self.obj), name="base") @ Location((0, 0, height + 2 * tol))
+        m["base"] = Mate(S.max_face(self.obj), name="base") @ Location(
+            (0, 0, height + 2 * tol)
+        )
         m["top"] = Mate(S.min_face(self.obj), name="top")
         return m
 
@@ -114,7 +104,7 @@ class Stand:
             m = S.max_edges(block)
             stand = chamfer(
                 stand,
-                S.min_shape(m, Axis.Y) if i == 1 else S.max_shape(m, Axis.Y),
+                S.sort_min(m, Axis.Y) if i == 1 else S.sort_max(m, Axis.Y),
                 length=self.h - 2 * tol,
             )
 
@@ -173,8 +163,8 @@ class UpperLeg:
 
     def mates(self):
         return {
-            "knee_bottom": Mate(S.min_shape(self.knee_hole), name="knee_bottom"),
-            "knee_top": Mate(S.max_shape(self.knee_hole), name="knee_top"),
+            "knee_bottom": Mate(S.sort_min(self.knee_hole), name="knee_bottom"),
+            "knee_top": Mate(S.sort_max(self.knee_hole), name="knee_top"),
             "hinge": Mate(S.min_face(self.obj, Axis.Y), name="hinge"),
         }
 
@@ -213,8 +203,8 @@ class LowerLeg:
 
     def mates(self):
         return {
-            "knee_bottom": Mate(S.min_shape(self.knee_hole), name="knee_bottom"),
-            "knee_top": Mate(S.max_shape(self.knee_hole), name="knee_top"),
+            "knee_bottom": Mate(S.sort_min(self.knee_hole), name="knee_bottom"),
+            "knee_top": Mate(S.sort_max(self.knee_hole), name="knee_top"),
         }
 
 
