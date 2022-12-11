@@ -173,13 +173,13 @@ def max_vertices(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return group_max(a.vertices(), axis)
 
 
-def from_cq(obj):
-    return AlgCompound.make_compound(obj.objects)
-
-
 #
 # Conversion functions
 #
+
+
+def from_cq(obj):
+    return AlgCompound.make_compound(obj.objects)
 
 
 def to_cq(obj):
