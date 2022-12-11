@@ -2,12 +2,46 @@ from typing import List, Union
 from .wrappers import AlgCompound
 from .direct_api import *
 
+__all__ = [
+    "Pos",
+    "Rot",
+    "planes",
+    "diff",
+    "sort_min",
+    "sort_max",
+    "group_min",
+    "group_max",
+    "min_solid",
+    "max_solid",
+    "min_solids",
+    "max_solids",
+    "min_face",
+    "max_face",
+    "min_faces",
+    "max_faces",
+    "min_edge",
+    "max_edge",
+    "min_edges",
+    "max_edges",
+    "min_vertex",
+    "max_vertex",
+    "min_vertices",
+    "max_vertices",
+    "from_cq",
+    "to_cq",
+    "from_bd",
+    "to_bd",
+]
 
-def tupleize(arg):
-    if isinstance(arg, (tuple, list)):
-        return tuple(arg)
-    else:
-        return (arg,)
+
+class Pos(Location):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super().__init__((x, y, z))
+
+
+class Rot(Location):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super().__init__((0, 0, 0), (x, y, z))
 
 
 def planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]:

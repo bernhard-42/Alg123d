@@ -1,5 +1,5 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 import build123d as bd
 import cadquery as cq
 
@@ -11,10 +11,10 @@ s = c.solids()
 f = c.faces()
 e = c.edges()
 
-a = S.from_cq(c)
-a3 = S.from_cq(s)
-a2 = S.from_cq(f)
-a1 = S.from_cq(e)
+a = from_cq(c)
+a3 = from_cq(s)
+a2 = from_cq(f)
+a1 = from_cq(e)
 
 print(a3.dim)
 print(a2.dim)
@@ -22,9 +22,9 @@ print(a1.dim)
 
 show(
     a,
-    a1 @ (2, 0, 0),
-    a2 @ (4, 0, 0),
-    a3 @ (6, 0, 0),
+    a1 @ Pos(2, 0, 0),
+    a2 @ Pos(4, 0, 0),
+    a3 @ Pos(6, 0, 0),
 )
 
 # %%
@@ -34,10 +34,10 @@ s = a.solids()
 f = a.faces()
 e = a.edges()
 
-c = S.to_cq(a)
-c3 = S.to_cq(s)
-c2 = S.to_cq(f)
-c1 = S.to_cq(e)
+c = to_cq(a)
+c3 = to_cq(s)
+c2 = to_cq(f)
+c1 = to_cq(e)
 
 show(
     c,
@@ -71,9 +71,9 @@ a1 = from_bd(b.edges())
 
 show(
     a,
-    a1 @ (2, 0, 0),
-    a2 @ (4, 0, 0),
-    a3 @ (6, 0, 0),
+    a1 @ Pos(2, 0, 0),
+    a2 @ Pos(4, 0, 0),
+    a3 @ Pos(6, 0, 0),
 )
 
 # %%

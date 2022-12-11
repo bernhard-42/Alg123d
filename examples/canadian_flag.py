@@ -1,4 +1,5 @@
 from alg123d import *
+from alg123d.shortcuts import *
 
 l1 = Polyline(((0.0000, 0.0771), (0.0187, 0.0771), (0.0094, 0.2569)))
 l2 = Polyline(((0.0325, 0.2773), (0.2115, 0.2458), (0.1873, 0.3125)))
@@ -19,7 +20,7 @@ leaf = l1 + l2 + l3 + l4 + l5 + l6 + l7 + r1 + r2 + r3 + r4 + r5 + s
 leaf += mirror(leaf, about=Plane.YZ)
 leaf = make_face(leaf)
 
-west_field = Rectangle(0.5, 1, centered=(False, False)) @ (-1, 0)
+west_field = Rectangle(0.5, 1, centered=(False, False)) @ Pos(-1, 0)
 east_field = mirror(west_field, Plane.YZ)
 centre_field = Rectangle(1, 1, centered=(True, False)) - leaf
 

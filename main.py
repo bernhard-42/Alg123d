@@ -1,8 +1,44 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 import build123d as bd
 import cadquery as cq
 
+
+a = extrude(Rectangle(1, 2), 1, both=True)
+show(a)
+# %%
+
+
+with bd.BuildPart() as a2:
+    with bd.BuildSketch() as s:
+        bd.Rectangle(1, 2)
+    bd.Extrude(amount=1, both=True)
+
+show(a2.part.wrapped)
+
+# %%
+from alg123d.wrappers import create_compound
+
+
+def extr(
+    to_extrude: Compound,
+    amount: float = None,
+    both: bool = False,
+    taper: float = 0.0,
+):
+    faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
+    compound = create_compound(
+        bd.Extrude,
+        dim=3,
+        faces=faces,
+        planes=[Plane(face) for face in faces],
+        params=dict(amount=amount, both=both, taper=taper),
+    )
+    return compound
+
+
+a = extr(Rectangle(1, 2), 0.1, both=True)
+show(a)
 # %%
 r = Rectangle(1, 2)
 b = extrude(r, 1, both=True)
@@ -13,10 +49,10 @@ s = c.solids()
 f = c.faces()
 e = c.edges()
 
-a = S.from_cq(c)
-a3 = S.from_cq(s)
-a2 = S.from_cq(f)
-a1 = S.from_cq(e)
+a = from_cq(c)
+a3 = from_cq(s)
+a2 = from_cq(f)
+a1 = from_cq(e)
 
 print(a3.dim)
 print(a2.dim)
@@ -31,10 +67,10 @@ s = a.solids()
 f = a.faces()
 e = a.edges()
 
-c = S.to_cq(a)
-c3 = S.to_cq(s)
-c2 = S.to_cq(f)
-c1 = S.to_cq(e)
+c = to_cq(a)
+c3 = to_cq(s)
+c2 = to_cq(f)
+c1 = to_cq(e)
 
 show(c3, c2, c1, show_parent=False)
 
@@ -69,10 +105,10 @@ show(flange2)
 # %%
 a = Box(1, 2, 3)
 l, f = a.edges(), a.faces()
-a -= CounterBore(a, 0.2, 0.3, 0.3) @ Plane(S.max_face(a))
+a -= CounterBore(a, 0.2, 0.3, 0.3) @ Plane(max_face(a))
 
-new_edges = S.diff(l, a.edges())
-new_faces = S.diff(f, a.faces())
+new_edges = diff(l, a.edges())
+new_faces = diff(f, a.faces())
 show(a, *new_edges, *new_faces, transparent=True)
 
 # %%
@@ -100,7 +136,7 @@ ribs += Rectangle(0.5 * MM, 17.5 * MM)
 ribs += Circle(radius=5.51 * MM / 2)
 
 ribs = extrude(ribs @ (0, 0, 4), 10)
-key_cap += S.min_solid(ribs - key_cap, wrapped=True)
+key_cap += min_solid(ribs - key_cap, wrapped=True)
 
 # Find the face on the bottom of the ribs to build onto
 rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]

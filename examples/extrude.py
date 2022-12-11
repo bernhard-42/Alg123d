@@ -1,5 +1,5 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 
 # simple
 
@@ -19,7 +19,7 @@ both = extrude(
 
 multiple = Box(10, 10, 10)
 t = Empty()
-for plane in S.planes(multiple.faces()):
+for plane in planes(multiple.faces()):
     for loc in GridLocations(5, 5, 2, 2):
         t += Text("Ω", fontsize=3, halign=Halign.CENTER, valign=Valign.CENTER) @ (
             plane * loc
@@ -30,13 +30,13 @@ multiple = multiple + extrude(t, amount=1)
 
 rect = Rectangle(7, 7)
 single_multiple = Box(10, 10, 10)
-for loc in S.planes(single_multiple.faces()):
+for loc in planes(single_multiple.faces()):
     single_multiple -= extrude(rect.faces()[0], amount=-2) @ loc
 
 # Non-planar surface
-non_planar = Cylinder(10, 20, centered=(True, False, True)) @ Rotation(90, 0, 0)
+non_planar = Cylinder(10, 20, centered=(True, False, True)) @ Rot(x=90)
 non_planar &= Box(10, 10, 10, centered=(True, True, False))
-non_planar = extrude(S.min_face(non_planar), 2)
+non_planar = extrude(min_face(non_planar), 2)
 
 # Taper Extrude and Extrude to "next" while creating a Cherry MX key cap
 # See: https://www.cherrymx.de/en/dev.html
@@ -64,7 +64,7 @@ ribs += Rectangle(0.5 * MM, 17.5 * MM)
 ribs += Circle(radius=5.51 * MM / 2)
 
 # Extrude the mount and ribs to the key cap underside
-key_cap += extrude_until(ribs @ (0, 0, 4 * MM), key_cap)
+key_cap += extrude_until(ribs @ Pos(z=4 * MM), key_cap)
 
 # Find the face on the bottom of the ribs to build onto
 rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
@@ -78,9 +78,9 @@ socket -= Rectangle(1.17 * MM, 4.1 * MM)
 key_cap += extrude(socket @ plane, amount=3.5 * MM)
 
 if "show_object" in locals():
-    show_object(simple @ (-15, 0, 0), name="simple pending extrude")
-    show_object(both @ (20, 10, 0), name="simple both")
-    show_object(multiple @ (0, -20, 0), name="multiple pending extrude")
-    show_object(single_multiple @ (0, 20, 0), name="single multiple")
-    show_object(non_planar @ (20, -10, 0), name="non planar")
+    show_object(simple @ Pos(-15, 0, 0), name="simple pending extrude")
+    show_object(both @ Pos(20, 10, 0), name="simple both")
+    show_object(multiple @ Pos(0, -20, 0), name="multiple pending extrude")
+    show_object(single_multiple @ Pos(0, 20, 0), name="single multiple")
+    show_object(non_planar @ Pos(20, -10, 0), name="non planar")
     show_object(key_cap, name="key cap", options={"alpha": 0.7})

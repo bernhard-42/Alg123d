@@ -113,7 +113,7 @@ class AlgCompound(Compound):
     def __and__(self, other: AlgCompound):
         return self._place(Mode.INTERSECT, other)
 
-    def __matmul__(self, obj: Union[float, LocationLike]):
+    def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
             if self.dim == 1:
                 return Wire.make_wire(self.edges()).position_at(obj)
@@ -122,9 +122,6 @@ class AlgCompound(Compound):
 
         elif isinstance(obj, Location):
             loc = obj
-
-        elif isinstance(obj, tuple) and all([isinstance(o, (int, float)) for o in obj]):
-            loc = Location(obj)
 
         elif isinstance(obj, Plane):
             loc = obj.to_location()

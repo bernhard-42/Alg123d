@@ -1,6 +1,5 @@
 from alg123d import *
-import alg123d.shortcuts as S
-from cq_vscode import show, set_defaults
+from alg123d.shortcuts import *
 
 set_defaults(axes=True, axes0=True, transparent=True, grid=(True, True, True))
 
@@ -10,7 +9,7 @@ set_defaults(axes=True, axes0=True, transparent=True, grid=(True, True, True))
 
 p = Polyline([(-2, 5), (-12, 5), (-12, 10), (10, 10)])
 o = offset(p, 1)
-show(o, p @ (0, -15, 0))
+show(o, p @ Pos(0, -15, 0))
 
 
 # %%
@@ -19,7 +18,7 @@ show(o, p @ (0, -15, 0))
 
 f = Rectangle(10, 20)
 o = offset(f, 1)
-show(f, o @ (15, 0, 0))
+show(f, o @ Pos(15, 0, 0))
 
 # %%
 
@@ -27,19 +26,19 @@ show(f, o @ (15, 0, 0))
 
 b = Box(10, 20, 15)
 o = offset(b, 1)
-show(b, o @ (15, 0, 0), transparent=True)
+show(b, o @ Pos(15, 0, 0), transparent=True)
 
 # %%
 b = Box(10, 20, 15)
 o = offset(b, 1) - b
-show(b, o @ (15, 0, 0), transparent=True)
+show(b, o @ Pos(15, 0, 0), transparent=True)
 
 # %%
 # Offset solid
 
 b = Box(10, 20, 15)
 o = offset(b, -1)
-show(b, o @ (15, 0, 0), transparent=True)
+show(b, o @ Pos(15, 0, 0), transparent=True)
 
 # %%
 

@@ -1,5 +1,5 @@
 from alg123d import *
-from cq_vscode import show, set_defaults
+from alg123d.shortcuts import *
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
@@ -46,7 +46,7 @@ show(RegularPolygon(2, 7))
 
 # %%
 
-show(RegularPolygon(2, 7, centered=centered))
+show(RegularPolygon(2, 7, centered=False))
 
 # %%
 
@@ -63,14 +63,7 @@ show(Text("Alg123d", 8, font_style=FontStyle.ITALIC))
 
 # %%
 
-from alg123d import *
-from cq_vscode import show, set_defaults
-
-set_defaults(axes=True, axes0=True, transparent=False)
-
-# %%
-
-c = Circle(1) - Rectangle(2, 2) @ (0.75, 0) - Rectangle(2, 2) @ (0, 0.75)
+c = Circle(1) - Rectangle(2, 2) @ Pos(0.75, 0) - Rectangle(2, 2) @ Pos(y=0.75)
 arc = c.edges()[0]
 
 s = SlotArc(arc, 0.1)
@@ -89,7 +82,7 @@ show(Rectangle(8, 2).edges(), s)
 # %%
 
 s = SlotCenterPoint((1, 1), (2, 0), 2)
-show((Rectangle(4, 4) @ (1, 1)).edges(), s)
+show((Rectangle(4, 4) @ Pos(1, 1)).edges(), s)
 
 
 # %%

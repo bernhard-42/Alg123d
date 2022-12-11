@@ -209,10 +209,10 @@ class Mate:
     def to_plane(self) -> Plane:
         return Plane(self.origin, self.x_dir, self.z_dir)
 
-    def __matmul__(self, loc: LocationLike):
+    def __matmul__(self, loc: Location):
         """
         Change location to a given loc
-        :param loc: LocationLike
+        :param loc: Location
         """
         plane = self.to_plane() * loc
         return Mate(

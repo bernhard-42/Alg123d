@@ -1,7 +1,7 @@
 from typing import List
 import build123d as bd
 from .wrappers import AlgCompound, create_compound
-from .shortcuts import tupleize, min_solid
+from .shortcuts import min_solid
 from .direct_api import *
 
 __all__ = [
@@ -26,6 +26,13 @@ __all__ = [
 #
 # Objects
 #
+
+
+def tupleize(arg):
+    if isinstance(arg, (tuple, list)):
+        return tuple(arg)
+    else:
+        return (arg,)
 
 
 class Box(AlgCompound):

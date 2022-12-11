@@ -1,8 +1,8 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 
 obj = Box(5, 5, 1)
-for plane in S.planes(obj.faces().filter_by(Axis.Z)):
+for plane in planes(obj.faces().filter_by(Axis.Z)):
     obj -= Sphere(1.8) @ plane
 
 if "show_object" in locals():

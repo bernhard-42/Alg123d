@@ -1,5 +1,5 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 
 # 35x7.5mm DIN Rail Dimensions
 overall_width, top_width, height, thickness, fillet_radius = 35, 27, 7.5, 1, 0.8
@@ -36,7 +36,7 @@ din = fillet(din, outside_vertices, radius=fillet_radius + thickness)
 
 rail = extrude(din, rail_length)
 
-plane = Plane(S.max_face(rail, Axis.Y))
+plane = Plane(max_face(rail, Axis.Y))
 
 slot_faces = Empty()
 for loc in GridLocations(0, slot_pitch, 1, rail_length // slot_pitch - 1):

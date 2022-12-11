@@ -1,7 +1,7 @@
 from math import sin, pi
+
 from alg123d import *
-import alg123d.shortcuts as S
-from cq_vscode import show, set_defaults
+from alg123d.shortcuts import *
 
 set_defaults(axes=True, axes0=True, transparent=False)
 
@@ -89,7 +89,7 @@ show(extrude(s, 0.1))
 # %%
 
 s1 = Rectangle(1, 1)
-s2 = Rectangle(0.5, 2) @ (1, 0, 1)
+s2 = Rectangle(0.5, 2) @ Pos(1, 0, 1)
 
 l = loft([s1, s2])
 show(s1.edges(), s2.edges(), l)
@@ -98,7 +98,7 @@ show(s1.edges(), s2.edges(), l)
 
 slice_count = 10
 sections = [
-    Circle(5 + 10 * sin(i * pi / slice_count)) @ (0, 0, 3 * i)
+    Circle(5 + 10 * sin(i * pi / slice_count)) @ Pos(z=3 * i)
     for i in range(slice_count + 1)
 ]
 
@@ -109,25 +109,25 @@ show(*[s.edges() for s in sections], l)
 # revolve
 
 # %%
-s1 = Circle(0.1) @ (0, 0.5, 0)
+s1 = Circle(0.1) @ Pos(0, 0.5, 0)
 r = revolve(s1, Axis.X, 90)
 show(r)
 
 # %%
 
-s1 = Circle(0.1) @ (0, 0.5, 0)
+s1 = Circle(0.1) @ Pos(0, 0.5, 0)
 r = revolve(s1, Axis.X, -130)
 show(r)
 
 # %%
 
-s = Sphere(1) @ (0.9, 0.2, 0)
+s = Sphere(1) @ Pos(0.9, 0.2, 0)
 sections = section(s, [Plane.XZ, Plane.ZY, Plane(Location((0, 1, 2), (60, 0, 0)))])
 show(s, sections, transparent=True)
 
 # %%
 
-c = Circle(2) @ (20, 0, 0)
+c = Circle(2) @ Pos(20, 0, 0)
 a = revolve(c, -Axis.Y, 180)
 r = extrude(Rectangle(20, 4), 17.5)
 a += S.min_solid(r - a, wrapped=True)
@@ -135,7 +135,7 @@ a += S.min_solid(r - a, wrapped=True)
 show(a)
 # %%
 
-c = Circle(2) @ (20, 0, 0)
+c = Circle(2) @ Pos(20, 0, 0)
 a = revolve(c, -Axis.Y, 180)
 a = extrude_until(Rectangle(20, 4), a)
 
@@ -145,9 +145,9 @@ show(a)
 pts = [(-2, 5), (-12, 5), (-12, 10), (10, 10)]
 l = offset(Polyline(pts), 1)
 f = make_face(l) @ Plane.XZ
-flange = extrude(f, 10, both=True) @ Rotation(10, 20, -30)
+flange = extrude(f, 10, both=True) @ Rot(10, 20, -30)
 
-rect = Rectangle(8, 8) @ Rotation(0, 10, 0)
+rect = Rectangle(8, 8) @ Rot(0, 10, 0)
 flange = extrude_until(rect.faces()[0], flange)
 
 show(rect, flange)

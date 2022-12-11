@@ -1,4 +1,5 @@
 from alg123d import *
+from alg123d.shortcuts import *
 
 powerup = Spline(
     [(0, 0, 0), (50, 0, 50), (100, 0, 0)],
@@ -6,7 +7,7 @@ powerup = Spline(
     tangent_scalars=(0.5, 2),
 )
 corner = RadiusArc(powerup @ 1, (100, 60, 0), -30)
-screw = Helix(75, 150, 15, direction=(-1, 0, 0)) @ (75, 40, 15)
+screw = Helix(75, 150, 15, direction=(-1, 0, 0)) @ Pos(75, 40, 15)
 
 roller_coaster = powerup + corner + screw
 roller_coaster += Spline((corner @ 1, screw @ 0), tangents=(corner % 1, screw % 0))

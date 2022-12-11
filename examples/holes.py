@@ -1,5 +1,5 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 
 thru_hole = Cylinder(radius=3, height=2)
 thru_hole -= Bore(thru_hole, radius=1)
@@ -18,13 +18,13 @@ recessed_counter_sink -= CounterSink(
 
 # Flush counter sink hole (hole location @ (0,0,2))
 flush_counter_sink = Cylinder(radius=3, height=2)
-plane = Plane(S.max_face(flush_counter_sink))
+plane = Plane(max_face(flush_counter_sink))
 flush_counter_sink -= (
     CounterSink(flush_counter_sink, radius=1, counter_sink_radius=1.5) @ plane
 )
 
 if "show_object" in locals():
     show_object(thru_hole, name="though hole")
-    show_object(recessed_counter_bore @ (10, 0), name="recessed counter bore")
-    show_object(recessed_counter_sink @ (0, 10), name="recessed counter sink")
-    show_object(flush_counter_sink @ (10, 10), name="flush counter sink")
+    show_object(recessed_counter_bore @ Pos(10, 0), name="recessed counter bore")
+    show_object(recessed_counter_sink @ Pos(0, 10), name="recessed counter sink")
+    show_object(flush_counter_sink @ Pos(10, 10), name="flush counter sink")

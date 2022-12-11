@@ -1,5 +1,5 @@
 from alg123d import *
-import alg123d.shortcuts as S
+from alg123d.shortcuts import *
 
 height, width, thickness, padding = 60, 80, 10, 12
 screw_shaft_radius, screw_head_radius, screw_head_height = 1.5, 3, 3
@@ -10,7 +10,7 @@ plan = Rectangle(width, height)
 plan = fillet(plan, plan.vertices(), 5)
 pillow_block = extrude(plan, thickness)
 
-plane = Plane(S.max_face(pillow_block))
+plane = Plane(max_face(pillow_block))
 
 pillow_block -= (
     CounterBore(pillow_block, bearing_axle_radius, bearing_radius, bearing_thickness)
