@@ -40,8 +40,8 @@ Another important operator is used from build123d:
 
 _Location classes_:
 
--   `Rot`: Rotations shortcut
--   `Pos`: Positions shortcut
+-   `Rot`: Create a rotation only Location
+-   `Pos`: Create a positions only Location
 
 _Plane classes_:
 
