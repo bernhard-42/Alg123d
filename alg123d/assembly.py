@@ -2,9 +2,23 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import overload, Union, Tuple, Dict, List, overload
 from webcolors import name_to_rgb
-
+from enum import Enum, auto
 
 from .direct_api import *
+
+
+class Action(Enum):
+    ROTATE = "t"
+    ROTATE_X = "tx"
+    ROTATE_Y = "ty"
+    ROTATE_Z = "tz"
+    TRANSLATE = "t"
+    TRANSLATE_X = "tx"
+    TRANSLATE_Y = "ty"
+    TRANSLATE_Z = "tz"
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}.{self.name}>"
 
 
 class Color:

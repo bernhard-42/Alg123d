@@ -3,9 +3,6 @@ import numpy as np
 from alg123d import *
 from alg123d.shortcuts import *
 
-set_defaults(mate_scale=3)
-
-# %%
 
 thickness = 2
 height = 40
@@ -13,9 +10,7 @@ width = 65
 length = 100
 diam = 4
 tol = 0.05
-hinge_x1, hinge_x2 = 0.63, 0.87
 
-# %%
 
 #
 # Base and top
@@ -23,6 +18,7 @@ hinge_x1, hinge_x2 = 0.63, 0.87
 
 
 class Base:
+    hinge_x1, hinge_x2 = 0.63, 0.87
 
     base_hinges = {
         "right_front": Pos(-hinge_x1 * width, -hinge_x1 * length),
@@ -74,10 +70,6 @@ class Base:
         return base
 
 
-base = Base().create()
-show(base, *base.mates.values(), clear=True, transparent=True)
-
-# %%
 #
 # Stands
 #
@@ -115,10 +107,6 @@ class Stand:
         return stand
 
 
-stand = Stand().create()
-show(stand, *stand.mates.values(), clear=True, transparent=True)
-
-# %%
 #
 # Legs
 #
@@ -158,9 +146,6 @@ class UpperLeg:
         return upper_leg
 
 
-upper_leg = UpperLeg().create()
-show(upper_leg, *upper_leg.mates.values(), transparent=True, reset_camera=True)
-
 # %%
 class LowerLeg:
     def __init__(self):
@@ -191,11 +176,11 @@ class LowerLeg:
         return lower_leg
 
 
+base = Base().create()
+stand = Stand().create()
+upper_leg = UpperLeg().create()
 lower_leg = LowerLeg().create()
-show(lower_leg, *lower_leg.mates.values(), transparent=True, reset_camera=True)
 
-
-# %%
 
 #
 # Assembly
@@ -257,10 +242,9 @@ for name in Base.base_hinges.keys():
     hexapod.assemble(f"{name}_hinge", f"{name}_hole")
     hexapod.assemble(f"{name}_lower_knee", f"{name}_knee")
 
-show(hexapod, render_mates=False, mate_scale=3, reset_camera=True)
+if "show_object" in locals():
+    show_object(hexapod)
 
-
-# %%
 
 #
 # Animation
@@ -296,5 +280,3 @@ for name in Base.base_hinges.keys():
     animation.add_track(f"/base/{name}_leg/lower_leg", "rz", times, values)
 
 animation.animate(2)
-
-# %%
