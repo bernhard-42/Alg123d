@@ -12,6 +12,7 @@ width = 65
 length = 100
 diam = 4
 tol = 0.05
+hinge_x1, hinge_x2 = 0.63, 0.87
 
 # %%
 
@@ -21,22 +22,24 @@ tol = 0.05
 
 
 class Base:
+
+    base_hinges = {
+        "right_front": Pos(-hinge_x1 * width, -hinge_x1 * length),
+        "right_middle": Pos(-hinge_x2 * width, 0),
+        "right_back": Pos(-hinge_x1 * width, hinge_x1 * length),
+        "left_front": Pos(hinge_x1 * width, -hinge_x1 * length),
+        "left_middle": Pos(hinge_x2 * width, 0),
+        "left_back": Pos(hinge_x1 * width, hinge_x1 * length),
+    }
+
+    stand_holes = {
+        "front_stand": Pos(0, -0.8 * length),
+        "back_stand": Pos(0, 0.75 * length),
+    }
+
     def __init__(self):
-        x1, x2 = 0.63, 0.87
-        self.base_hinges = {
-            "right_front": Pos(-x1 * width, -x1 * length),
-            "right_middle": Pos(-x2 * width, 0),
-            "right_back": Pos(-x1 * width, x1 * length),
-            "left_front": Pos(x1 * width, -x1 * length),
-            "left_middle": Pos(x2 * width, 0),
-            "left_back": Pos(x1 * width, x1 * length),
-        }
         self.base_edges = {}
 
-        self.stand_holes = {
-            "front_stand": Pos(0, -0.8 * length),
-            "back_stand": Pos(0, 0.75 * length),
-        }
         self.stand_edges = {}
 
         self.obj = None
@@ -57,28 +60,24 @@ class Base:
             base -= Box(width / 2 + 2 * tol, thickness + 2 * tol, 5 * thickness) @ pos
             self.stand_edges[name] = group_min(diff(base.edges(), last))
 
-        self.obj = base
-        return base
-
-    def mates(self):
-        m = {
+        base.mates = {
             f"{name}_hole": Mate(edge, name=name)
             for name, edge in self.base_edges.items()
         }
-        m2 = {
-            f"{name}_hole": Mate(edge, name=name)
-            for name, edge in self.stand_edges.items()
-        }
-        m.update(m2)
-        m["base"] = Mate(max_face(self.obj), name="base") @ Pos(z=height + 2 * tol)
-        m["top"] = Mate(min_face(self.obj), name="top")
-        return m
+        base.mates.update(
+            {
+                f"{name}_hole": Mate(edge, name=name)
+                for name, edge in self.stand_edges.items()
+            }
+        )
+        base.mates["base"] = Mate(max_face(base), name="base") @ Pos(z=height + 2 * tol)
+        base.mates["top"] = Mate(min_face(base), name="top")
+
+        return base
 
 
-_base = Base()
-base = _base.create()
-mates = _base.mates()
-show(base, *mates.values(), clear=True, transparent=True)
+base = Base().create()
+show(base, *base.mates.values(), clear=True, transparent=True)
 
 # %%
 #
@@ -114,17 +113,12 @@ class Stand:
                 @ plane
             )
 
-        self.obj = stand
+        stand.mates = {"bottom": Mate(max_face(stand, Axis.Y), name="bottom")}
         return stand
 
-    def mates(self):
-        return {"bottom": Mate(max_face(self.obj, Axis.Y), name="bottom")}
 
-
-_stand = Stand()
-stand = _stand.create()
-mates = _stand.mates()
-show(stand, *mates.values(), clear=True, transparent=True)
+stand = Stand().create()
+show(stand, *stand.mates.values(), clear=True, transparent=True)
 
 # %%
 #
@@ -158,21 +152,17 @@ class UpperLeg:
             90, 0, 0
         )
 
-        self.obj = upper_leg
-        return upper_leg
-
-    def mates(self):
-        return {
+        upper_leg.mates = {
             "knee_bottom": Mate(sort_min(self.knee_hole), name="knee_bottom"),
             "knee_top": Mate(sort_max(self.knee_hole), name="knee_top"),
-            "hinge": Mate(min_face(self.obj, Axis.Y), name="hinge"),
+            "hinge": Mate(min_face(upper_leg, Axis.Y), name="hinge"),
         }
 
+        return upper_leg
 
-_upper_leg = UpperLeg()
-upper_leg = _upper_leg.create()
-mates = _upper_leg.mates()
-show(upper_leg, *mates.values(), transparent=True, reset_camera=True)
+
+upper_leg = UpperLeg().create()
+show(upper_leg, *upper_leg.mates.values(), transparent=True, reset_camera=True)
 
 # %%
 class LowerLeg:
@@ -198,20 +188,15 @@ class LowerLeg:
             diff(lower_leg.edges(), last).filter_by(GeomType.CIRCLE).sort_by()
         )
 
-        self.obj = lower_leg
-        return lower_leg
-
-    def mates(self):
-        return {
+        lower_leg.mates = {
             "knee_bottom": Mate(sort_min(self.knee_hole), name="knee_bottom"),
             "knee_top": Mate(sort_max(self.knee_hole), name="knee_top"),
         }
+        return lower_leg
 
 
-_lower_leg = LowerLeg()
-lower_leg = _lower_leg.create()
-mates = _lower_leg.mates()
-show(lower_leg, *mates.values(), transparent=True, reset_camera=True)
+lower_leg = LowerLeg().create()
+show(lower_leg, *lower_leg.mates.values(), transparent=True, reset_camera=True)
 
 set_defaults(mate_scale=3)
 
@@ -223,20 +208,20 @@ set_defaults(mate_scale=3)
 #
 
 
-hexapod = MAssembly(base, "bottom", color=Color("gray"), loc=Location())
-hexapod.add(base, name="top", color=Color(204, 204, 204))
+hexapod = MAssembly(base, "base", color=Color("gray"), loc=Location())
+hexapod.add(base, "top", color=Color(204, 204, 204))
 
-for name, mate in _base.mates().items():
+for name, mate in base.mates.items():
     if name != "top":
-        hexapod.mate("bottom", mate, name)
+        hexapod["/base"].mate(name, mate)
     else:
-        hexapod.mate("top", mate, name)
+        hexapod["/base/top"].mate(name, mate)
 
 r = {"front_stand": Rot(180, 0, 90), "back_stand": Rot(180, 0, -90)}
-for name in _base.stand_holes.keys():
+for name in Base.stand_holes.keys():
     hexapod.add(stand, name=name, color=Color(128, 204, 230))
 
-    hexapod.mate(name, _stand.mates()["bottom"] @ r[name], name)
+    hexapod[f"/base/{name}"].mate(name, stand.mates["bottom"] @ r[name])
 
 angles = {
     "right_back": 195,
@@ -247,23 +232,23 @@ angles = {
     "left_front": 15,
 }
 
-for name in _base.base_hinges.keys():
+for name in Base.base_hinges.keys():
     leg = MAssembly(upper_leg, name=f"{name}_leg")
     leg.add(lower_leg, name=f"lower_leg")
     hexapod.add(leg)
 
-    hexapod.mate(
-        f"{name}_leg",
-        _upper_leg.mates()["hinge"] @ Rot(180, 0, angles[name]),
+    hexapod[f"/base/{name}_leg"].mate(
         f"{name}_hinge",
+        upper_leg.mates["hinge"] @ Rot(180, 0, angles[name]),
         origin=True,
     )
-    hexapod.mate(f"{name}_leg", _upper_leg.mates()["knee_top"], f"{name}_knee")
-
-    hexapod.mate(
-        f"{name}_leg/lower_leg",
-        _lower_leg.mates()["knee_bottom"] @ Rot(0, 0, -75),
+    hexapod[f"/base/{name}_leg"].mate(
+        f"{name}_knee",
+        upper_leg.mates["knee_top"],
+    )
+    hexapod[f"/base/{name}_leg/lower_leg"].mate(
         f"{name}_lower_knee",
+        lower_leg.mates["knee_bottom"] @ Rot(0, 0, -75),
         origin=True,
     )
 
@@ -273,13 +258,12 @@ hexapod.assemble("top", "base")
 hexapod.assemble("front_stand", "back_stand_hole")
 hexapod.assemble("back_stand", "front_stand_hole")
 
-for name in _base.base_hinges.keys():
+for name in Base.base_hinges.keys():
     hexapod.assemble(f"{name}_hinge", f"{name}_hole")
     hexapod.assemble(f"{name}_lower_knee", f"{name}_knee")
 
 show(hexapod, render_mates=True, mate_scale=3, reset_camera=True)
 
-show(hexapod, render_mates=True, mate_scale=5, reset_camera=True)
 
 # %%
 
@@ -309,12 +293,12 @@ animation = Animation()
 
 leg_group = ("left_front", "right_middle", "left_back")
 
-for name in _base.base_hinges.keys():
+for name in Base.base_hinges.keys():
     times, values = horizontal(4, "middle" in name)
-    animation.add_track(f"/bottom/{name}_leg", "rz", times, values)
+    animation.add_track(f"/base/{name}_leg", "rz", times, values)
 
     times, values = vertical(8, 4, 0 if name in leg_group else 4)
-    animation.add_track(f"/bottom/{name}_leg/lower_leg", "rz", times, values)
+    animation.add_track(f"/base/{name}_leg/lower_leg", "rz", times, values)
 
 animation.animate(2)
 

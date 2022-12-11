@@ -67,7 +67,7 @@ class Color:
 @dataclass
 class MateDef:
     mate: Mate
-    assembly: "MAssembly"
+    assembly: str
     origin: bool
 
     @property
@@ -198,6 +198,9 @@ class Mate:
         c = lambda v: f"({v.X:.2f}, {v.Y:.2f}, {v.Z:.2f})"
         return f"Mate(name='{self.name}', origin={c(self.origin)}, x_dir={c(self.x_dir)}, z_dir={c(self.z_dir)})"
 
+    def __deepcopy__(self, memo):
+        return Mate(self)
+
     @property
     def loc(self) -> Location:
         return Location(self.to_plane())
@@ -278,7 +281,7 @@ class MAssembly:
             return result
 
         matelist: Dict[str, List[str]] = {}
-        for k, v in ((k, v.assembly.fq_name) for k, v in self.mates.items()):
+        for k, v in ((k, v.assembly) for k, v in self.mates.items()):
             if matelist.get(v) is None:
                 matelist[v] = [k]
             else:
@@ -314,10 +317,6 @@ class MAssembly:
     def cq_name(self):
         return self.name if self.parent is None else self.fq_name[1:].partition("/")[2]
 
-    @property
-    def objects(self):
-        return {assy.cq_name: assy for _, assy in self.traverse()}
-
     # proper key path across the assembly
     @property
     def fq_name(self):
@@ -328,20 +327,25 @@ class MAssembly:
         )
 
     @property
-    def objs(self):
-        return {assy.fq_name: assy for _, assy in self.traverse()}
+    def top(self):
+        t = self
+        while t.parent is not None:
+            t = t.parent
+        return t
 
     @property
-    def list(self):
-        return [(assy.fq_name, assy) for _, assy in self.traverse()]
+    def objects(self):
+        return {assy.fq_name: assy for _, assy in self.traverse()}
 
-    def mate(self, id: str, mate: Mate, name: str, origin: bool = False) -> "MAssembly":
-        assembly = self.objects[id]
-        self.mates[name] = MateDef(mate, assembly, origin)
+    def __getitem__(self, key):
+        return self.objects[key]
+
+    def mate(self, mate_name: str, mate: Mate, origin: bool = False) -> "MAssembly":
+        self.top.mates[mate_name] = MateDef(mate, self.fq_name, origin)
 
     def relocate(self):
         def _relocate(assembly, origins):
-            origin_mate = origins.get(assembly.name)
+            origin_mate = origins.get(assembly.fq_name)
             if origin_mate is not None:
                 assembly.obj = (
                     None
@@ -353,7 +357,7 @@ class MAssembly:
                 _relocate(c, origins)
 
         origins = {
-            mate_def.assembly.name: mate_def.mate
+            mate_def.assembly: mate_def.mate
             for mate_def in self.mates.values()
             if mate_def.origin
         }
@@ -363,7 +367,7 @@ class MAssembly:
 
         # relocate all mates
         for mate_def in self.mates.values():
-            origin_mate = origins.get(mate_def.assembly.name)
+            origin_mate = origins.get(mate_def.assembly)
             if origin_mate is not None:
                 mate_def.mate = mate_def.mate.moved(origin_mate.loc.inverse())
 
@@ -379,9 +383,15 @@ class MAssembly:
         :return: self
         """
 
-        o_mate, o_assy = self.mates[object_name].mate, self.mates[object_name].assembly
+        o_mate, o_assy = (
+            self.mates[object_name].mate,
+            self.objects[self.mates[object_name].assembly],
+        )
         if isinstance(target, str):
-            t_mate, t_assy = self.mates[target].mate, self.mates[target].assembly
+            t_mate, t_assy = (
+                self.mates[target].mate,
+                self.objects[self.mates[target].assembly],
+            )
             if o_assy.parent == t_assy.parent or o_assy.parent is None:
                 o_assy.loc = t_assy.loc
             else:
@@ -392,5 +402,4 @@ class MAssembly:
 
     def __repr__(self):
         parent = None if self.parent is None else self.parent.name
-        object = None if self.obj is None else f"{self.obj.__class__.__name__}"
-        return f"MAssembly(name={self.name}, parent={parent}, color={self.color}, loc={self.loc.__repr__()}, obj={object}"
+        return f"MAssembly(name={self.name}, parent={parent}, color={self.color}, loc={self.loc.__repr__()}"
