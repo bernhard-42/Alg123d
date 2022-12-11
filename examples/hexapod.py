@@ -39,10 +39,7 @@ class Base:
 
     def __init__(self):
         self.base_edges = {}
-
         self.stand_edges = {}
-
-        self.obj = None
 
     def create(self):
         base = extrude(Ellipse(width, length), thickness)
@@ -130,7 +127,6 @@ class UpperLeg:
     def __init__(self):
         self.l1 = 50
         self.l2 = 80
-        self.obj = None
 
     def create(self):
         points = [(0, 0), (0, height / 2), (self.l1, height / 2 - 5), (self.l2, 0)]
@@ -170,7 +166,6 @@ class LowerLeg:
         self.w = 15
         self.l1 = 20
         self.l2 = 120
-        self.obj = None
 
     def create(self):
         points = [(0, 0), (self.l1, self.w), (self.l2, 0)]
@@ -217,11 +212,11 @@ for name, mate in base.mates.items():
     else:
         hexapod["/base/top"].mate(name, mate)
 
-r = {"front_stand": Rot(180, 0, 90), "back_stand": Rot(180, 0, -90)}
+rot = {"front_stand": Rot(180, 0, 90), "back_stand": Rot(180, 0, -90)}
 for name in Base.stand_holes.keys():
     hexapod.add(stand, name=name, color=Color(128, 204, 230))
 
-    hexapod[f"/base/{name}"].mate(name, stand.mates["bottom"] @ r[name])
+    hexapod[f"/base/{name}"].mate(name, stand.mates["bottom"] @ rot[name])
 
 angles = {
     "right_back": 195,
@@ -244,11 +239,12 @@ for name in Base.base_hinges.keys():
     )
     hexapod[f"/base/{name}_leg"].mate(
         f"{name}_knee",
-        upper_leg.mates["knee_top"],
+        upper_leg.mates["knee_top" if "right" in name else "knee_bottom"],
     )
     hexapod[f"/base/{name}_leg/lower_leg"].mate(
         f"{name}_lower_knee",
-        lower_leg.mates["knee_bottom"] @ Rot(0, 0, -75),
+        lower_leg.mates["knee_bottom" if "right" in name else "knee_top"]
+        @ Rot(0, 0, -75),
         origin=True,
     )
 
@@ -262,7 +258,7 @@ for name in Base.base_hinges.keys():
     hexapod.assemble(f"{name}_hinge", f"{name}_hole")
     hexapod.assemble(f"{name}_lower_knee", f"{name}_knee")
 
-show(hexapod, render_mates=True, mate_scale=3, reset_camera=True)
+show(hexapod, render_mates=False, mate_scale=3, reset_camera=True)
 
 
 # %%
