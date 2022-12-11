@@ -616,9 +616,9 @@ $\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b
 
 **Abelian groups**
 
-$( A^n, e_n, +, -)$ is an abelian group for $n=2,3$
-
 $( A^1, e_1, +)$ is an abelian semigroup
+
+$( A^n, e_n, +, -)$ is an abelian group for $n=2,3$
 
 Note: The implementation `a - b = a.cut(b)` needs to be read as $a + (-b)$ since the group does not have a binary $-$ operation. As such, $a - (b - c) = a + -(b + -c)) \ne a - b + c$
 
