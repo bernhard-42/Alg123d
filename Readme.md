@@ -41,7 +41,7 @@ Another important operator is used from build123d:
 _Location classes_:
 
 -   `Rot`: Create a rotation only Location
--   `Pos`: Create a positions only Location
+-   `Pos`: Create a position only Location
 
 _Plane classes_:
 
