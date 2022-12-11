@@ -5,7 +5,7 @@ from .direct_api import *
 __all__ = [
     "Pos",
     "Rot",
-    "planes",
+    "Planes",
     "diff",
     "sort_min",
     "sort_max",
@@ -44,8 +44,22 @@ class Rot(Location):
         super().__init__((0, 0, 0), (x, y, z))
 
 
-def planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]:
-    return [Plane(obj) for obj in objs]
+class Planes:
+    def __init__(self, objs: List[Union[Plane, Location, Face]]) -> List[Plane]:
+        self.objects = [Plane(obj) for obj in objs]
+        self.index = 0
+
+    def __iter__(self):
+        self.index = 0
+        return self
+
+    def __next__(self):
+        if self.index < len(self.objects):
+            plane = self.objects[self.index]
+            self.index += 1
+            return plane
+        else:
+            raise StopIteration
 
 
 def diff(l1: List[Shape], l2: List[Shape]) -> ShapeList:

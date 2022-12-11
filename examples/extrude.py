@@ -19,7 +19,7 @@ both = extrude(
 
 multiple = Box(10, 10, 10)
 t = Empty()
-for plane in planes(multiple.faces()):
+for plane in Planes(multiple.faces()):
     for loc in GridLocations(5, 5, 2, 2):
         t += Text("Ω", fontsize=3, halign=Halign.CENTER, valign=Valign.CENTER) @ (
             plane * loc
@@ -30,7 +30,7 @@ multiple = multiple + extrude(t, amount=1)
 
 rect = Rectangle(7, 7)
 single_multiple = Box(10, 10, 10)
-for loc in planes(single_multiple.faces()):
+for loc in Planes(single_multiple.faces()):
     single_multiple -= extrude(rect.faces()[0], amount=-2) @ loc
 
 # Non-planar surface

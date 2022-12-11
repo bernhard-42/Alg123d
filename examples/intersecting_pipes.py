@@ -3,7 +3,7 @@ from alg123d.shortcuts import *
 
 pipes = Box(10, 10, 10) @ Rot(10, 20, 30)
 
-for plane in planes(pipes.faces()):
+for plane in Planes(pipes.faces()):
     pipe = Circle(4) @ plane
     pipes -= extrude(pipe, amount=-5)
     pipe = Circle(4.5) @ plane
