@@ -606,7 +606,7 @@ $+: A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a + b$ , for $n=1,2,3$
 
 $\\;\\;\\;\\;\\;\\; a + b :=$ `a.fuse(b)`
 
-$-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=1, 2,3$
+$-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=2,3$
 
 $\\;\\;\\;\\;\\;\\; b + (-a)$ := `b.cut(a)` (implicit definition)
 
