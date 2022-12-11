@@ -3,6 +3,7 @@ import numpy as np
 from alg123d import *
 from alg123d.shortcuts import *
 
+set_defaults(mate_scale=3)
 
 # %%
 
@@ -192,8 +193,6 @@ class LowerLeg:
 
 lower_leg = LowerLeg().create()
 show(lower_leg, *lower_leg.mates.values(), transparent=True, reset_camera=True)
-
-set_defaults(mate_scale=3)
 
 
 # %%
