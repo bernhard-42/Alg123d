@@ -68,7 +68,7 @@ _ShapeList functions_
     ```python
     last = obj.faces()
     obj = my_transformation(obj)
-    diff = diff(obj.faces(), last)
+    new_faces = diff(obj.faces(), last)
     ```
 
 _Conversions_:
