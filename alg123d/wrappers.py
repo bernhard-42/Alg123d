@@ -199,4 +199,8 @@ def create_compound(
             else:
                 compound = ctx._obj
 
-    return AlgCompound(compound, dim)
+    solids = compound.solids()
+    if len(solids) > 1:
+        return AlgCompound(solids[0].fuse(*solids[1:]).clean(), 3)
+    else:
+        return AlgCompound(compound, dim)
