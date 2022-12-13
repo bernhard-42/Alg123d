@@ -268,7 +268,7 @@ def horizontal(end, reverse):
     return time_range(end, 4), [0, angle, 0, -angle, 0]
 
 
-animation = Animation()
+animation = Animation(hexapod)
 
 leg_group = ("left_front", "right_middle", "left_back")
 
