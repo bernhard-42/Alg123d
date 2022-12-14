@@ -4,7 +4,7 @@ from .generic import *
 from .part import *
 from .sketch import *
 from .line import *
-from .wrappers import AlgCompound, Empty
+from .wrappers import AlgCompound, Empty, DelayClean
 
 from .assembly import *
 

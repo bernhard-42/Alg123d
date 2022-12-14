@@ -1,9 +1,11 @@
 from __future__ import annotations
+from typing import List
 
 import build123d as bd
 from .direct_api import *
+from .utils import to_list
 
-__all__ = ["Empty", "AlgCompound", "create_compound"]
+__all__ = ["DelayClean", "Empty", "AlgCompound", "create_compound"]
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
@@ -11,6 +13,22 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 #
 # Algebra operations enhanced Compound
 #
+class DelayClean:
+    clean = True
+
+    def __init__(self, callback):
+        self.callback = callback
+
+    def __enter__(self):
+        DelayClean.clean = False
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        objs = self.callback()
+        if not isinstance(objs, (tuple, list)):
+            objs = [objs]
+        for obj in objs:
+            obj.clean()
+        DelayClean.clean = True
 
 
 class AlgCompound(Compound):
@@ -27,6 +45,8 @@ class AlgCompound(Compound):
         else:
             self.dim = dim
             self.wrapped = None if obj is None else obj.wrapped
+
+        self.mates = {}
 
     @classmethod
     def make_compound(cls, objs: Shape, dim=None):
@@ -73,45 +93,66 @@ class AlgCompound(Compound):
 
             self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
         self.dim = 3
+        self.mates = {}
 
-    def _place(self, mode: Mode, obj: AlgCompound):
-        if not (obj.dim == 0 or self.dim == 0 or self.dim == obj.dim):
-            raise RuntimeError(
-                f"Cannot combine obercts of different dimensionality: {self.dim} and {obj.dim} "
-            )
+    def _place(self, mode: Mode, *objs: AlgCompound):
+        if len(objs) == 1:
+            obj = objs[0]
+            if not (obj.dim == 0 or self.dim == 0 or self.dim == obj.dim):
+                raise RuntimeError(
+                    f"Cannot combine obercts of different dimensionality: {self.dim} and {obj.dim}"
+                )
+        else:
+            objs = list(objs)
+            if not (self.dim == 0 or all([obj.dim == self.dim for obj in objs])):
+                raise RuntimeError(
+                    f"Cannot combine obercts of different dimensionalities"
+                )
 
         if self.dim == 0:  # Cover addition of Empty with another object
             if mode == Mode.ADD:
-                compound = obj
-                self.dim = obj.dim  # take over dimensionality of other operand
+                if len(objs) == 1:
+                    compound = obj
+                else:
+                    compound = objs.pop().fuse(*objs).clean()
+                dim = objs[0].dim  # take over dimensionality of other operand
             else:
                 raise RuntimeError("Can only add to empty object")
-        elif obj.dim == 0:  # Cover operation with Empty object
+        elif objs[0].dim == 0:  # Cover operation with Empty object
             compound = self
         else:
-            if self.dim == 1:
+            dim = self.dim
+            if dim == 1:
                 if mode == Mode.ADD:
-                    compound = self.fuse(obj).clean()
+                    compound = self.fuse(*objs)
+                    if DelayClean.clean:
+                        compound.clean()
                 else:
                     raise RuntimeError("Lines can only be added")
             else:
                 if mode == Mode.ADD:
-                    compound = self.fuse(obj).clean()
+                    compound = self.fuse(*objs)
+                    if DelayClean.clean:
+                        compound.clean()
                 elif mode == Mode.SUBTRACT:
-                    compound = self.cut(obj).clean()
+                    compound = self.cut(*objs)
+                    if DelayClean.clean:
+                        compound.clean()
                 elif mode == Mode.INTERSECT:
-                    compound = self.intersect(obj).clean()
+                    compound = self.intersect(*objs)
+                    if DelayClean.clean:
+                        compound.clean()
 
-        return AlgCompound(compound, self.dim)
+        return AlgCompound(compound, dim)
 
-    def __add__(self, other: AlgCompound):
-        return self._place(Mode.ADD, other)
+    def __add__(self, other: Union[AlgCompound, List[AlgCompound]]):
+        return self._place(Mode.ADD, *to_list(other))
 
-    def __sub__(self, other: AlgCompound):
-        return self._place(Mode.SUBTRACT, other)
+    def __sub__(self, other: Union[AlgCompound, List[AlgCompound]]):
+        return self._place(Mode.SUBTRACT, *to_list(other))
 
-    def __and__(self, other: AlgCompound):
-        return self._place(Mode.INTERSECT, other)
+    def __and__(self, other: Union[AlgCompound, List[AlgCompound]]):
+        return self._place(Mode.INTERSECT, *to_list(other))
 
     def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
