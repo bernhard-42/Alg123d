@@ -3,6 +3,7 @@ import build123d as bd
 from .wrappers import AlgCompound, create_compound
 from .shortcuts import min_solid
 from .direct_api import *
+from .utils import to_tuple
 
 __all__ = [
     "Box",
@@ -26,13 +27,6 @@ __all__ = [
 #
 # Objects
 #
-
-
-def tupleize(arg):
-    if isinstance(arg, (tuple, list)):
-        return tuple(arg)
-    else:
-        return (arg,)
 
 
 class Box(AlgCompound):
@@ -252,7 +246,7 @@ def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgComp
 
 def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False):
     faces = []
-    for s in tupleize(sections):
+    for s in to_tuple(sections):
         if isinstance(s, Compound):
             faces += s.faces()
         else:
@@ -266,7 +260,7 @@ def revolve(
     axis: Axis,
     arc: float = 360.0,
 ):
-    for p in tupleize(profiles):
+    for p in to_tuple(profiles):
         faces = []
         if isinstance(p, Compound):
             faces += p.faces()
