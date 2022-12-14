@@ -17,15 +17,22 @@ __all__ = [
 
 
 class LocationList:
-    def __init__(self, generator):
+    def __init__(self, loclist):
         bd.Workplanes(Plane.XY).__enter__()
-        self.generator = generator
+        self.locations = loclist.locations
+        self.index = 0
 
     def __iter__(self):
-        return self.generator.__iter__()
+        self.index = 0
+        return self
 
     def __next__(self):
-        return self.generator.__next__()
+        if self.index < len(self.locations):
+            result = self.locations[self.index]
+            self.index += 1
+            return result
+        else:
+            raise StopIteration
 
 
 class Locations(LocationList):
