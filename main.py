@@ -4,110 +4,11 @@ import build123d as bd
 import cadquery as cq
 import time
 
-# %%
-t = time.time()
-diam = 175
-meshop = 2
-gridxy = 16  # int(diam/meshop/2)
 
-c = [
-    Rectangle(meshop, meshop) @ pos
-    for pos in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy)
-]
-e = Empty()
-
-holes = e + c
-print(time.time() - t)
-show(holes)
-# %%
-
-diam = 175
-meshop = 2
-gridxy = 16  # int(diam/meshop/2)
-
-
-holes = Empty()
-a = time.time()
-rectangles = []
-
-t = time.time()
-for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
-    rect = Rectangle(meshop, meshop) 
-    # rect = rect @ loc
-    # rectangles.append(rect)
-    pass 
-# holes = Empty() + rectangles
-print(1, time.time() - a)
-
-
-# show(holes)
-
-# %%
-
-t = time.time()
-
-rectangles = []
-for loc in bd.GridLocations(meshop * 2, meshop * 2, gridxy, gridxy).locations:
-    rect = bd.Face.make_rect(meshop, meshop)
-    # rect = rect.located(loc)
-    # rectangles.append(rect)
-    pass
-# holes = rectangles.pop().fuse(*rectangles).clean()
-print(time.time() - t)
-
-# show(holes)
-# %%
-
-a = time.time()
-holes = Empty()
-for loc in GridLocations(meshop * 2, meshop * 2, gridxy + 1, 1):
-    holes += Rectangle(meshop, diam) @ loc
-for loc in GridLocations(meshop * 2, meshop * 2, 1, gridxy + 1):
-    holes += Rectangle(diam, meshop) @ loc
-
-# holes.clean()
-print(time.time() - a)
-
-show(holes)
-
-# %%
-
-# TEST1
-t = time.time()
-with bd.BuildSketch() as holes2:
-    with bd.GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
-        bd.Rectangle(meshop, meshop)
-print(time.time() - t)
-
-show(holes2)
-# %%
-t = time.time()
-rectangles = []
-for loc in bd.GridLocations(meshop * 2, meshop * 2, gridxy, gridxy).locations:
-    rect = bd.Face.make_rect(meshop, meshop).located(loc)
-    rectangles.append(rect)
-holes = rectangles.pop().fuse(*rectangles).clean()
-
-print(time.time() - t)
-
-show(holes)
-# %%
-# TEST2
-# with BuildPart():
-#     with BuildSketch() as holes:
-#         with GridLocations(meshop*2,meshop*2,gridxy+1,1):
-#             Rectangle(meshop,diam)
-#         with GridLocations(meshop*2,meshop*2,1,gridxy+1):
-#             Rectangle(diam,meshop)
-#         Circle(diam/2, mode=Mode.INTERSECT)
-# 2.41 seconds
-
-if "log" and "show_object" in locals():
-    print(time.time() - a)
-    show(holes.sketch)
-else:
-    print(time.time() - a)
-
+c1 = Circle(10)
+c2 = Circle(10) @ Pos(7,9)
+c3 = Circle(10) @ Pos(-7,9)
+show(c1,c2,c3)
 
 # %%
 a = extrude(Rectangle(10, 20), 10, both=True)
@@ -207,9 +108,7 @@ with bd.BuildPart() as ex:
 
 with bd.BuildPart() as ex2:
     bd.Add(ex.part)
-    bd.Add(
-        flange.part, mode=bd.Mode.SUBTRACT
-    )  # (2) subtract flange from the extruded solid
+    bd.Add(flange.part, mode=bd.Mode.SUBTRACT)  # (2) subtract flange from the extruded solid
 
 with bd.BuildPart() as flange2:
     bd.Add(ex2.solids().sort_by()[0])  # and the take the bottom solid and add flange
@@ -349,9 +248,7 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(
-            Axis.Z, 0, 30 * MM, inclusive=(False, True)
-        ),
+        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
@@ -400,9 +297,7 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(
-            Axis.Z, 0, 30 * MM, inclusive=(False, True)
-        ),
+        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version

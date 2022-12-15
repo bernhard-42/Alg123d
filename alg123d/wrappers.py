@@ -5,7 +5,7 @@ import build123d as bd
 from .direct_api import *
 from .utils import to_list
 
-__all__ = ["DelayClean", "Empty", "AlgCompound", "create_compound"]
+__all__ = ["DelayClean", "Zero", "LazyZero", "AlgCompound", "create_compound"]
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
@@ -13,22 +13,6 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 #
 # Algebra operations enhanced Compound
 #
-class DelayClean:
-    clean = True
-
-    def __init__(self, callback):
-        self.callback = callback
-
-    def __enter__(self):
-        DelayClean.clean = False
-
-    def __exit__(self, exception_type, exception_value, traceback):
-        objs = self.callback()
-        if not isinstance(objs, (tuple, list)):
-            objs = [objs]
-        for obj in objs:
-            obj.clean()
-        DelayClean.clean = True
 
 
 class AlgCompound(Compound):
@@ -99,15 +83,11 @@ class AlgCompound(Compound):
         if len(objs) == 1:
             obj = objs[0]
             if not (obj.dim == 0 or self.dim == 0 or self.dim == obj.dim):
-                raise RuntimeError(
-                    f"Cannot combine obercts of different dimensionality: {self.dim} and {obj.dim}"
-                )
+                raise RuntimeError(f"Cannot combine objects of different dimensionality: {self.dim} and {obj.dim}")
         else:
             objs = list(objs)
             if not (self.dim == 0 or all([obj.dim == self.dim for obj in objs])):
-                raise RuntimeError(
-                    f"Cannot combine obercts of different dimensionalities"
-                )
+                raise RuntimeError(f"Cannot combine objects of different dimensions")
 
         if self.dim == 0:  # Cover addition of Empty with another object
             if mode == Mode.ADD:
@@ -124,24 +104,16 @@ class AlgCompound(Compound):
             dim = self.dim
             if dim == 1:
                 if mode == Mode.ADD:
-                    compound = self.fuse(*objs)
-                    if DelayClean.clean:
-                        compound.clean()
+                    compound = self.fuse(*objs).clean()
                 else:
                     raise RuntimeError("Lines can only be added")
             else:
                 if mode == Mode.ADD:
-                    compound = self.fuse(*objs)
-                    if DelayClean.clean:
-                        compound.clean()
+                    compound = self.fuse(*objs).clean()
                 elif mode == Mode.SUBTRACT:
-                    compound = self.cut(*objs)
-                    if DelayClean.clean:
-                        compound.clean()
+                    compound = self.cut(*objs).clean()
                 elif mode == Mode.INTERSECT:
-                    compound = self.intersect(*objs)
-                    if DelayClean.clean:
-                        compound.clean()
+                    compound = self.intersect(*objs).clean()
 
         return AlgCompound(compound, dim)
 
@@ -189,19 +161,12 @@ class AlgCompound(Compound):
         return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
 
 
-class Empty(AlgCompound):
-    def __init__(self):
-        super().__init__(dim=0)
-
-
 #
 # Function wrapper
 #
 
 
-def create_compound(
-    cls, objects=None, part=None, dim=None, faces=None, planes=None, params=None
-):
+def create_compound(cls, objects=None, part=None, dim=None, faces=None, planes=None, params=None):
     if objects is None:
         objs = None
     else:
@@ -245,3 +210,41 @@ def create_compound(
         return AlgCompound(solids[0].fuse(*solids[1:]).clean(), 3)
     else:
         return AlgCompound(compound, dim)
+
+
+class Zero(AlgCompound):
+    def __init__(self):
+        super().__init__(dim=0)
+
+
+class LazyZero(AlgCompound):
+    def __init__(self):
+        super().__init__(dim=0)
+
+    def __enter__(self):
+        self._collected_objects = []
+        return self
+
+    def __add__(self, other):
+        if hasattr(self, "_collected_objects"):
+            if other.solids():
+                dim = 3
+            elif other.faces():
+                dim = 2
+            else:
+                dim = 1
+
+            if self.dim == 0:
+                self.dim = dim
+            else:
+                if dim != self.dim:
+                    raise RuntimeError("Cannot add objects with different dimensions")
+
+            self._collected_objects.append(other)
+            return self
+        else:
+            return super().__add__(other)
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self.wrapped = self._collected_objects.pop().fuse(*self._collected_objects).clean().wrapped
+        del self._collected_objects
