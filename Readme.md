@@ -6,7 +6,7 @@
 
 **Additional properties:**
 
--   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part
+-   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=zero, 1=line, 2=sketch, 3=part
 
 **Additional user facing operators:**
 
@@ -27,9 +27,9 @@ Another important operator is used from build123d:
 
 **Objects:**
 
--   3-dim: {`Empty`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`}
--   2-dim: {`Empty`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`}
--   1-dim: {`Empty`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`}
+-   3-dim: {`Zero`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`}
+-   2-dim: {`Zero`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`}
+-   1-dim: {`Zero`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`}
 
 **Functions:**
 
@@ -165,7 +165,7 @@ eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
 def eyes(face, ind):
     """build a compound of spheres representing the eyes of a side"""
     p = Plane(face) * Location((0, 0, eye_offset))  # eye offset above plane
-    rv = Empty()
+    rv = Zero()
     for loc in [eye_locs[i] for i in ind]:
         rv += Sphere(eye_radius) @ (p * loc)
     return rv
@@ -200,7 +200,7 @@ plane = Plane.ZX
 rotations = [Rotation(0, a, 0) for a in (0, 45, 90, 135)]
 
 # initialize result with "zero"
-s = Empty()
+s = Zero()
 
 # get four locations on a grid
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
@@ -209,7 +209,7 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = plane * outer_loc * rotations[i]
 
     # Create a circle and place it the c_plane.
-    # Fuse the result with s (hence we need to initiailize s with Empty for the first loop)
+    # Fuse the result with s (hence we need to initiailize s with Zero for the first loop)
     s += Circle(1) @ c_plane
 
     # Get a different amount of polar locations per loop
@@ -588,15 +588,15 @@ _Conversions_
 
 $A^n$ is the set of all `AlgCompounds a` with `a.dim = n` for $n = 1,2,3$
 
-$e_n$ := `Empty` , for $n = 1,2,3$ , are `AlgCompounds a` with `a.dim = n` and `a.wrapped = None`
+$e_n$ := `Zero` , for $n = 1,2,3$ , are `AlgCompounds a` with `a.dim = n` and `a.wrapped = None`
 
 **Sets of predefined basic shapes:**
 
-$B^3 := \lbrace$`Empty`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$
+$B^3 := \lbrace$`Zero`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$
 
-$B^2 := \lbrace$`Empty`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`$\rbrace$
+$B^2 := \lbrace$`Zero`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`$\rbrace$
 
-$B^1 := \lbrace$`Empty`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`$\rbrace$
+$B^1 := \lbrace$`Zero`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`$\rbrace$
 
 with $B^n \subset A^n$
 
