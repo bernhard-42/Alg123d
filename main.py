@@ -6,9 +6,9 @@ import time
 
 
 c1 = Circle(10)
-c2 = Circle(10) @ Pos(7,9)
-c3 = Circle(10) @ Pos(-7,9)
-show(c1,c2,c3)
+c2 = Circle(10) @ Pos(7, 9)
+c3 = Circle(10) @ Pos(-7, 9)
+show(c1, c2, c3)
 
 # %%
 a = extrude(Rectangle(10, 20), 10, both=True)
@@ -108,7 +108,9 @@ with bd.BuildPart() as ex:
 
 with bd.BuildPart() as ex2:
     bd.Add(ex.part)
-    bd.Add(flange.part, mode=bd.Mode.SUBTRACT)  # (2) subtract flange from the extruded solid
+    bd.Add(
+        flange.part, mode=bd.Mode.SUBTRACT
+    )  # (2) subtract flange from the extruded solid
 
 with bd.BuildPart() as flange2:
     bd.Add(ex2.solids().sort_by()[0])  # and the take the bottom solid and add flange
@@ -190,7 +192,7 @@ show(p, p.faces().group_by(Axis.Y)[0], transparent=True)
 
 locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s = Empty()
+s = Zero()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = plane * outer_loc * locs[i]
     s += Circle(1) @ c_plane
@@ -203,33 +205,33 @@ show(e, reset_camera=False)
 
 # %%
 
-show(Empty() + Box(1, 1, 1))
+show(Zero() + Box(1, 1, 1))
 # %%
 
-show(Box(1, 2, 3) + Empty())
-
-# %%
-
-show(Box(2, 3, 1) - Empty())
+show(Box(1, 2, 3) + Zero())
 
 # %%
 
-show(Box(3, 2, 1) & Empty())
+show(Box(2, 3, 1) - Zero())
 
 # %%
 
-show(Empty() + Rectangle(1, 1))
-# %%
-
-show(Rectangle(1, 2) + Empty())
+show(Box(3, 2, 1) & Zero())
 
 # %%
 
-show(Rectangle(2, 2) - Empty())
+show(Zero() + Rectangle(1, 1))
+# %%
+
+show(Rectangle(1, 2) + Zero())
 
 # %%
 
-show(Rectangle(2, 1) & Empty())
+show(Rectangle(2, 2) - Zero())
+
+# %%
+
+show(Rectangle(2, 1) & Zero())
 
 # %%
 
@@ -248,7 +250,9 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
+        *key_cap.edges().filter_by_position(
+            Axis.Z, 0, 30 * MM, inclusive=(False, True)
+        ),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
@@ -297,7 +301,9 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
+        *key_cap.edges().filter_by_position(
+            Axis.Z, 0, 30 * MM, inclusive=(False, True)
+        ),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
