@@ -14,7 +14,7 @@ handle_path = handle_center_line.edges()[0]
 
 
 # Create the cross sections - added to pending_faces
-sections = Empty()
+sections = Zero()
 for i in range(segment_count + 1):
     plane = Plane(
         origin=handle_path @ (i / segment_count),

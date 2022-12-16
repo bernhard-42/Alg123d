@@ -63,7 +63,7 @@ with bd.BuildPart() as b:
     with bd.Workplanes(Plane.XZ):
         bd.Cylinder(1, 1)
 
-show(b)
+
 a = from_bd(b)
 a3 = from_bd(b.solids())
 a2 = from_bd(b.faces())
@@ -87,8 +87,8 @@ a2 = from_bd(s.faces())
 a1 = from_bd(s.edges())
 show(
     a, 
-    a2 @ (2, 0, 0),
-    a1 @ (4, 0, 0)
+    a2 @ Pos(2, 0, 0),
+    a1 @ Pos(4, 0, 0)
 )
 
 # %%

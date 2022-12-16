@@ -12,7 +12,7 @@ eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
 
 def eyes(face, ind):
     p = Plane(face) * Location((0, 0, eye_offset))  # eye_offset above plane
-    rv = Empty()
+    rv = Zero()
     for loc in [eye_locs[i] for i in ind]:
         rv += Sphere(eye_radius) @ (p * loc)
     return rv
