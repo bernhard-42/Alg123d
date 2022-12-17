@@ -1,10 +1,128 @@
 from alg123d import *
 from alg123d.shortcuts import *
+
 import build123d as bd
 import cadquery as cq
 import time
 
+# %%
+class JointBox(AlgCompound):
+    def __init__(
+        self,
+        length: float,
+        width: float,
+        height: float,
+        radius: float = 0.0,
+    ):
+        # Store the attributes so the object can be copied
+        self.length = length
+        self.width = width
+        self.height = height
+        self.joints: dict[str, Joint] = {}
 
+        # Create the object
+        obj = Solid.make_box(length, width, height, Plane((-length / 2, -width / 2, 0)))
+        if radius != 0.0:
+            obj = obj.fillet(radius, obj.edges())
+        hole = Solid.make_cylinder(width / 4, length, Plane.YZ.offset(-length / 2))
+        obj = obj.cut(hole)
+
+        super().__init__(obj)
+
+
+# %%
+#
+# Base Object
+#
+
+base = JointBox(10, 10, 10).locate(Location(Vector(1, 1, 1), (1, 1, 1), 30))
+base.joints = {}
+base_top_edges = group_max(base.edges(), z_axis(base)).filter_by(x_axis(base))
+
+# %%
+
+#
+# Rigid Joint
+#
+fixed_arm = JointBox(1, 1, 5)
+
+j1 = RigidJoint("side", base, max_face(base, x_axis(base)).location)
+j2 = RigidJoint("top", fixed_arm, max_face(fixed_arm, Axis.Z).location * Rot(x=180))
+
+j1.connect_to(j2)
+
+show(base, fixed_arm, j1.symbol, j2.symbol)
+# %%
+#
+# Hinge
+#
+hinge_arm = JointBox(2, 1, 10)
+swing_arm_hinge_axis = max_edge(min_face(hinge_arm, Axis.X), Axis.Y).to_axis()
+base_hinge_axis = max_edge(max_face(base, x_axis(base)), y_axis(base)).to_axis()
+
+j3 = RevoluteJoint("hinge", base, axis=base_hinge_axis, range=(0, 360))
+j4 = RigidJoint("corner", hinge_arm, swing_arm_hinge_axis.to_location())
+
+j3.connect_to(j4, angle=180)
+
+show(base, hinge_arm, j3.symbol, j4.symbol)
+# show(base, fixed_arm, hinge_arm, j1.symbol, j2.symbol, j3.symbol, j4.symbol)
+
+# %%
+#
+# Slider
+#
+slider_arm = JointBox(4, 1, 2, 0.2)
+s1 = LinearJoint(
+    "slide",
+    base,
+    axis=Edge.make_mid_way(*base_top_edges, 0.67).to_axis(),
+    range=(0, 10),
+)
+s2 = RigidJoint("slide", slider_arm, Location(Vector(0, 0, 0)))
+s1.connect_to(s2, 8)
+
+#
+# Cylindrical
+#
+hole_axis = Axis(
+    base.faces().sort_by(Axis.Y)[0].center(),
+    -base.faces().sort_by(Axis.Y)[0].normal_at(),
+)
+screw_arm = JointBox(1, 1, 10, 0.49)
+j5 = CylindricalJoint("hole", base, hole_axis, linear_range=(-10, 10))
+j6 = RigidJoint("screw", screw_arm, screw_arm.faces().sort_by(Axis.Z)[-1].location)
+j5.connect_to(j6, -1, 90)
+
+#
+# PinSlotJoint
+#
+j7 = LinearJoint(
+    "slot",
+    base,
+    axis=Edge.make_mid_way(*base_top_edges, 0.33).to_axis(),
+    range=(0, 10),
+)
+pin_arm = JointBox(2, 1, 2)
+j8 = RevoluteJoint("pin", pin_arm, axis=Axis.Z, range=(0, 360))
+j7.connect_to(j8, position=6, angle=60)
+
+if "show_object" in locals():
+    show_object(base, name="base", options={"alpha": 0.8}, clear=True)
+    show_object(base.joints["side"].symbol, name="side joint")
+    show_object(base.joints["hinge"].symbol, name="hinge joint")
+    show_object(base.joints["slide"].symbol, name="slot joint")
+    show_object(base.joints["slot"].symbol, name="pin slot joint")
+    show_object(fixed_arm, name="fixed_arm", options={"alpha": 0.6})
+    show_object(hinge_arm, name="hinge_arm", options={"alpha": 0.6})
+    show_object(slider_arm, name="slider_arm", options={"alpha": 0.6})
+    show_object(pin_arm, name="pin_arm", options={"alpha": 0.6})
+    show_object(slider_arm.joints["slide"].symbol, name="slider attachment")
+    show_object(pin_arm.joints["pin"].symbol, name="pin axis")
+    show_object(screw_arm, name="screw_arm")
+    show_object(base.joints["hole"].symbol, name="hole")
+
+# %%
 c1 = Circle(10)
 c2 = Circle(10) @ Pos(7, 9)
 c3 = Circle(10) @ Pos(-7, 9)
@@ -108,9 +226,7 @@ with bd.BuildPart() as ex:
 
 with bd.BuildPart() as ex2:
     bd.Add(ex.part)
-    bd.Add(
-        flange.part, mode=bd.Mode.SUBTRACT
-    )  # (2) subtract flange from the extruded solid
+    bd.Add(flange.part, mode=bd.Mode.SUBTRACT)  # (2) subtract flange from the extruded solid
 
 with bd.BuildPart() as flange2:
     bd.Add(ex2.solids().sort_by()[0])  # and the take the bottom solid and add flange
@@ -250,9 +366,7 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(
-            Axis.Z, 0, 30 * MM, inclusive=(False, True)
-        ),
+        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
@@ -301,9 +415,7 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(
-            Axis.Z, 0, 30 * MM, inclusive=(False, True)
-        ),
+        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
