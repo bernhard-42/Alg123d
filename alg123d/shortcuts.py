@@ -99,15 +99,11 @@ def z_axis(obj: Union[Location, AlgCompound]) -> Axis:
 #
 
 
-def sort_min(
-    s: ShapeList, axis: Axis = Axis.Z
-) -> Union[Solid, Face, Wire, Edge, Vertex]:
+def sort_min(s: ShapeList, axis: Axis = Axis.Z) -> Union[Solid, Face, Wire, Edge, Vertex]:
     return s.sort_by(axis)[0]
 
 
-def sort_max(
-    s: ShapeList, axis: Axis = Axis.Z
-) -> Union[Solid, Face, Wire, Edge, Vertex]:
+def sort_max(s: ShapeList, axis: Axis = Axis.Z) -> Union[Solid, Face, Wire, Edge, Vertex]:
     return s.sort_by(axis)[-1]
 
 
@@ -119,16 +115,12 @@ def group_max(s: ShapeList, axis: Axis = Axis.Z) -> ShapeList:
     return s.group_by(axis)[-1]
 
 
-def min_solid(
-    a: Compound, axis: Axis = Axis.Z, wrapped: bool = False
-) -> Union[Compound, Solid]:
+def min_solid(a: Compound, axis: Axis = Axis.Z, wrapped: bool = False) -> Union[Compound, Solid]:
     obj = sort_min(a.solids(), axis)
     return AlgCompound(obj) if wrapped else obj
 
 
-def max_solid(
-    a: Compound, axis: Axis = Axis.Z, wrapped: bool = False
-) -> Union[Compound, Solid]:
+def max_solid(a: Compound, axis: Axis = Axis.Z, wrapped: bool = False) -> Union[Compound, Solid]:
     obj = sort_max(a.solids(), axis)
     return AlgCompound(obj) if wrapped else obj
 
@@ -177,16 +169,12 @@ def max_edges(a: Compound, axis: Axis = Axis.Z) -> ShapeList:
     return group_max(a.edges(), axis)
 
 
-def min_vertex(
-    a: Compound, axis: Axis = Axis.Z, wrapped=False
-) -> Union[Compound, Vertex]:
+def min_vertex(a: Compound, axis: Axis = Axis.Z, wrapped=False) -> Union[Compound, Vertex]:
     obj = sort_min(a.vertices(), axis)
     return AlgCompound(obj) if wrapped else obj
 
 
-def max_vertex(
-    a: Compound, axis: Axis = Axis.Z, wrapped=False
-) -> Union[Compound, Vertex]:
+def max_vertex(a: Compound, axis: Axis = Axis.Z, wrapped=False) -> Union[Compound, Vertex]:
     obj = sort_max(a.vertices(), axis)
     return AlgCompound(obj) if wrapped else obj
 
@@ -230,6 +218,4 @@ def to_bd(obj):
             bd.Add(Compound.make_compound(list(obj)))
         return c
     else:
-        return bd.ShapeList(
-            bd.Compound.make_compound([bd.Shape.cast(o.wrapped) for o in obj])
-        )
+        return bd.ShapeList(bd.Compound.make_compound([bd.Shape.cast(o.wrapped) for o in obj]))
