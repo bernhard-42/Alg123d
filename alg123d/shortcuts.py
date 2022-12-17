@@ -7,6 +7,9 @@ __all__ = [
     "Rot",
     "Planes",
     "diff",
+    "x_axis",
+    "y_axis",
+    "z_axis",
     "sort_min",
     "sort_max",
     "group_min",
@@ -66,6 +69,29 @@ def diff(l1: List[Shape], l2: List[Shape]) -> ShapeList:
     d2 = [hash(o) for o in l2]
     d1 = {hash(o): o for o in l1 if hash(o) not in d2}
     return ShapeList(d1.values())
+
+
+#
+# Get transformed x-, y- and z-axis of a Compound
+#
+
+
+def x_axis(obj: Union[Location, AlgCompound]) -> Axis:
+    loc = obj.location if isinstance(obj, AlgCompound) else obj
+    dir = Plane(loc).x_dir
+    return Axis(loc.position, dir)
+
+
+def y_axis(obj: Union[Location, AlgCompound]) -> Axis:
+    loc = obj.location if isinstance(obj, AlgCompound) else obj
+    dir = Plane(loc).y_dir
+    return Axis(loc.position, dir)
+
+
+def z_axis(obj: Union[Location, AlgCompound]) -> Axis:
+    loc = obj.location if isinstance(obj, AlgCompound) else obj
+    dir = Plane(loc).z_dir
+    return Axis(loc.position, dir)
 
 
 #
