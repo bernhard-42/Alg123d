@@ -5,6 +5,7 @@ from .part import *
 from .sketch import *
 from .line import *
 from .wrappers import AlgCompound, Zero, LazyZero
+from .joints import *
 
 from .assembly import *
 
