@@ -50,7 +50,7 @@ class AlgCompound(Compound):
             self.dim = 3
             self.wrapped = Compound.make_compound(objs).wrapped
         else:
-            raise RuntimeError(f"{obj} not supported")
+            raise RuntimeError(f"{objs} not supported")
 
         self.mates = {}
         self.joints = {}
