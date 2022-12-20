@@ -56,7 +56,7 @@ class AlgCompound(Compound):
         self.joints = {}
 
     @classmethod
-    def make_compound(cls, objs: Shape, dim=None):
+    def make_compound(cls, objs: Shape):
         compound = Compound.make_compound(objs)
         return cls(compound)
 
