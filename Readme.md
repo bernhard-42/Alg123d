@@ -27,9 +27,9 @@ Another important operator is used from build123d:
 
 **Objects:**
 
--   3-dim: {`Zero`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`}
--   2-dim: {`Zero`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`}
--   1-dim: {`Zero`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`}
+-   3-dim: {`Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`}
+-   2-dim: {`Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`}
+-   1-dim: {`Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`}
 
 **Functions:**
 
@@ -165,7 +165,7 @@ eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
 def eyes(face, ind):
     """build a compound of spheres representing the eyes of a side"""
     p = Plane(face) * Location((0, 0, eye_offset))  # eye offset above plane
-    rv AlgCompound()
+    rv = AlgCompound()
     for loc in [eye_locs[i] for i in ind]:
         rv += Sphere(eye_radius) @ (p * loc)
     return rv
@@ -199,8 +199,8 @@ plane = Plane.ZX
 # Four rotations around Y
 rotations = [Rotation(0, a, 0) for a in (0, 45, 90, 135)]
 
-# initialize result with "zero"
-s AlgCompound()
+# initialize result with empty AlgCompound
+s = AlgCompound()
 
 # get four locations on a grid
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
@@ -209,7 +209,7 @@ for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = plane * outer_loc * rotations[i]
 
     # Create a circle and place it the c_plane.
-    # Fuse the result with s (hence we need to initiailize s with Zero for the first loop)
+    # Fuse the result with s (hence we need to initiailize s with empty AlgCompound for the first loop)
     s += Circle(1) @ c_plane
 
     # Get a different amount of polar locations per loop
@@ -231,7 +231,7 @@ e = extrude(s, 0.3)
 Creating lots of Shapes in a loop means for every step `fuse`and `clean` will be called. In an example like the below, both functions get slower and slower the more objects are already fused. Overall it takes on my machine 11.5 sec.
 
 ```python
-holes AlgCompound()
+holes = AlgCompound()
 r = Rectangle(2, 2)
 for loc in GridLocations(4, 4, 20, 20):
     if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2:
@@ -240,10 +240,10 @@ for loc in GridLocations(4, 4, 20, 20):
 c = Circle(diam / 2) - holes
 ```
 
-One way to avoid it is to use the `LazyZero` context. It will just collect all objects and at exit of the context call `fuse` once with all objects and `clean` once. Overall it takes 0.326 sec.
+One way to avoid it is to use the `LazyAlgCompound` context. It will just collect all objects and at exit of the context call `fuse` once with all objects and `clean` once. Overall it takes 0.326 sec.
 
 ```python
-with LazyAlgCompound as holes:
+with LazyAlgCompound() as holes:
     r = Rectangle(2, 2)
     for loc in GridLocations(4, 4, 20, 20):
         if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2:
@@ -252,7 +252,7 @@ with LazyAlgCompound as holes:
 c = Circle(diam / 2) - holes
 ```
 
-Another option is to use the vectorized operations, e.g. `AlgCompound - List[AlgCompound]`. It is another syntax for the `LazyZero` approach above and slightly faster. Overall it takes 0.264 sec.
+Another option is to use the vectorized operations, e.g. `AlgCompound - List[AlgCompound]`. It is another syntax for the `LazyAlgCompound` approach above and slightly faster. Overall it takes 0.264 sec.
 
 ```python
 r = Rectangle(2, 2)

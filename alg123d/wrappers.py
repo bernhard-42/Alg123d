@@ -106,7 +106,7 @@ class AlgCompound(Compound):
             if not (self.dim == 0 or all([obj.dim == self.dim for obj in objs])):
                 raise RuntimeError(f"Cannot combine objects of different dimensions")
 
-        if self.dim == 0:  # Cover addition of Zero with another object
+        if self.dim == 0:  # Cover addition of Zempty AlgCompound with another object
             if mode == Mode.ADD:
                 if len(objs) == 1:
                     compound = obj
@@ -114,8 +114,8 @@ class AlgCompound(Compound):
                     compound = objs.pop().fuse(*objs).clean()
                 dim = objs[0].dim  # take over dimensionality of other operand
             else:
-                raise RuntimeError("Can only add to Zero object")
-        elif objs[0].dim == 0:  # Cover operation with Zero object
+                raise RuntimeError("Can only add to an empty AlgCompound object")
+        elif objs[0].dim == 0:  # Cover operation with empty AlgCompound object
             compound = self
             dim = objs[0].dim
         else:
