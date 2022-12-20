@@ -233,20 +233,3 @@ def to_bd(obj):
         return bd.ShapeList(
             bd.Compound.make_compound([bd.Shape.cast(o.wrapped) for o in obj])
         )
-
-
-#
-# Symbols
-#
-
-
-def axis_symbol(axis, l=5):
-    return Edge.make_line(axis.position, axis.position + axis.direction * l)
-
-
-def location_symbol(location, l=1):
-    p = Plane(location)
-    x = Edge.make_line(p.origin, p.origin + p.x_dir * l)
-    y = Edge.make_line(p.origin, p.origin + p.y_dir * l)
-    z = Edge.make_line(p.origin, p.origin + p.z_dir * l)
-    return Compound.make_compound([x, y, z])
