@@ -37,7 +37,7 @@ class Circle(AlgCompound):
             radius=radius,
             centered=centered,
         )
-        self.create_sketch(bd.Circle, params=params)
+        super().__init__(self.create_sketch(bd.Circle, params=params))
 
 
 class Ellipse(AlgCompound):
@@ -55,7 +55,7 @@ class Ellipse(AlgCompound):
             y_radius=y_radius,
             centered=centered,
         )
-        self.create_sketch(bd.Ellipse, params=params)
+        super().__init__(self.create_sketch(bd.Ellipse, params=params))
 
 
 class Rectangle(AlgCompound):
@@ -73,7 +73,7 @@ class Rectangle(AlgCompound):
             height=height,
             centered=centered,
         )
-        self.create_sketch(bd.Rectangle, params=params)
+        super().__init__(self.create_sketch(bd.Rectangle, params=params))
 
 
 class Polygon(AlgCompound):
@@ -89,7 +89,7 @@ class Polygon(AlgCompound):
         #     centered=centered,
         # )
         params = {}
-        self.create_sketch(bd.Polygon, objects=pts, params=params)
+        super().__init__(self.create_sketch(bd.Polygon, objects=pts, params=params))
 
 
 class RegularPolygon(AlgCompound):
@@ -107,7 +107,7 @@ class RegularPolygon(AlgCompound):
             side_count=side_count,
             centered=centered,
         )
-        self.create_sketch(bd.RegularPolygon, params=params)
+        super().__init__(self.create_sketch(bd.RegularPolygon, params=params))
 
 
 class Text(AlgCompound):
@@ -134,7 +134,7 @@ class Text(AlgCompound):
             path=path,
             position_on_path=position_on_path,
         )
-        self.create_sketch(bd.Text, params=params)
+        super().__init__(self.create_sketch(bd.Text, params=params))
 
 
 class Trapezoid(AlgCompound):
@@ -156,7 +156,7 @@ class Trapezoid(AlgCompound):
             right_side_angle=right_side_angle,
             centered=centered,
         )
-        self.create_sketch(bd.Trapezoid, params=params)
+        super().__init__(self.create_sketch(bd.Trapezoid, params=params))
 
 
 class SlotArc(AlgCompound):
@@ -169,7 +169,7 @@ class SlotArc(AlgCompound):
             arc=arc,
             height=height,
         )
-        self.create_sketch(bd.SlotArc, params=params)
+        super().__init__(self.create_sketch(bd.SlotArc, params=params))
 
 
 class SlotCenterPoint(AlgCompound):
@@ -184,7 +184,7 @@ class SlotCenterPoint(AlgCompound):
             point=point,
             height=height,
         )
-        self.create_sketch(bd.SlotCenterPoint, params=params)
+        super().__init__(self.create_sketch(bd.SlotCenterPoint, params=params))
 
 
 class SlotCenterToCenter(AlgCompound):
@@ -197,7 +197,7 @@ class SlotCenterToCenter(AlgCompound):
             center_separation=center_separation,
             height=height,
         )
-        self.create_sketch(bd.SlotCenterToCenter, params=params)
+        super().__init__(self.create_sketch(bd.SlotCenterToCenter, params=params))
 
 
 class SlotOverall(AlgCompound):
@@ -210,7 +210,7 @@ class SlotOverall(AlgCompound):
             width=width,
             height=height,
         )
-        self.create_sketch(bd.SlotOverall, params=params)
+        super().__init__(self.create_sketch(bd.SlotOverall, params=params))
 
 
 #
@@ -226,4 +226,4 @@ def make_face(objs: Union[AlgCompound, List[Edge]]):
     else:
         edges = [objs]
 
-    return AlgCompound.make_compound([Face.make_from_wires(*Wire.combine(edges))], 2)
+    return AlgCompound.make_compound([Face.make_from_wires(*Wire.combine(edges))])

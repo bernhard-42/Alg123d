@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections.abc import Iterable
 from typing import List
 
 import build123d as bd
@@ -15,20 +16,41 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 #
 
 
+def unwrap(compound):
+    if (
+        isinstance(compound, Compound)
+        and isinstance(compound, Iterable)
+        and len(list(compound)) == 1
+        and isinstance(list(compound)[0], Compound)
+    ):
+        return list(compound)[0]
+    else:
+        return compound
+
+
 class AlgCompound(Compound):
-    def __init__(self, obj: Union[Compound, Solid, Face, Edge] = None, dim: int = None):
-        if isinstance(obj, Solid):
-            self.dim = 3
-            self.wrapped = Compound.make_compound([obj]).wrapped
-        elif isinstance(obj, Face):
-            self.dim = 2
-            self.wrapped = Compound.make_compound([obj]).wrapped
-        elif isinstance(obj, Edge):
+    def __init__(self, obj: Union[Compound, Solid, Face, Edge] = None):
+        if isinstance(obj, Compound):
+            objs = list(unwrap(obj))
+        elif isinstance(obj, (Solid, Face, Edge)):
+            objs = [obj]
+        elif obj is not None:
+            raise TypeError(f"Unknown type {obj}")
+
+        if obj is None:
+            self.dim = 0
+            self.wrapped = None
+        elif all([isinstance(obj, (Edge, Wire)) for obj in objs]):
             self.dim = 1
-            self.wrapped = Compound.make_compound([obj]).wrapped
+            self.wrapped = Compound.make_compound(objs).wrapped
+        elif all([isinstance(obj, Face) for obj in objs]):
+            self.dim = 2
+            self.wrapped = Compound.make_compound(objs).wrapped
+        elif all([isinstance(obj, Solid) for obj in objs]):
+            self.dim = 3
+            self.wrapped = Compound.make_compound(objs).wrapped
         else:
-            self.dim = dim
-            self.wrapped = None if obj is None else obj.wrapped
+            raise RuntimeError(f"{obj} not supported")
 
         self.mates = {}
         self.joints = {}
@@ -36,13 +58,7 @@ class AlgCompound(Compound):
     @classmethod
     def make_compound(cls, objs: Shape, dim=None):
         compound = Compound.make_compound(objs)
-        if dim is None:
-            dims = {"Solid": 3, "Face": 2, "Wire": 1, "Edge": 1}
-            if hasattr(objs[0], "ShapeType"):
-                dim = dims[objs[0].ShapeType()]
-            else:
-                dim = dims[objs[0].shape_type()]
-        return cls(compound, dim)
+        return cls(compound)
 
     def create_line(self, cls, objects=None, params=None):
         if params is None:
@@ -54,8 +70,7 @@ class AlgCompound(Compound):
             else:
                 obj = cls(*list(objects), **params, mode=Mode.PRIVATE)
 
-        self.wrapped = Compound.make_compound(obj.edges()).wrapped
-        self.dim = 1
+        return Compound.make_compound(obj.edges())
 
     def create_sketch(self, cls, objects=None, params=None):
         if params is None:
@@ -63,10 +78,10 @@ class AlgCompound(Compound):
 
         with bd.BuildSketch():
             if objects is None:
-                self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
+                result = cls(**params, mode=Mode.PRIVATE)
             else:
-                self.wrapped = cls(*list(objects), **params, mode=Mode.PRIVATE).wrapped
-        self.dim = 2
+                result = cls(*list(objects), **params, mode=Mode.PRIVATE)
+        return result
 
     def create_part(self, cls, part=None, params=None):
         if params is None:
@@ -76,9 +91,8 @@ class AlgCompound(Compound):
             if part is not None:
                 ctx._add_to_context(part)
 
-            self.wrapped = cls(**params, mode=Mode.PRIVATE).wrapped
-        self.dim = 3
-        self.mates = {}
+            result = cls(**params, mode=Mode.PRIVATE)
+        return result
 
     def _place(self, mode: Mode, *objs: AlgCompound):
         if len(objs) == 1:
@@ -119,7 +133,7 @@ class AlgCompound(Compound):
                 elif mode == Mode.INTERSECT:
                     compound = self.intersect(*objs).clean()
 
-        return AlgCompound(compound, dim)
+        return AlgCompound(compound)
 
     def __add__(self, other: Union[AlgCompound, List[AlgCompound]]):
         return self._place(Mode.ADD, *to_list(other))
@@ -203,29 +217,26 @@ def create_compound(
         if planes is not None:
             ctx.pending_face_planes = planes
 
-        compound = cls(**params) if objs is None else cls(*objs, **params)
+        compound = unwrap(cls(**params) if objs is None else cls(*objs, **params))
 
         if part is not None:
-            if len(list(ctx._obj)) == 1 and isinstance(ctx._obj, Compound):
-                compound = list(ctx._obj)[0]
-            else:
-                compound = ctx._obj
+            compound = unwrap(ctx._obj)
 
     solids = compound.solids()
     if len(solids) > 1:
-        return AlgCompound(solids[0].fuse(*solids[1:]).clean(), 3)
+        return AlgCompound(solids[0].fuse(*solids[1:]).clean())
     else:
-        return AlgCompound(compound, dim)
+        return AlgCompound(compound)
 
 
 class Zero(AlgCompound):
     def __init__(self):
-        super().__init__(dim=0)
+        super().__init__()
 
 
 class LazyZero(AlgCompound):
     def __init__(self):
-        super().__init__(dim=0)
+        super().__init__()
 
     def __enter__(self):
         self._collected_objects = []

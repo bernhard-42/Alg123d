@@ -25,7 +25,7 @@ class JointBox(AlgCompound):
             obj = fillet(obj, obj.edges(), radius)
         obj -= Cylinder(width / 4, length) @ Rot(y=90)
 
-        super().__init__(obj, 3)
+        super().__init__(obj)
 
 
 # %%
@@ -114,7 +114,7 @@ show(base, pin_arm, j7.symbol, j8.symbol)
 #
 # BallJoint
 #
-j9 = BallJoint("socket", base, min_face(base, Axis.X).absolute_location)
+j9 = BallJoint("socket", base, min_face(base, Axis.X).center_location)
 ball = JointBox(2, 2, 2, 0.99)
 j10 = RigidJoint("ball", ball, Location(Vector(0, 0, 1)))
 j9.connect_to(j10, angles=(10, 20, 30))

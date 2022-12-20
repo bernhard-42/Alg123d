@@ -44,7 +44,8 @@ for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
     rectangles.append(r.located(loc))
 
 holes = rectangles.pop().fuse(*rectangles).clean()
-c = Circle(diam / 2) - AlgCompound(holes, 2)
+c = Circle(diam / 2) - AlgCompound(holes)
 print(time.time() - a)
 
+show(c)
 # %%

@@ -46,7 +46,7 @@ class Box(AlgCompound):
             height=height,
             centered=centered,
         )
-        self.create_part(bd.Box, params=params)
+        super().__init__(self.create_part(bd.Box, params=params))
 
 
 class Cylinder(AlgCompound):
@@ -66,7 +66,7 @@ class Cylinder(AlgCompound):
             arc_size=arc_size,
             centered=centered,
         )
-        self.create_part(bd.Cylinder, params=params)
+        super().__init__(self.create_part(bd.Cylinder, params=params))
 
 
 class Cone(AlgCompound):
@@ -88,7 +88,7 @@ class Cone(AlgCompound):
             arc_size=arc_size,
             centered=centered,
         )
-        self.create_part(bd.Cone, params=params)
+        super().__init__(self.create_part(bd.Cone, params=params))
 
 
 class Sphere(AlgCompound):
@@ -110,7 +110,7 @@ class Sphere(AlgCompound):
             arc_size3=arc_size3,
             centered=centered,
         )
-        self.create_part(bd.Sphere, params=params)
+        super().__init__(self.create_part(bd.Sphere, params=params))
 
 
 class Torus(AlgCompound):
@@ -134,7 +134,7 @@ class Torus(AlgCompound):
             major_angle=major_angle,
             centered=centered,
         )
-        self.create_part(bd.Torus, params=params)
+        super().__init__(self.create_part(bd.Torus, params=params))
 
 
 class Wedge(AlgCompound):
@@ -157,7 +157,7 @@ class Wedge(AlgCompound):
             xmax=xmax,
             zmax=zmax,
         )
-        self.create_part(bd.Wedge, params=params)
+        super().__init__(self.create_part(bd.Wedge, params=params))
 
 
 class CounterBore(AlgCompound):
@@ -175,7 +175,7 @@ class CounterBore(AlgCompound):
             counter_bore_depth=counter_bore_depth,
             depth=depth,
         )
-        self.create_part(bd.CounterBoreHole, part, params=params)
+        super().__init__(self.create_part(bd.CounterBoreHole, part, params=params))
 
 
 class CounterSink(AlgCompound):
@@ -193,7 +193,7 @@ class CounterSink(AlgCompound):
             counter_sink_angle=counter_sink_angle,
             depth=depth,
         )
-        self.create_part(bd.CounterSinkHole, part, params=params)
+        super().__init__(self.create_part(bd.CounterSinkHole, part, params=params))
 
 
 class Bore(AlgCompound):
@@ -207,7 +207,7 @@ class Bore(AlgCompound):
             radius=radius,
             depth=depth,
         )
-        self.create_part(bd.Hole, part, params=params)
+        super().__init__(self.create_part(bd.Hole, part, params=params))
 
 
 #

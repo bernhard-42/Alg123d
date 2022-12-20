@@ -26,7 +26,7 @@ __all__ = [
 
 class Line(AlgCompound):
     def __init__(self, start: VectorLike, end: VectorLike):
-        self.create_line(bd.Line, objects=[start, end])
+        super().__init__(self.create_line(bd.Line, objects=[start, end]))
 
 
 class Bezier(AlgCompound):
@@ -35,7 +35,9 @@ class Bezier(AlgCompound):
         cntl_pts: Iterable[VectorLike],
         weights: List[float] = None,
     ):
-        self.create_line(bd.Bezier, objects=cntl_pts, params=dict(weights=weights))
+        super().__init__(
+            self.create_line(bd.Bezier, objects=cntl_pts, params=dict(weights=weights))
+        )
 
 
 class PolarLine(AlgCompound):
@@ -47,13 +49,13 @@ class PolarLine(AlgCompound):
         direction: VectorLike = None,
     ):
         params = dict(start=start, length=length, angle=angle, direction=direction)
-        self.create_line(bd.PolarLine, params=params)
+        super().__init__(self.create_line(bd.PolarLine, params=params))
 
 
 class Polyline(AlgCompound):
     def __init__(self, pts: List[VectorLike], close: bool = False):
         params = dict(close=close)
-        self.create_line(bd.Polyline, objects=pts, params=params)
+        super().__init__(self.create_line(bd.Polyline, objects=pts, params=params))
 
 
 class Spline(AlgCompound):
@@ -69,7 +71,7 @@ class Spline(AlgCompound):
             tangent_scalars=tangent_scalars,
             periodic=periodic,
         )
-        self.create_line(bd.Spline, objects=pts, params=params)
+        super().__init__(self.create_line(bd.Spline, objects=pts, params=params))
 
 
 class Helix(AlgCompound):
@@ -90,7 +92,7 @@ class Helix(AlgCompound):
             cone_angle=cone_angle,
             lefhand=lefthand,
         )
-        self.create_line(bd.Helix, params=params)
+        super().__init__(self.create_line(bd.Helix, params=params))
 
 
 class CenterArc(AlgCompound):
@@ -104,7 +106,7 @@ class CenterArc(AlgCompound):
         params = dict(
             center=center, radius=radius, start_angle=start_angle, arc_size=arc_size
         )
-        self.create_line(bd.CenterArc, params=params)
+        super().__init__(self.create_line(bd.CenterArc, params=params))
 
 
 class EllipticalCenterArc(AlgCompound):
@@ -127,7 +129,7 @@ class EllipticalCenterArc(AlgCompound):
             angular_direction=angular_direction,
             plane=plane,
         )
-        self.create_line(bd.EllipticalCenterArc, params=params)
+        super().__init__(self.create_line(bd.EllipticalCenterArc, params=params))
 
 
 class RadiusArc(AlgCompound):
@@ -138,7 +140,7 @@ class RadiusArc(AlgCompound):
         radius: float,
     ):
         params = dict(start_point=start_point, end_point=end_point, radius=radius)
-        self.create_line(bd.RadiusArc, params=params)
+        super().__init__(self.create_line(bd.RadiusArc, params=params))
 
 
 class SagittaArc(AlgCompound):
@@ -149,7 +151,7 @@ class SagittaArc(AlgCompound):
         sagitta: float,
     ):
         params = dict(start_point=start_point, end_point=end_point, sagitta=sagitta)
-        self.create_line(bd.SagittaArc, params=params)
+        super().__init__(self.create_line(bd.SagittaArc, params=params))
 
 
 class TangentArc(AlgCompound):
@@ -164,12 +166,16 @@ class TangentArc(AlgCompound):
             tangent=tangent,
             tangent_from_first=tangent_from_first,
         )
-        self.create_line(bd.TangentArc, objects=[start_point, end_point], params=params)
+        super().__init__(
+            self.create_line(
+                bd.TangentArc, objects=[start_point, end_point], params=params
+            )
+        )
 
 
 class ThreePointArc(AlgCompound):
     def __init__(self, p1: VectorLike, p2: VectorLike, p3: VectorLike):
-        self.create_line(bd.ThreePointArc, objects=(p1, p2, p3))
+        super().__init__(self.create_line(bd.ThreePointArc, objects=(p1, p2, p3)))
 
 
 class JernArc(AlgCompound):
@@ -188,4 +194,4 @@ class JernArc(AlgCompound):
             arc_size=arc_size,
             plane=plane,
         )
-        self.create_line(bd.JernArc, params=params)
+        super().__init__(self.create_line(bd.JernArc, params=params))

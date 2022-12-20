@@ -81,7 +81,7 @@ show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=False).edges())
 
 # %%
 
-s = Circle(1) + Circle(0.5) @ (0.9, 0) + Circle(0.5) @ (-0.7, 0) - Circle(0.5)
+s = Circle(1) + Circle(0.5) @ Pos(0.9, 0) + Circle(0.5) @ Pos(-0.7, 0) - Circle(0.5)
 
 show(extrude(s, 0.1))
 # loft

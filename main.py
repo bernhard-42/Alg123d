@@ -17,8 +17,8 @@ Face.center_location = property(_face_center_location)
 # %%
 
 with bd.BuildSketch() as s:
-    with bd.Locations(bd.Location((1,2,3), (10,20,30))):
-        bd.Rectangle(1,2)
+    with bd.Locations(bd.Location((1, 2, 3), (10, 20, 30))):
+        bd.Rectangle(1, 2)
 show(s)
 
 # %%
@@ -285,7 +285,9 @@ with bd.BuildPart() as ex:
 
 with bd.BuildPart() as ex2:
     bd.Add(ex.part)
-    bd.Add(flange.part, mode=bd.Mode.SUBTRACT)  # (2) subtract flange from the extruded solid
+    bd.Add(
+        flange.part, mode=bd.Mode.SUBTRACT
+    )  # (2) subtract flange from the extruded solid
 
 with bd.BuildPart() as flange2:
     bd.Add(ex2.solids().sort_by()[0])  # and the take the bottom solid and add flange
@@ -425,7 +427,9 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
+        *key_cap.edges().filter_by_position(
+            Axis.Z, 0, 30 * MM, inclusive=(False, True)
+        ),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
@@ -474,7 +478,9 @@ with BuildPart() as key_cap:
         Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
     # Fillet all the edges except the bottom
     Fillet(
-        *key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
+        *key_cap.edges().filter_by_position(
+            Axis.Z, 0, 30 * MM, inclusive=(False, True)
+        ),
         radius=1 * MM,
     )
     # Hollow out the key by subtracting a scaled version
