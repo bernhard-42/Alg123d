@@ -6,6 +6,65 @@ import cadquery as cq
 import time
 
 # %%
+def _face_center_location(self):
+    origin = self.center()
+    x_dir = Vector(self._geom_adaptor().Position().XDirection())
+    z_dir = self.normal_at(origin)
+    return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
+
+
+Face.center_location = property(_face_center_location)
+# %%
+
+with bd.BuildSketch() as s:
+    with bd.Locations(bd.Location((1,2,3), (10,20,30))):
+        bd.Rectangle(1,2)
+show(s)
+
+# %%
+def _location_x_axis(self) -> Axis:
+    p = Plane(self)
+    return Axis(p.origin, p.x_dir)
+
+
+def _location_y_axis(self) -> Axis:
+    p = Plane(self)
+    return Axis(p.origin, p.y_dir)
+
+
+def _location_z_axis(self) -> Axis:
+    p = Plane(self)
+    return Axis(p.origin, p.z_dir)
+
+
+Location.x_axis = property(_location_x_axis)
+Location.y_axis = property(_location_y_axis)
+Location.z_axis = property(_location_z_axis)
+# %%
+
+from build123d import *
+from build123d.joints import JointBox
+
+base: JointBox = JointBox(10, 10, 10, taper=3).locate(
+    Location(Vector(1, 1, 1), (1, 1, 1), 30)
+)
+base_top_edges: ShapeList[Edge] = (
+    base.edges().filter_by(Axis.X, tolerance=30).sort_by(Axis.Z)[-2:]
+)
+
+show(base, base_top_edges)
+
+
+# %%
+loc = Location(Vector(1, 1, 1), (1, 1, 1), 30)
+base: JointBox = JointBox(10, 10, 10, taper=3).locate(loc)
+
+base_top_edges: ShapeList[Edge] = (
+    base.edges().group_by(loc.z_axis)[-1].filter_by(loc.x_axis)
+)
+show(base, base_top_edges)
+
+# %%
 class JointBox(AlgCompound):
     def __init__(
         self,
