@@ -3,6 +3,8 @@ from alg123d.shortcuts import *
 import build123d as bd
 import cadquery as cq
 
+set_defaults(axes=True, axes0=True)
+
 # CQ <-> Alg123d
 
 # %%
