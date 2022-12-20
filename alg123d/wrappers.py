@@ -31,6 +31,7 @@ class AlgCompound(Compound):
             self.wrapped = None if obj is None else obj.wrapped
 
         self.mates = {}
+        self.joints = {}
 
     @classmethod
     def make_compound(cls, objs: Shape, dim=None):
