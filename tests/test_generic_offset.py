@@ -82,7 +82,7 @@ show(b.edges(), o, transparent=False)
 
 # %%
 
-openings = S.max_face(b)
+openings = max_face(b)
 
 o = shell(b, -0.1, openings)
 

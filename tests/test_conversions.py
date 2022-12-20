@@ -16,20 +16,17 @@ a3 = from_cq(s)
 a2 = from_cq(f)
 a1 = from_cq(e)
 
-print(a3.dim)
-print(a2.dim)
-print(a1.dim)
-
 show(
-    a,
-    a1 @ Pos(2, 0, 0),
-    a2 @ Pos(4, 0, 0),
-    a3 @ Pos(6, 0, 0),
+    c,
+    a @ Pos(2, 0, 0),
+    a1 @ Pos(4, 0, 0),
+    a2 @ Pos(6, 0, 0),
+    a3 @ Pos(8, 0, 0),
 )
 
 # %%
 
-a = Cylinder(1, 1) @ Plane.XZ
+a = Cylinder(1, 1, centered=False) @ Plane.XZ
 s = a.solids()
 f = a.faces()
 e = a.edges()
@@ -40,10 +37,11 @@ c2 = to_cq(f)
 c1 = to_cq(e)
 
 show(
-    c,
-    c1.translate((2, 0, 0)),
-    c2.translate((4, 0, 0)),
-    c3.translate((6, 0, 0)),
+    a,
+    c.translate((2, 0, 0)),
+    c1.translate((4, 0, 0)),
+    c2.translate((6, 0, 0)),
+    c3.translate((8, 0, 0)),
     show_parent=False,
 )
 
@@ -70,10 +68,11 @@ a2 = from_bd(b.faces())
 a1 = from_bd(b.edges())
 
 show(
-    a,
-    a1 @ Pos(2, 0, 0),
-    a2 @ Pos(4, 0, 0),
-    a3 @ Pos(6, 0, 0),
+    b,
+    a @ Pos(2, 0, 0),
+    a1 @ Pos(4, 0, 0),
+    a2 @ Pos(6, 0, 0),
+    a3 @ Pos(8, 0, 0),
 )
 
 # %%
