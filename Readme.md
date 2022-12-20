@@ -36,8 +36,6 @@ Another important operator is used from build123d:
 -   3-dim: {`extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`}
 -   2-dim: {`make_face`}
 
-
-
 ## Shortcuts
 
 _Location classes_:
@@ -79,7 +77,6 @@ _Conversions_:
 -   `to_cq`: Convert Alg123d object to CadQuery
 -   `from_bd`: Load a Build123d object into Alg123d
 -   `to_bd`: Convert Alg123d object to Build123d
-
 
 ## Usage
 
@@ -168,7 +165,7 @@ eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
 def eyes(face, ind):
     """build a compound of spheres representing the eyes of a side"""
     p = Plane(face) * Location((0, 0, eye_offset))  # eye offset above plane
-    rv = Zero()
+    rv AlgCompound()
     for loc in [eye_locs[i] for i in ind]:
         rv += Sphere(eye_radius) @ (p * loc)
     return rv
@@ -203,7 +200,7 @@ plane = Plane.ZX
 rotations = [Rotation(0, a, 0) for a in (0, 45, 90, 135)]
 
 # initialize result with "zero"
-s = Zero()
+s AlgCompound()
 
 # get four locations on a grid
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
@@ -234,7 +231,7 @@ e = extrude(s, 0.3)
 Creating lots of Shapes in a loop means for every step `fuse`and `clean` will be called. In an example like the below, both functions get slower and slower the more objects are already fused. Overall it takes on my machine 11.5 sec.
 
 ```python
-holes = Zero()
+holes AlgCompound()
 r = Rectangle(2, 2)
 for loc in GridLocations(4, 4, 20, 20):
     if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2:
@@ -246,7 +243,7 @@ c = Circle(diam / 2) - holes
 One way to avoid it is to use the `LazyZero` context. It will just collect all objects and at exit of the context call `fuse` once with all objects and `clean` once. Overall it takes 0.326 sec.
 
 ```python
-with LazyZero() as holes:
+with LazyAlgCompound as holes:
     r = Rectangle(2, 2)
     for loc in GridLocations(4, 4, 20, 20):
         if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2:

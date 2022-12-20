@@ -1,11 +1,15 @@
 setup.py
 alg123d/__init__.py
+alg123d/assembly.py
 alg123d/common.py
 alg123d/direct_api.py
 alg123d/generic.py
+alg123d/joints.py
 alg123d/line.py
 alg123d/part.py
+alg123d/shortcuts.py
 alg123d/sketch.py
+alg123d/utils.py
 alg123d/wrappers.py
 alg123d.egg-info/PKG-INFO
 alg123d.egg-info/SOURCES.txt

@@ -9,7 +9,7 @@ meshop = 2
 gridxy = int(diam / meshop / 2)
 
 a = time.time()
-with LazyZero() as holes:
+with LazyAlgCompound() as holes:
     r = Rectangle(meshop, meshop)
     for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
         if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2:

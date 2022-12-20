@@ -6,7 +6,7 @@ import build123d as bd
 from .direct_api import *
 from .utils import to_list
 
-__all__ = ["DelayClean", "Zero", "LazyZero", "AlgCompound", "create_compound"]
+__all__ = ["DelayClean", "LazyAlgCompound", "AlgCompound", "create_compound"]
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
@@ -229,12 +229,7 @@ def create_compound(
         return AlgCompound(compound)
 
 
-class Zero(AlgCompound):
-    def __init__(self):
-        super().__init__()
-
-
-class LazyZero(AlgCompound):
+class LazyAlgCompound(AlgCompound):
     def __init__(self):
         super().__init__()
 

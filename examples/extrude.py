@@ -18,7 +18,7 @@ both = extrude(
 # multiple
 
 multiple = Box(10, 10, 10)
-t = Zero()
+t = AlgCompound()
 for plane in Planes(multiple.faces()):
     for loc in GridLocations(5, 5, 2, 2):
         t += Text("Ω", fontsize=3, halign=Halign.CENTER, valign=Valign.CENTER) @ (

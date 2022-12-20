@@ -4,8 +4,7 @@ from .generic import *
 from .part import *
 from .sketch import *
 from .line import *
-from .wrappers import AlgCompound, Zero, LazyZero
-from .joints import *
+from .wrappers import AlgCompound, LazyAlgCompound
 
 from .assembly import *
 

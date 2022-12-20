@@ -25,7 +25,7 @@ plane = Plane.ZX
 
 rotations = [Rot(y=a) for a in (0, 45, 90, 135)]
 
-s = Zero()
+s = AlgCompound()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     # on plane, located to grid position, and finally rotated
     c_plane = plane * outer_loc * rotations[i]
@@ -51,40 +51,40 @@ show(a)
 
 # %%
 
-show(Zero() + Box(1, 1, 1))
+show(AlgCompound() + Box(1, 1, 1))
 # %%
 
-show(Box(1, 2, 3) + Zero())
-
-# %%
-
-show(Box(2, 3, 1) - Zero())
+show(Box(1, 2, 3) + AlgCompound())
 
 # %%
 
-show(Box(3, 2, 1) & Zero())
+show(Box(2, 3, 1) - AlgCompound())
 
 # %%
 
-show(Zero() + Rectangle(1, 1))
-# %%
-
-show(Rectangle(1, 2) + Zero())
+show(Box(3, 2, 1) & AlgCompound())
 
 # %%
 
-show(Rectangle(2, 2) - Zero())
+show(AlgCompound() + Rectangle(1, 1))
+# %%
+
+show(Rectangle(1, 2) + AlgCompound())
 
 # %%
 
-show(Rectangle(2, 1) & Zero())
+show(Rectangle(2, 2) - AlgCompound())
 
 # %%
 
-show(Zero() + RegularPolygon(2, 3))
+show(Rectangle(2, 1) & AlgCompound())
 
 # %%
 
-show(RegularPolygon(2, 4) + Zero())
+show(AlgCompound() + RegularPolygon(2, 3))
+
+# %%
+
+show(RegularPolygon(2, 4) + AlgCompound())
 
 # %%
