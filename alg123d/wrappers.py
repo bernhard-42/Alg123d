@@ -16,7 +16,8 @@ CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 #
 
 
-def unwrap(compound):
+def unwrap(compound: Compound) -> Compound:
+    """remove enclosing Compound if it only holds one other Compund"""
     if (
         isinstance(compound, Compound)
         and isinstance(compound, Iterable)
@@ -54,6 +55,7 @@ class AlgCompound(Compound):
 
         self.mates = {}
         self.joints = {}
+        # Don't call super().__init__() since we don't need .for_construction
 
     @classmethod
     def make_compound(cls, objs: Shape):
@@ -95,40 +97,28 @@ class AlgCompound(Compound):
         return result
 
     def _place(self, mode: Mode, *objs: AlgCompound):
-        if len(objs) == 1:
-            obj = objs[0]
-            if not (obj.dim == 0 or self.dim == 0 or self.dim == obj.dim):
-                raise RuntimeError(
-                    f"Cannot combine objects of different dimensionality: {self.dim} and {obj.dim}"
-                )
-        else:
-            objs = list(objs)
-            if not (self.dim == 0 or all([obj.dim == self.dim for obj in objs])):
-                raise RuntimeError(f"Cannot combine objects of different dimensions")
+        if not (objs[0].dim == 0 or self.dim == 0 or self.dim == objs[0].dim):
+            raise RuntimeError(
+                f"Cannot combine objects of different dimensionality: {self.dim} and {objs[0].dim}"
+            )
 
-        if self.dim == 0:  # Cover addition of Zempty AlgCompound with another object
+        if self.dim == 0:  # Cover addition of empty AlgCompound with another object
             if mode == Mode.ADD:
                 if len(objs) == 1:
-                    compound = obj
+                    compound = objs[0]
                 else:
                     compound = objs.pop().fuse(*objs).clean()
-                dim = objs[0].dim  # take over dimensionality of other operand
             else:
                 raise RuntimeError("Can only add to an empty AlgCompound object")
         elif objs[0].dim == 0:  # Cover operation with empty AlgCompound object
             compound = self
-            dim = objs[0].dim
         else:
-            dim = self.dim
-            if dim == 1:
-                if mode == Mode.ADD:
-                    compound = self.fuse(*objs).clean()
-                else:
-                    raise RuntimeError("Lines can only be added")
+            if mode == Mode.ADD:
+                compound = self.fuse(*objs).clean()
+            elif self.dim == 1:
+                raise RuntimeError("Lines can only be added")
             else:
-                if mode == Mode.ADD:
-                    compound = self.fuse(*objs).clean()
-                elif mode == Mode.SUBTRACT:
+                if mode == Mode.SUBTRACT:
                     compound = self.cut(*objs).clean()
                 elif mode == Mode.INTERSECT:
                     compound = self.intersect(*objs).clean()
