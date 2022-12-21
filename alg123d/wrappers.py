@@ -41,15 +41,19 @@ class AlgCompound(Compound):
         if obj is None:
             self.dim = 0
             self.wrapped = None
+
         elif all([isinstance(obj, (Edge, Wire)) for obj in objs]):
             self.dim = 1
             self.wrapped = Compound.make_compound(objs).wrapped
+
         elif all([isinstance(obj, Face) for obj in objs]):
             self.dim = 2
             self.wrapped = Compound.make_compound(objs).wrapped
+
         elif all([isinstance(obj, Solid) for obj in objs]):
             self.dim = 3
             self.wrapped = Compound.make_compound(objs).wrapped
+
         else:
             raise RuntimeError(f"{objs} not supported")
 
@@ -65,6 +69,7 @@ class AlgCompound(Compound):
     def _create(self, ctx, cls, objects=None, part=None, params=None):
         if params is None:
             params = {}
+
         with ctx() as c:
             if part is not None:
                 c._add_to_context(part)
@@ -73,6 +78,7 @@ class AlgCompound(Compound):
                 result = cls(**params, mode=Mode.PRIVATE)
             else:
                 result = cls(*list(objects), **params, mode=Mode.PRIVATE)
+
         return result
 
     def create_line(self, cls, objects=None, params=None):
@@ -104,8 +110,10 @@ class AlgCompound(Compound):
         else:
             if mode == Mode.ADD:
                 compound = self.fuse(*objs).clean()
+
             elif self.dim == 1:
                 raise RuntimeError("Lines can only be added")
+
             else:
                 if mode == Mode.SUBTRACT:
                     compound = self.cut(*objs).clean()
@@ -155,6 +163,7 @@ class AlgCompound(Compound):
             loc_str = "None"
         else:
             loc_str = f"(position={r2(self.location.position)}, rotation={r2(self.location.orientation)})"
+
         return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
 
 
@@ -233,6 +242,7 @@ class LazyAlgCompound(AlgCompound):
 
             self._collected_objects.append(other)
             return self
+
         else:
             return super().__add__(other)
 
