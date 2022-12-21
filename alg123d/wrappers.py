@@ -174,7 +174,7 @@ class AlgCompound(Compound):
 
 def create_compound(
     cls, objects=None, part=None, dim=None, faces=None, planes=None, params=None
-):
+) -> AlgCompound:
     if objects is None:
         objs = None
     else:

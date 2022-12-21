@@ -6,7 +6,7 @@ from build123d.build_enums import *
 #
 
 
-def _face_center_location(self):
+def _face_center_location(self) -> Location:
     origin = self.center()
     x_dir = Vector(self._geom_adaptor().Position().XDirection())
     z_dir = self.normal_at(origin)
@@ -44,11 +44,11 @@ Location.z_axis = property(_location_z_axis)
 #
 
 
-def axis_symbol(axis, l=1):
+def axis_symbol(axis: Axis, l=1) -> Edge:
     return Edge.make_line(axis.position, axis.position + axis.direction * l)
 
 
-def location_symbol(location, l=1):
+def location_symbol(location: Location, l=1) -> Compound:
     plane = Plane(location)
     x = Edge.make_line(plane.origin, plane.origin + plane.x_dir * l)
     y = Edge.make_line(plane.origin, plane.origin + plane.y_dir * l)
@@ -56,7 +56,7 @@ def location_symbol(location, l=1):
     return Compound.make_compound([x, y, z])
 
 
-def plane_symbol(plane, l=1):
+def plane_symbol(plane: Axis, l: float = 1) -> Compound:
     c = Edge.make_circle(l).located(plane.to_location())
     x = Edge.make_line(plane.origin, plane.origin + plane.x_dir * l / 2)
     y = Edge.make_line(plane.origin, plane.origin + plane.y_dir * l / 2)

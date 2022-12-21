@@ -220,7 +220,7 @@ def extrude(
     amount: float = None,
     both: bool = False,
     taper: float = 0.0,
-):
+) -> AlgCompound:
     faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
     return create_compound(
         bd.Extrude,
@@ -244,7 +244,7 @@ def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgComp
     return min_solid(ex, axis, wrapped=True) + limit
 
 
-def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False):
+def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False) -> AlgCompound:
     faces = []
     for s in to_tuple(sections):
         if isinstance(s, Compound):
@@ -259,7 +259,7 @@ def revolve(
     profiles: Union[List[Union[Compound, Face]], Compound, Face],
     axis: Axis,
     arc: float = 360.0,
-):
+) -> AlgCompound:
     for p in to_tuple(profiles):
         faces = []
         if isinstance(p, Compound):
@@ -280,7 +280,7 @@ def sweep(
     transition: Transition = Transition.TRANSFORMED,
     normal: VectorLike = None,
     binormal: Union[Edge, Wire] = None,
-):
+) -> AlgCompound:
     return create_compound(
         bd.Sweep,
         sections,
@@ -300,7 +300,7 @@ def section(
     part: AlgCompound,
     by: List[Plane],
     height: float = 0.0,
-):
+) -> AlgCompound:
     return create_compound(
         bd.Section, by, part=part, params=dict(height=height, mode=Mode.INTERSECT)
     )
@@ -311,7 +311,7 @@ def shell(
     amount: float,
     openings: Union[Face, List[Face]] = None,
     kind: Kind = Kind.ARC,
-):
+) -> AlgCompound:
     return create_compound(
         bd.Offset, objects, params=dict(amount=amount, openings=openings, kind=kind)
     )
