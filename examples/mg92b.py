@@ -102,13 +102,34 @@ class MG92B:
         t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
         t = fillet(t, t.edges().filter_by(Axis.Z), self.f)
 
-        for plane in Planes(t.faces().filter_by(Axis.Z).group_by()[-2]):
-            print(plane)
-            d = 0  # (self.hole_distance - self.body_length) / 8
-            print(d)
-            for loc in Locations(Pos(-d, 0), Pos(d, 0)):
-                print(loc)
-                t -= Bore(t, self.hole_diameter / 2) @ (plane * loc)
+        for loc in Locations((-self.hole_distance / 2, 0), (self.hole_distance / 2, 0)):
+            t -= Bore(t, self.hole_diameter / 2) @ loc
+
+        loc = Pos(
+            (self.body_length - self.body_width) / 2,
+            0,
+            self.top_cable_side_height + self.wing_thickness + self.top_wing_distance,
+        )
+        motor = extrude(Circle(self.motor_diameter / 2), self.motor_height) @ loc
+        motor = fillet(motor, max_edge(motor), self.f)
+        plane = Plane(max_face(motor))
+        motor += extrude(Circle(3.65), 0.5) @ plane
+        t += motor
+
+        loc.position -= Vector(self.motor_diameter / 2, 0)
+        gear = extrude(Circle(self.gear_diameter / 2), self.motor_height) @ loc
+        gear = fillet(gear, max_edge(gear), self.f)
+        t += gear
+
+        spline = extrude(Circle(self.spline_radius1), self.spline_height1) @ Plane(
+            max_face(t)
+        )
+        spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ Plane(
+            max_face(spline)
+        )
+        spline -= Bore(spline, 1, self.spline_height2) @ Plane(max_face(spline))
+        spline = chamfer(spline, max_edge(spline), 0.3)
+        t += spline
         return t
 
 
@@ -117,5 +138,4 @@ bottom = servo.bottom()
 cable = servo.cable()
 body = servo.body()
 top = servo.top()
-show(top)
-# show(bottom, cable, body, top, transparent=True)
+show(bottom, cable, body, top, transparent=True)
