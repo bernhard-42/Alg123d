@@ -62,39 +62,28 @@ class AlgCompound(Compound):
         compound = Compound.make_compound(objs)
         return cls(compound)
 
-    def create_line(self, cls, objects=None, params=None):
+    def _create(self, ctx, cls, objects=None, part=None, params=None):
         if params is None:
             params = {}
+        with ctx() as c:
+            if part is not None:
+                c._add_to_context(part)
 
-        with bd.BuildLine():
-            if objects is None:
-                obj = cls(**params, mode=Mode.PRIVATE)
-            else:
-                obj = cls(*list(objects), **params, mode=Mode.PRIVATE)
-
-        return Compound.make_compound(obj.edges())
-
-    def create_sketch(self, cls, objects=None, params=None):
-        if params is None:
-            params = {}
-
-        with bd.BuildSketch():
             if objects is None:
                 result = cls(**params, mode=Mode.PRIVATE)
             else:
                 result = cls(*list(objects), **params, mode=Mode.PRIVATE)
         return result
 
+    def create_line(self, cls, objects=None, params=None):
+        result = self._create(bd.BuildLine, cls, objects=objects, params=params)
+        return Compound.make_compound(result.edges())
+
+    def create_sketch(self, cls, objects=None, params=None):
+        return self._create(bd.BuildSketch, cls, objects=objects, params=params)
+
     def create_part(self, cls, part=None, params=None):
-        if params is None:
-            params = {}
-
-        with bd.BuildPart() as ctx:
-            if part is not None:
-                ctx._add_to_context(part)
-
-            result = cls(**params, mode=Mode.PRIVATE)
-        return result
+        return self._create(bd.BuildPart, cls, part=part, params=params)
 
     def _place(self, mode: Mode, *objs: AlgCompound):
         if not (objs[0].dim == 0 or self.dim == 0 or self.dim == objs[0].dim):
