@@ -9,6 +9,7 @@ Alg123d is based to (maybe 90%) on [build123d](https://github.com/gumyr/build123
 1. Explicit is better than implicit
 2. Minimum boilerplate
 3. Readbility
+4. Interoperability with build123d and CadQuery
 
 So Alg123d
 
