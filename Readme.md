@@ -1,12 +1,32 @@
 # Alg123d
 
+## Credits
+
+Alg123d is based to (maybe 90%) on [build123d](https://github.com/gumyr/build123d), so most of the credit goes to Roger Maitland.
+
 ## Overview
 
-`class AlgCompound(build123d.Compound)`
+Design philosophy:
+
+1. Explicit is better than implicit
+2. Minimum boilerplate
+3. Readbility
+
+So Alg123d removed:
+
+-   Removed all implicit computation (e.g. Build contexts, Location context, spending_xxx, last selection) to get compliant with 1)
+-   Add some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
+
+Alg123d consists of basically one class: `class AlgCompound(build123d.Compound)`
 
 **Additional properties:**
 
 -   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=zero, 1=line, 2=sketch, 3=part
+-   `joints`: To support build123d's joint connectors directly on `AlgCompound`'s, default = `{}`
+-   `mates`: To support manual assemblies with `MAssembly`, default =`{}`
+
+If one doesn't use `build123d.Joint` or `alg123d.MAsembly`, `mates` and `joints` can be safely ignored.
+`dim` is used to check compatibility of algebra operationes, see below.
 
 **Additional user facing operators:**
 
