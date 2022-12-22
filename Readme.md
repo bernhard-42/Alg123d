@@ -95,14 +95,14 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
 -   Box at `origin = (0,1,0)` without rotation:
 
     ```python
-    b = Box(1,2,3) @ Location((0,1,0))
-    b = Box(1,2,3) @ (0,1,0)             # shortcut
+    b = Box(1,2,3) @ Pos((0,1,0))
+    b = Box(1,2,3) @ Pos((y=1)
     ```
 
 -   Box at `origin = (0,0,0)` with `rotation = (0, 100, 45)`:
 
     ```python
-    b = Box(1,2,3) @ Rotation((0, 100, 45))
+    b = Box(1,2,3) @ Rot((0, 100, 45))
     ```
 
 -   Box at `origin = (0,1,0)` with `rotation = (0, 100, 45)`:
@@ -120,7 +120,7 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
 -   Box on plane `Plane.YZ` rotated around `X` by 45°:
 
     ```python
-    b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
+    b = Box(1,2,3) @ (Plane.XZ * Rot(x=45))
     ```
 
 ### Direct API extension
