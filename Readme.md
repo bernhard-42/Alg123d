@@ -202,11 +202,11 @@ dist = 0.9
 eye_radius = 0.23
 eye_offset = 0.15
 
-eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Location((0, 0, 0))]
+eye_locs = list(GridLocations(dist, dist / 2, 2, 3)) + [Pos((0, 0, 0))]
 
 def eyes(face, ind):
     """build a compound of spheres representing the eyes of a side"""
-    p = Plane(face) * Location((0, 0, eye_offset))  # eye offset above plane
+    p = Plane(face) * Pos(z=eye_offset)  # eye offset above plane
     rv = AlgCompound()
     for loc in [eye_locs[i] for i in ind]:
         rv += Sphere(eye_radius) @ (p * loc)
