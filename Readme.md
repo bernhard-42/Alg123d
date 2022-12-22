@@ -150,13 +150,13 @@ tolerance: float
 the following extensions are the same as e.g. `faces().filter_by(filter_by, reverse, tolerance)`
 
 ```python
-def vertices(self, filter_by=None, reverse=False, tolerance=1e-5)
-def edges(self, filter_by=None, reverse=False, tolerance=1e-5)
-def compounds(self, filter_by=None, reverse=False, tolerance=1e-5)
-def wires(self, filter_by=None, reverse=False, tolerance=1e-5)
-def faces(self, filter_by=None, reverse=False, tolerance=1e-5)
-def shells(self, filter_by=None, reverse=False, tolerance=1e-5)
-def solids(self, filter_by=None, reverse=False, tolerance=1e-5)
+def vertices(self, filter_by=None, reverse=False, tolerance=1e-5):
+def edges(self, filter_by=None, reverse=False, tolerance=1e-5):
+def compounds(self, filter_by=None, reverse=False, tolerance=1e-5):
+def wires(self, filter_by=None, reverse=False, tolerance=1e-5):
+def faces(self, filter_by=None, reverse=False, tolerance=1e-5):
+def shells(self, filter_by=None, reverse=False, tolerance=1e-5):
+def solids(self, filter_by=None, reverse=False, tolerance=1e-5):
 ```
 
 **ShapeList**
@@ -181,8 +181,8 @@ Get min or max element/group of a ShapeList. Simply for readability:
 `obj.faces().max_group(axis)` is easier to read then `obj.faces().group_by(axis)[-1]`
 
 ```python
-max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
-min(self, axis: Axis = Axis.Z, wrapped=False)  -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
+min(self, axis: Axis = Axis.Z, wrapped=False)  -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
 min_group(self, axis: Axis = Axis.Z) -> ShapeList:
 max_group(self, axis: Axis = Axis.Z) -> ShapeList:
 ```
