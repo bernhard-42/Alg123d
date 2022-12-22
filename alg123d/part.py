@@ -1,7 +1,6 @@
 from typing import List
 import build123d as bd
 from .wrappers import AlgCompound, create_compound
-from .shortcuts import min_solid
 from .direct_api import *
 from .utils import to_tuple
 
@@ -241,7 +240,7 @@ def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgComp
     axis = Axis(f.center(), f.normal_at(f.center()))
 
     ex = extrude(f, z_max) - limit
-    return min_solid(ex, axis, wrapped=True) + limit
+    return ex.solids().min(axis, wrapped=True) + limit
 
 
 def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False) -> AlgCompound:

@@ -130,7 +130,7 @@ show(s, sections, transparent=True)
 c = Circle(2) @ Pos(20, 0, 0)
 a = revolve(c, -Axis.Y, 180)
 r = extrude(Rectangle(20, 4), 17.5)
-a += min_solid(r - a, wrapped=True)
+a += (r - a).solids().min(wrapped=True)
 
 show(a)
 # %%

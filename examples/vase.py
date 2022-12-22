@@ -20,9 +20,9 @@ outline += Polyline(
 )
 profile = make_face(outline)
 vase = revolve(profile, axis=Axis.Y)
-vase = shell(vase, openings=max_face(vase, Axis.Y), amount=-1)
+vase = shell(vase, openings=vase.faces().max(Axis.Y), amount=-1)
 
-top_edges = vase.edges().filter_by_position(Axis.Y, 60, 62).filter_by(GeomType.CIRCLE)
+top_edges = vase.edges(GeomType.CIRCLE).filter_by_position(Axis.Y, 60, 62)
 vase = fillet(vase, top_edges, radius=0.25)
 
 vase = fillet(vase, vase.edges().sort_by(Axis.Y)[0], radius=0.5)

@@ -1,3 +1,5 @@
+from typing import List
+
 from build123d.direct_api import *
 from build123d.build_enums import *
 
@@ -16,6 +18,7 @@ def _face_center_location(self) -> Location:
 Face.center_location = property(_face_center_location)
 
 #
+# Location monkey patching
 # Axis of locations
 #
 
@@ -38,6 +41,129 @@ def _location_z_axis(self) -> Axis:
 Location.x_axis = property(_location_x_axis)
 Location.y_axis = property(_location_y_axis)
 Location.z_axis = property(_location_z_axis)
+
+#
+# Shape monkey patching
+#
+
+_shape_vertices_orig = Shape.vertices
+_shape_edges_orig = Shape.edges
+_shape_compounds_orig = Shape.compounds
+_shape_wires_orig = Shape.wires
+_shape_faces_orig = Shape.faces
+_shape_shells_orig = Shape.shells
+_shape_solids_orig = Shape.solids
+
+
+def _filter(
+    objs,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    if filter_by is None:
+        return objs
+    else:
+        return objs.filter_by(filter_by, reverse, tolerance)
+
+
+def _shape_vertices(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_vertices_orig(self), filter_by, reverse, tolerance)
+
+
+def _shape_edges(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_edges_orig(self), filter_by, reverse, tolerance)
+
+
+def _shape_compounds(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_compounds_orig(self), filter_by, reverse, tolerance)
+
+
+def _shape_wires(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_wires_orig(self), filter_by, reverse, tolerance)
+
+
+def _shape_faces(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_faces_orig(self), filter_by, reverse, tolerance)
+
+
+def _shape_shells(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_shells_orig(self), filter_by, reverse, tolerance)
+
+
+def _shape_solids(
+    self,
+    filter_by: Union[Axis, GeomType] = None,
+    reverse: bool = False,
+    tolerance: float = 1e-5,
+):
+    return _filter(_shape_solids_orig(self), filter_by, reverse, tolerance)
+
+
+Shape.vertices = _shape_vertices
+Shape.edges = _shape_edges
+Shape.compounds = _shape_compounds
+Shape.wires = _shape_wires
+Shape.faces = _shape_faces
+Shape.shells = _shape_shells
+Shape.solids = _shape_solids
+
+#
+# ShapeList
+#
+
+
+def _shapelist_sub(self, other: List[Shape]) -> ShapeList:
+    d2 = [hash(o) for o in other]
+    d1 = {hash(o): o for o in self if hash(o) not in d2}
+    return ShapeList(d1.values())
+
+
+# def _shapelist_max(self, axis: Axis = Axis.Z, wrapped=False) => wrappers.py
+# def _shapelist_min(self, axis: Axis = Axis.Z, wrapped=False) => wrappers.py
+
+
+def _shapelist_min_group(self, axis: Axis = Axis.Z) -> ShapeList:
+    return self.group_by(axis)[0]
+
+
+def _shapelist_max_group(self, axis: Axis = Axis.Z) -> ShapeList:
+    return self.group_by(axis)[-1]
+
+
+ShapeList.__sub__ = _shapelist_sub
+ShapeList.min_group = _shapelist_min_group
+ShapeList.max_group = _shapelist_max_group
 
 #
 # Symbols

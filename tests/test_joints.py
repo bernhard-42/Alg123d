@@ -33,7 +33,7 @@ loc = Location(Vector(1, 1, 1), (1, 0.1, 1), 30)
 
 base = JointBox(10, 10, 10, taper=3).locate(loc)
 # base_top_edges = base.edges().filter_by(Axis.X, tolerance=30).sort_by(Axis.Z)[-2:]
-base_top_edges = max_edges(base, loc.z_axis).filter_by(loc.x_axis)
+base_top_edges = base.edges(loc.x_axis).max_group(loc.z_axis)
 
 show(base, base_top_edges)
 # %%
@@ -41,9 +41,9 @@ show(base, base_top_edges)
 # Rigid Joint
 #
 fixed_arm = JointBox(1, 1, 5, 0.2)
-j1 = RigidJoint("side", base, max_face(base, loc.x_axis).center_location)
+j1 = RigidJoint("side", base, base.faces().max(loc.x_axis).center_location)
 # j2 = RigidJoint("top", fixed_arm, (-Plane(fixed_arm.faces().sort_by(Axis.Z)[-1])).to_location())
-j2 = RigidJoint("top", fixed_arm, max_face(fixed_arm).center_location * Rot(x=180))
+j2 = RigidJoint("top", fixed_arm, fixed_arm.faces().max().center_location * Rot(x=180))
 base.joints["side"].connect_to(fixed_arm.joints["top"])
 j1.connect_to(j2)
 
@@ -54,10 +54,10 @@ show(base, fixed_arm, j1.symbol, j2.symbol)
 #
 hinge_arm = JointBox(2, 1, 10, taper=1)
 # swing_arm_hinge_edge: Edge = hinge_arm.edges().group_by(SortBy.LENGTH)[-1].sort_by(Axis.X)[-2:].sort_by(Axis.Y)[0]
-swing_arm_hinge_edge: Edge = max_edge(min_face(hinge_arm, Axis.Y), Axis.X)
+swing_arm_hinge_edge: Edge = hinge_arm.faces().max(Axis.Y).edges().max(Axis.X)
 swing_arm_hinge_axis = swing_arm_hinge_edge.to_axis()
 # base_corner_edge = base.edges().sort_by(Axis((0, 0, 0), (1, 1, 0)))[-1]
-base_corner_edge = max_edge(max_face(base, loc.x_axis), loc.y_axis)
+base_corner_edge = base.faces().max(loc.x_axis).edges().max(loc.y_axis)
 base_hinge_axis = base_corner_edge.to_axis()
 j3 = RevoluteJoint("hinge", base, axis=base_hinge_axis, range=(0, 180))
 j4 = RigidJoint("corner", hinge_arm, swing_arm_hinge_axis.to_location())
@@ -84,12 +84,12 @@ show(base, slider_arm, s1.symbol, s2.symbol)
 # Cylindrical
 #
 hole_axis = Axis(
-    min_face(base, Axis.Y).center(),
-    -min_face(base, Axis.Y).normal_at(),
+    base.faces().min(Axis.Y).center(),
+    base.faces().min(Axis.Y).normal_at(),
 )
 screw_arm = JointBox(1, 1, 10, 0.49)
 j5 = CylindricalJoint("hole", base, hole_axis, linear_range=(-10, 10))
-j6 = RigidJoint("screw", screw_arm, max_face(screw_arm).center_location)
+j6 = RigidJoint("screw", screw_arm, screw_arm.faces().max().center_location)
 j5.connect_to(j6, position=-4, angle=90)
 
 show(base, screw_arm, j5.symbol, j6.symbol)
@@ -114,7 +114,7 @@ show(base, pin_arm, j7.symbol, j8.symbol)
 #
 # BallJoint
 #
-j9 = BallJoint("socket", base, min_face(base, Axis.X).center_location)
+j9 = BallJoint("socket", base, base.faces().min(Axis.X).center_location)
 ball = JointBox(2, 2, 2, 0.99)
 j10 = RigidJoint("ball", ball, Location(Vector(0, 0, 1)))
 j9.connect_to(j10, angles=(10, 20, 30))

@@ -39,10 +39,10 @@ class MG92B:
 
     def bottom(self):
         b = Box(self.body_length, self.body_width, self.bottom_height)
-        loc = min_face(b, Axis.X).center_location
+        loc = b.faces().min(Axis.X).center_location
 
-        b = fillet(b, b.edges().filter_by(Axis.Z), self.f)
-        b = fillet(b, min_edges(b), self.f)
+        b = fillet(b, b.edges(Axis.Z), self.f)
+        b = fillet(b, b.edges().min(), self.f)
 
         loc.position -= Vector(0, 0, (self.bottom_height - self.cable_diameter) / 2)
         r = Rectangle(self.cable_diameter, 5 * self.cable_diameter) @ (loc)
@@ -54,7 +54,7 @@ class MG92B:
 
     def body(self):
         b = Box(self.body_length, self.body_width, self.body_height)
-        return fillet(b, b.edges().filter_by(Axis.Z), self.f)
+        return fillet(b, b.edges(Axis.Z), self.f)
 
     def top(self):
         polygon = (
@@ -100,7 +100,7 @@ class MG92B:
         )
         self.poly = polygon
         t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
-        t = fillet(t, t.edges().filter_by(Axis.Z), self.f)
+        t = fillet(t, t.edges(Axis.Z), self.f)
 
         for loc in Locations((-self.hole_distance / 2, 0), (self.hole_distance / 2, 0)):
             t -= Bore(t, self.hole_diameter / 2) @ loc
@@ -111,24 +111,24 @@ class MG92B:
             self.top_cable_side_height + self.wing_thickness + self.top_wing_distance,
         )
         motor = extrude(Circle(self.motor_diameter / 2), self.motor_height) @ loc
-        motor = fillet(motor, max_edge(motor), self.f)
-        plane = Plane(max_face(motor))
+        motor = fillet(motor, motor.edges().max(), self.f)
+        plane = Plane(motor.faces().max())
         motor += extrude(Circle(3.65), 0.5) @ plane
         t += motor
 
         loc.position -= Vector(self.motor_diameter / 2, 0)
         gear = extrude(Circle(self.gear_diameter / 2), self.motor_height) @ loc
-        gear = fillet(gear, max_edge(gear), self.f)
+        gear = fillet(gear, gear.edges().max(), self.f)
         t += gear
 
         spline = extrude(Circle(self.spline_radius1), self.spline_height1) @ Plane(
-            max_face(t)
+            t.faces().max()
         )
         spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ Plane(
-            max_face(spline)
+            spline.faces().max()
         )
-        spline -= Bore(spline, 1, self.spline_height2) @ Plane(max_face(spline))
-        spline = chamfer(spline, max_edge(spline), 0.3)
+        spline -= Bore(spline, 1, self.spline_height2) @ Plane(spline.faces().max())
+        spline = chamfer(spline, spline.edges().max(), 0.3)
         t += spline
         return t
 

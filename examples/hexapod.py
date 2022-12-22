@@ -47,12 +47,12 @@ class Base:
             base -= (
                 Cylinder(diam / 2 + tol, thickness, centered=(True, True, False)) @ pos
             )
-            self.base_edges[name] = sort_min(diff(base.edges(), last))
+            self.base_edges[name] = (base.edges() - last).min()
 
         for name, pos in self.stand_holes.items():
             last = base.edges()
             base -= Box(width / 2 + 2 * tol, thickness + 2 * tol, 5 * thickness) @ pos
-            self.stand_edges[name] = group_min(diff(base.edges(), last))
+            self.stand_edges[name] = (base.edges() - last).min_group()
 
         base.mates = {
             f"{name}_hole": Mate(edge, name=name)
@@ -64,8 +64,10 @@ class Base:
                 for name, edge in self.stand_edges.items()
             }
         )
-        base.mates["base"] = Mate(max_face(base), name="base") @ Pos(z=height + 2 * tol)
-        base.mates["top"] = Mate(min_face(base), name="top")
+        base.mates["base"] = Mate(base.faces().max(), name="base") @ Pos(
+            z=height + 2 * tol
+        )
+        base.mates["top"] = Mate(base.faces().min(), name="top")
 
         return base
 
@@ -90,10 +92,10 @@ class Stand:
             block = extrude(rect, self.h)
             stand += block
 
-            m = max_edges(block)
+            m = block.edges().max_group()
             stand = chamfer(
                 stand,
-                sort_min(m, Axis.Y) if i == 1 else sort_max(m, Axis.Y),
+                m.min(Axis.Y) if i == 1 else m.max(Axis.Y),
                 length=self.h - 2 * tol,
             )
 
@@ -103,7 +105,7 @@ class Stand:
                 @ plane
             )
 
-        stand.mates = {"bottom": Mate(max_face(stand, Axis.Y), name="bottom")}
+        stand.mates = {"bottom": Mate(stand.faces().max(Axis.Y), name="bottom")}
         return stand
 
 
@@ -125,22 +127,20 @@ class UpperLeg:
         line += mirror(line, Plane.XZ)
         face = make_face(line)
         upper_leg = extrude(face, thickness / 2, both=True)
-        upper_leg = fillet(upper_leg, max_edge(upper_leg, Axis.X), radius=4)
+        upper_leg = fillet(upper_leg, upper_leg.edges().max(Axis.X), radius=4)
 
         last = upper_leg.edges()
         upper_leg -= Bore(upper_leg, diam / 2 + tol) @ leg_hole
-        self.knee_hole = (
-            diff(upper_leg.edges(), last).filter_by(GeomType.CIRCLE).sort_by()
-        )
+        self.knee_hole = upper_leg.edges(GeomType.CIRCLE) - last
 
         upper_leg += Cylinder(diam / 2, 2 * (height / 2 + thickness + tol)) @ Rot(
             90, 0, 0
         )
 
         upper_leg.mates = {
-            "knee_bottom": Mate(sort_min(self.knee_hole), name="knee_bottom"),
-            "knee_top": Mate(sort_max(self.knee_hole), name="knee_top"),
-            "hinge": Mate(min_face(upper_leg, Axis.Y), name="hinge"),
+            "knee_bottom": Mate(self.knee_hole.min(), name="knee_bottom"),
+            "knee_top": Mate(self.knee_hole.max(), name="knee_top"),
+            "hinge": Mate(upper_leg.faces().min(Axis.Y), name="hinge"),
         }
 
         return upper_leg
@@ -161,17 +161,15 @@ class LowerLeg:
         line += mirror(line, Plane.XZ)
         face = make_face(line)
         lower_leg = extrude(face, thickness / 2, both=True)
-        lower_leg = fillet(lower_leg, lower_leg.edges().filter_by(Axis.Z), radius=4)
+        lower_leg = fillet(lower_leg, lower_leg.edges(Axis.Z), radius=4)
 
         last = lower_leg.edges()
         lower_leg -= Bore(lower_leg, diam / 2 + tol) @ leg_hole
-        self.knee_hole = (
-            diff(lower_leg.edges(), last).filter_by(GeomType.CIRCLE).sort_by()
-        )
+        self.knee_hole = (lower_leg.edges(GeomType.CIRCLE) - last).sort_by()
 
         lower_leg.mates = {
-            "knee_bottom": Mate(sort_min(self.knee_hole), name="knee_bottom"),
-            "knee_top": Mate(sort_max(self.knee_hole), name="knee_top"),
+            "knee_bottom": Mate(self.knee_hole.min(), name="knee_bottom"),
+            "knee_top": Mate(self.knee_hole.max(), name="knee_top"),
         }
         return lower_leg
 

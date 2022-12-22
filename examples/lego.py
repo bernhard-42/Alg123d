@@ -51,7 +51,7 @@ for loc in GridLocations(
 lego = extrude(plan, amount=base_height - wall_thickness)
 
 # Create a box on the top of the walls
-for loc in Locations((0, 0, max_vertex(lego).Z)):
+for loc in Locations((0, 0, lego.vertices().max().Z)):
     # Create the top of the block
     lego += (
         Box(
@@ -64,7 +64,7 @@ for loc in Locations((0, 0, max_vertex(lego).Z)):
     )
 
 # Create a workplane on the top of the block
-plane = Plane(max_face(lego))
+plane = Plane(lego.faces().max())
 
 # Create a grid of pips
 for loc in GridLocations(lego_unit_size, lego_unit_size, pip_count, 2):

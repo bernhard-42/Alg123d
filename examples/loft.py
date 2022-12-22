@@ -9,7 +9,7 @@ for i in range(slice_count + 1):
     art += Circle(10 * sin(i * pi / slice_count) + 5) @ plane
 
 art = loft(art)
-top_bottom = art.faces().filter_by(GeomType.PLANE)
+top_bottom = art.faces(GeomType.PLANE)
 art = shell(art, openings=top_bottom, amount=0.5)
 
 reset_show()
