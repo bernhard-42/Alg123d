@@ -22,12 +22,12 @@ dice = Box(width, width, width)
 dice = fillet(dice, dice.edges(), fillet_radius)
 
 sides = [
-    (min_face(dice, Axis.Z), [6]),  # 1
-    (max_face(dice, Axis.Z), [0, 1, 2, 3, 4, 5]),  # 6
-    (min_face(dice, Axis.Y), [0, 5]),  # 2
-    (max_face(dice, Axis.Y), [0, 2, 3, 5, 6]),  # 5
-    (min_face(dice, Axis.X), [2, 3, 6]),  # 3
-    (max_face(dice, Axis.X), [0, 2, 3, 5]),  # 4
+    (dice.faces().min(Axis.Z), [6]),  # 1
+    (dice.faces().max(Axis.Z), [0, 1, 2, 3, 4, 5]),  # 6
+    (dice.faces().min(Axis.Y), [0, 5]),  # 2
+    (dice.faces().max(Axis.Y), [0, 2, 3, 5, 6]),  # 5
+    (dice.faces().min(Axis.X), [2, 3, 6]),  # 3
+    (dice.faces().max(Axis.X), [0, 2, 3, 5]),  # 4
 ]
 
 for side in sides:

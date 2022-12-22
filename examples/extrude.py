@@ -36,7 +36,7 @@ for loc in Planes(single_multiple.faces()):
 # Non-planar surface
 non_planar = Cylinder(10, 20, centered=(True, False, True)) @ Rot(x=90)
 non_planar &= Box(10, 10, 10, centered=(True, True, False))
-non_planar = extrude(min_face(non_planar), 2)
+non_planar = extrude(non_planar.faces().min(), 2)
 
 # Taper Extrude and Extrude to "next" while creating a Cherry MX key cap
 # See: https://www.cherrymx.de/en/dev.html

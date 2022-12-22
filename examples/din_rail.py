@@ -36,7 +36,7 @@ din = fillet(din, outside_vertices, radius=fillet_radius + thickness)
 
 rail = extrude(din, rail_length)
 
-plane = Plane(max_face(rail, Axis.Y))
+plane = Plane(rail.faces().max(Axis.Y))
 
 # with LazyAlgCompound as slot_faces:
 slot_faces = AlgCompound()

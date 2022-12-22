@@ -10,7 +10,7 @@ plan = Rectangle(width, height)
 plan = fillet(plan, plan.vertices(), 5)
 pillow_block = extrude(plan, thickness)
 
-plane = Plane(max_face(pillow_block))
+plane = Plane(pillow_block.faces().max())
 
 pillow_block -= (
     CounterBore(pillow_block, bearing_axle_radius, bearing_radius, bearing_thickness)

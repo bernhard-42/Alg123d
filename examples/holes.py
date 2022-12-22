@@ -18,7 +18,7 @@ recessed_counter_sink -= CounterSink(
 
 # Flush counter sink hole (hole location @ (0,0,2))
 flush_counter_sink = Cylinder(radius=3, height=2)
-plane = Plane(max_face(flush_counter_sink))
+plane = Plane(flush_counter_sink.faces().max())
 flush_counter_sink -= (
     CounterSink(flush_counter_sink, radius=1, counter_sink_radius=1.5) @ plane
 )
