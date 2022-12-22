@@ -4,18 +4,18 @@
 
 Alg123d is based to (maybe 90%) on [build123d](https://github.com/gumyr/build123d), so most of the credit goes to Roger Maitland.
 
-## Overview
-
-Design philosophy:
+## Design philosophy
 
 1. Explicit is better than implicit
 2. Minimum boilerplate
 3. Readbility
 
-So Alg123d removed:
+So Alg123d
 
--   Removed all implicit computation (e.g. Build contexts, Location context, spending_xxx, last selection) to get compliant with 1)
--   Add some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
+-   removed all implicit computation (e.g. Build contexts, Location context, pending_xxx, last selection) to get compliant with 1)
+-   add some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
+
+## Overview
 
 Alg123d consists of basically one class: `class AlgCompound(build123d.Compound)`
 
