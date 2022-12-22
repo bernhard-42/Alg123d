@@ -260,14 +260,14 @@ class LazyAlgCompound(AlgCompound):
 
 def _shapelist_max(
     self, axis: Axis = Axis.Z, wrapped=False
-) -> Union[Solid, Face, Wire, Edge, Vertex]:
+) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
     obj = self.sort_by(axis)[-1]
     return AlgCompound(obj) if wrapped else obj
 
 
 def _shapelist_min(
     self, axis: Axis = Axis.Z, wrapped=False
-) -> Union[Solid, Face, Wire, Edge, Vertex]:
+) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
     obj = self.sort_by(axis)[0]
     return AlgCompound(obj) if wrapped else obj
 
