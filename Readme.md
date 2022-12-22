@@ -130,9 +130,9 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
 Return x-, y- or z-axis of a location:
 
 ```python
-x_axis(self) -> Axis:
-y_axis(self) -> Axis:
-z_axis(self) -> Axis:
+Location.x_axis(self) -> Axis
+Location.y_axis(self) -> Axis
+Location.z_axis(self) -> Axis
 ```
 
 **Shape**
@@ -150,13 +150,13 @@ tolerance: float
 the following extensions are the same as e.g. `faces().filter_by(filter_by, reverse, tolerance)`
 
 ```python
-vertices(self, filter_by=None, reverse=False, tolerance=1e-5):
-edges(self, filter_by=None, reverse=False, tolerance=1e-5):
-compounds(self, filter_by=None, reverse=False, tolerance=1e-5):
-wires(self, filter_by=None, reverse=False, tolerance=1e-5):
-faces(self, filter_by=None, reverse=False, tolerance=1e-5):
-shells(self, filter_by=None, reverse=False, tolerance=1e-5):
-solids(self, filter_by=None, reverse=False, tolerance=1e-5):
+Shape.vertices(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.edges(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.compounds(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.wires(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.faces(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.shells(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.solids(self, filter_by=None, reverse=False, tolerance=1e-5)
 ```
 
 **ShapeList**
@@ -164,7 +164,7 @@ solids(self, filter_by=None, reverse=False, tolerance=1e-5):
 Allow two `ShapeList`s to be subtracted:
 
 ```python
-__sub__(self, other: List[Shape]) -> ShapeList:
+ShapeList.__sub__(self, other: List[Shape]) -> ShapeList
 ```
 
 Use case:
@@ -181,11 +181,13 @@ Get min or max element/group of a ShapeList. Simply for readability:
 `obj.faces().max_group(axis)` is easier to read then `obj.faces().group_by(axis)[-1]`
 
 ```python
-max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
-min(self, axis: Axis = Axis.Z, wrapped=False)  -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
-min_group(self, axis: Axis = Axis.Z) -> ShapeList:
-max_group(self, axis: Axis = Axis.Z) -> ShapeList:
+ShapeList.max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+ShapeList.min(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+ShapeList.min_group(self, axis: Axis = Axis.Z) -> ShapeList
+ShapeList.max_group(self, axis: Axis = Axis.Z) -> ShapeList
 ```
+
+`min` and `max` can also return an `AlgCompound` if `wrapped=True`
 
 ### Examples
 
