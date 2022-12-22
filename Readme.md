@@ -13,8 +13,9 @@ Alg123d is based to (maybe 90%) on [build123d](https://github.com/gumyr/build123
 
 So Alg123d
 
--   removed all implicit computations (e.g. Build contexts, Location context, pending_xxx, last selection) to get compliant with 1)
--   add some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
+-   removes all implicit computations (e.g. Build contexts, Location context, pending_xxx, last selection) to get compliant with 1) and improve on 2)
+-   adds some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
+-   adds conversion functions to act on 4)
 
 ## Overview
 
