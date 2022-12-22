@@ -130,9 +130,9 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
 Return x-, y- or z-axis of a location:
 
 ```python
-def x_axis(self) -> Axis:
-def y_axis(self) -> Axis:
-def z_axis(self) -> Axis:
+x_axis(self) -> Axis:
+y_axis(self) -> Axis:
+z_axis(self) -> Axis:
 ```
 
 **Shape**
@@ -150,13 +150,13 @@ tolerance: float
 the following extensions are the same as e.g. `faces().filter_by(filter_by, reverse, tolerance)`
 
 ```python
-def vertices(self, filter_by=None, reverse=False, tolerance=1e-5):
-def edges(self, filter_by=None, reverse=False, tolerance=1e-5):
-def compounds(self, filter_by=None, reverse=False, tolerance=1e-5):
-def wires(self, filter_by=None, reverse=False, tolerance=1e-5):
-def faces(self, filter_by=None, reverse=False, tolerance=1e-5):
-def shells(self, filter_by=None, reverse=False, tolerance=1e-5):
-def solids(self, filter_by=None, reverse=False, tolerance=1e-5):
+vertices(self, filter_by=None, reverse=False, tolerance=1e-5):
+edges(self, filter_by=None, reverse=False, tolerance=1e-5):
+compounds(self, filter_by=None, reverse=False, tolerance=1e-5):
+wires(self, filter_by=None, reverse=False, tolerance=1e-5):
+faces(self, filter_by=None, reverse=False, tolerance=1e-5):
+shells(self, filter_by=None, reverse=False, tolerance=1e-5):
+solids(self, filter_by=None, reverse=False, tolerance=1e-5):
 ```
 
 **ShapeList**
@@ -164,7 +164,7 @@ def solids(self, filter_by=None, reverse=False, tolerance=1e-5):
 Allow two `ShapeList`s to be subtracted:
 
 ```python
-def __sub__(self, other: List[Shape]) -> ShapeList:
+__sub__(self, other: List[Shape]) -> ShapeList:
 ```
 
 Use case:
@@ -612,23 +612,23 @@ Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the
 _Location classes_:
 
 ```python
-    Pos(x: float = 0, y: float = 0, z: float = 0) -> Location
-    Rot(x: float = 0, y: float = 0, z: float = 0) -> Location
+Pos(x: float = 0, y: float = 0, z: float = 0) -> Location
+Rot(x: float = 0, y: float = 0, z: float = 0) -> Location
 ```
 
 _Plane classes_:
 
 ```python
-    Planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]
+Planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]
 ```
 
 _Conversions_
 
 ```python
-    from_cq(obj) -> AlgCompound
-    to_cq(obj) -> cq.Compound
-    from_bd(obj) -> AlgCompound
-    to_bd(obj) -> build123d.Compound
+from_cq(obj) -> AlgCompound
+to_cq(obj) -> cq.Compound
+from_bd(obj) -> AlgCompound
+to_bd(obj) -> build123d.Compound
 ```
 
 ## Algebraic definition
