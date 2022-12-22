@@ -13,7 +13,7 @@ Alg123d is based to (maybe 90%) on [build123d](https://github.com/gumyr/build123
 
 So Alg123d
 
--   removed all implicit computation (e.g. Build contexts, Location context, pending_xxx, last selection) to get compliant with 1)
+-   removed all implicit computations (e.g. Build contexts, Location context, pending_xxx, last selection) to get compliant with 1)
 -   add some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
 
 ## Overview
@@ -710,7 +710,7 @@ Neutral element: $l_0 \in L$: `Location()`
 
 Inverse element: $l^{-1} \in L$: `l.inverse()`
 
-### Placing objects on planes and at locations:
+### Placing objects on planes and at locations
 
 For $n = 1, 2, 3$:
 
