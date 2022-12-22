@@ -47,30 +47,6 @@ _Plane classes_:
 
 -   `Planes`: Transform a mixed list of faces and locations to a list of planes
 
-_ShapeList functions_
-
--   `sort_min`: Get the minimum element of a Shapelist in axis direction
--   `sort_max`: Get the maximum element of a Shapelist in axis direction
-
--   `min_<shape>`: Get minimum shape in axis direction for `<shape>` in `solid`, `face`, `edge`, `vertex`
--   `max_<shape>`: Get maximum shape in axis direction for `<shape>` in `solid`, `face`, `edge`, `vertex`
-
--   `group_min`: Get the minimum group of a Shapelist in axis direction
--   `group_max`: Get the maximum group of a Shapelist in axis direction
-
--   `min_<shapes>`: Get the minimum group of shapes in axis direction for `<shapes>` in `solids`, `faces`, `edges`, `vertices`
--   `max_<shapes>`: Get the maximum group of shapes in axis direction for `<shapes>` in `solids`, `faces`, `edges`, `vertices`
-
--   `diff`: Get the difference of two ShapeLists
-
-    Use case: Get the edges, faces, solids created by the last transformation
-
-    ```python
-    last = obj.faces()
-    obj = my_transformation(obj)
-    new_faces = diff(obj.faces(), last)
-    ```
-
 _Conversions_:
 
 -   `from_cq`: Load a CadQuery object into Alg123d
@@ -146,6 +122,70 @@ is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgC
     ```python
     b = Box(1,2,3) @ (Plane.XZ * Rotation(45, 0, 0))
     ```
+
+### Direct API extension
+
+**Location**
+
+Return x-, y- or z-axis of a location:
+
+```python
+def x_axis(self) -> Axis:
+def y_axis(self) -> Axis:
+def z_axis(self) -> Axis:
+```
+
+**Shape**
+
+Add filters to shape accessors:
+
+With the following types
+
+```Python
+filter_by: Union[Axis, GeomType]
+reverse: bool
+tolerance: float
+```
+
+the following extensions are the same as e.g. `faces().filter_by(filter_by, reverse, tolerance)`
+
+```python
+def vertices(self, filter_by=None, reverse=False, tolerance=1e-5)
+def edges(self, filter_by=None, reverse=False, tolerance=1e-5)
+def compounds(self, filter_by=None, reverse=False, tolerance=1e-5)
+def wires(self, filter_by=None, reverse=False, tolerance=1e-5)
+def faces(self, filter_by=None, reverse=False, tolerance=1e-5)
+def shells(self, filter_by=None, reverse=False, tolerance=1e-5)
+def solids(self, filter_by=None, reverse=False, tolerance=1e-5)
+```
+
+**ShapeList**
+
+Allow two `ShapeList`s to be subtracted:
+
+```python
+def __sub__(self, other: List[Shape]) -> ShapeList:
+```
+
+Use case:
+
+```python
+last = obj.faces()
+obj = my_transformation(obj)
+new_faces = obj.faces() - last
+```
+
+Get min or max element/group of a ShapeList. Simply for readability:
+
+`obj.faces().min(axis)` is easier to read then `obj.faces().sort_by(axis)[0]`
+`obj.faces().max_group(axis)` is easier to read then `obj.faces().group_by(axis)[-1]`
+
+```python
+max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+min(self, axis: Axis = Axis.Z, wrapped=False)  -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+min_group(self, axis: Axis = Axis.Z) -> ShapeList:
+max_group(self, axis: Axis = Axis.Z) -> ShapeList:
+```
 
 ### Examples
 
@@ -580,36 +620,6 @@ _Plane classes_:
 
 ```python
     Planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]
-```
-
-_ShapeList functions_
-
-```python
-    sort_min(s: ShapeList, axis: Axis = Axis.Z) -> Union[Solid, Face, Wire, Edge, Vertex]
-    sort_max(s: ShapeList, axis: Axis = Axis.Z) -> Union[Solid, Face, Wire, Edge, Vertex]
-
-    min_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Solid>]
-    max_solid(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Solid>]
-    min_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Face>]
-    max_face(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Face>]
-    min_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Edge>]
-    max_edge(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Edge>]
-    min_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Vertex>]
-    max_vertex(a: Compound, axis=Axis.Z, wrapped=False) -> Union[Compound, <Vertex>]
-
-    group_min(s: ShapeList, axis: Axis = Axis.Z) -> ShapeList
-    group_max(s: ShapeList, axis: Axis = Axis.Z) -> ShapeList
-
-    min_solids(a: Compound, axis=Axis.Z) -> ShapeList
-    max_solids(a: Compound, axis=Axis.Z) -> ShapeList
-    min_faces(a: Compound, axis=Axis.Z) -> ShapeList
-    max_faces(a: Compound, axis=Axis.Z) -> ShapeList
-    min_edges(a: Compound, axis=Axis.Z) -> ShapeList
-    max_edges(a: Compound, axis=Axis.Z) -> ShapeList
-    min_vertices(a: Compound, axis=Axis.Z) -> ShapeList
-    max_vertices(a: Compound, axis=Axis.Z) -> ShapeList
-
-    diff(l1: List[Shape], l2: List[Shape]) -> ShapeList
 ```
 
 _Conversions_
