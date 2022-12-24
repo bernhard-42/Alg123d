@@ -35,25 +35,45 @@ class MG92B:
         self.gear_diameter = 6
 
         self.cable_diameter = 1
+        self.cable_depth = 2
         self.f = 0.3
 
     def bottom(self):
-        b = Box(self.body_length, self.body_width, self.bottom_height)
+        b = Box(
+            self.body_length,
+            self.body_width,
+            self.bottom_height,
+            centered=(True, True, False),
+        )
         loc = b.faces().min(Axis.X).center_location
 
         b = fillet(b, b.edges(Axis.Z), self.f)
         b = fillet(b, b.edges().min(), self.f)
 
         loc.position -= Vector(0, 0, (self.bottom_height - self.cable_diameter) / 2)
-        r = Rectangle(self.cable_diameter, 5 * self.cable_diameter) @ (loc)
-        b -= extrude(r, -2)
+        r = Rectangle(self.cable_diameter, 5 * self.cable_diameter) @ loc
+        b -= extrude(r, -self.cable_depth)
         return b
 
     def cable(self):
-        return extrude(Circle(0.5), 5) @ Plane.YZ
+        return extrude(Circle(0.5), 5) @ (
+            Location(
+                (
+                    -self.body_length / 2 + self.cable_depth,
+                    0,
+                    (self.cable_diameter) / 2,
+                ),
+                (0, -90, 0),
+            )
+        )
 
     def body(self):
-        b = Box(self.body_length, self.body_width, self.body_height)
+        b = Box(
+            self.body_length,
+            self.body_width,
+            self.body_height,
+            centered=(True, True, False),
+        ) @ Pos(z=self.bottom_height)
         return fillet(b, b.edges(Axis.Z), self.f)
 
     def top(self):
@@ -101,15 +121,15 @@ class MG92B:
         self.poly = polygon
         t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
         t = fillet(t, t.edges(Axis.Z), self.f)
+        t = t @ Pos(z=self.bottom_height + self.body_height)
 
+        last = t.edges()
         for loc in Locations((-self.hole_distance / 2, 0), (self.hole_distance / 2, 0)):
             t -= Bore(t, self.hole_diameter / 2) @ loc
+        self.holes = (t.edges(GeomType.CIRCLE) - last).min_group()
 
-        loc = Pos(
-            (self.body_length - self.body_width) / 2,
-            0,
-            self.top_cable_side_height + self.wing_thickness + self.top_wing_distance,
-        )
+        offset = t.faces().max().center_location.position.Z
+        loc = Pos((self.body_length - self.body_width) / 2, 0, offset)
         motor = extrude(Circle(self.motor_diameter / 2), self.motor_height) @ loc
         motor = fillet(motor, motor.edges().max(), self.f)
         plane = Plane(motor.faces().max())
@@ -127,6 +147,7 @@ class MG92B:
         spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ Plane(
             spline.faces().max()
         )
+        self.spline_hole = spline.edges(GeomType.CIRCLE).max()
         spline -= Bore(spline, 1, self.spline_height2) @ Plane(spline.faces().max())
         spline = chamfer(spline, spline.edges().max(), 0.3)
         t += spline
@@ -135,7 +156,19 @@ class MG92B:
 
 servo = MG92B("mg92b")
 bottom = servo.bottom()
-cable = servo.cable()
+loc = Location(
+    (
+        -servo.body_length / 2 + servo.cable_depth,
+        0,
+        -(servo.bottom_height - servo.cable_diameter) / 2,
+    ),
+    (0, -90, 0),
+)
+cable2 = servo.cable()
+cable1 = cable2.moved(Pos(y=-1))
+cable3 = cable2.moved(Pos(y=1))
 body = servo.body()
 top = servo.top()
-show(bottom, cable, body, top, transparent=True)
+mg92b = bottom + cable1 + cable2 + cable3 + body + top
+
+show(mg92b, *servo.holes, servo.spline_hole, transparent=False)
