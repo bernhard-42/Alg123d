@@ -15,7 +15,26 @@ def _face_origin_location(self) -> Location:
     return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
 
 
-Face.center_location = property(_face_center_location)
+Face.origin_location = property(_face_origin_location)
+
+
+def _edge_origin_location(self) -> Location:
+    z_dir = self.normal()
+
+    vertices = self.vertices()
+    if len(vertices) == 1:  # e.g. a single closed spline
+        origin = self.center(CenterOf.BOUNDING_BOX)
+        # Use the vector defined by the vertex and the origin as x direction
+        x_dir = Vector((vertices[0] - origin).to_tuple()).normalized()
+    else:
+        origin = Vector(vertices[0].to_tuple())
+        # Use the vector defined by the first and the last vertex as x direction
+        x_dir = Vector((vertices[0] - vertices[-1]).to_tuple()).normalized()
+
+    return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
+
+
+Edge.origin_location = property(_edge_origin_location)
 
 #
 # Location monkey patching
