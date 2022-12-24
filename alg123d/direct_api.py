@@ -8,7 +8,7 @@ from build123d.build_enums import *
 #
 
 
-def _face_center_location(self) -> Location:
+def _face_origin_location(self) -> Location:
     origin = self.center()
     x_dir = Vector(self._geom_adaptor().Position().XDirection())
     z_dir = self.normal_at(origin)

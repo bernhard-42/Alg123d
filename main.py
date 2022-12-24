@@ -5,15 +5,7 @@ import build123d as bd
 import cadquery as cq
 import time
 
-# %%
-def _face_center_location(self):
-    origin = self.center()
-    x_dir = Vector(self._geom_adaptor().Position().XDirection())
-    z_dir = self.normal_at(origin)
-    return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
 
-
-Face.center_location = property(_face_center_location)
 # %%
 
 with bd.BuildSketch() as s:
