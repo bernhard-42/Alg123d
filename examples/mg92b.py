@@ -38,45 +38,77 @@ class MG92B:
         self.cable_depth = 2
         self.f = 0.3
 
+        self._bottom = None
+        self._body = None
+        self._top = None
+
     def bottom(self):
+        if self._bottom is not None:
+            return self._bottom
+
+        # create a box that is not centered in z direction
         b = Box(
             self.body_length,
             self.body_width,
             self.bottom_height,
             centered=(True, True, False),
         )
-        loc = b.faces().min(Axis.X).center_location
+        # before filleting, caclulate the location for the cable inset
+        cable_loc = b.faces().min(Axis.X).origin_location
+        cable_loc *= Pos(x=-(self.bottom_height - self.cable_diameter) / 2)
 
         b = fillet(b, b.edges(Axis.Z), self.f)
         b = fillet(b, b.edges().min(), self.f)
 
-        loc.position -= Vector(0, 0, (self.bottom_height - self.cable_diameter) / 2)
-        r = Rectangle(self.cable_diameter, 5 * self.cable_diameter) @ loc
+        #  extrude the rectangle in minus direction and subtract it from the object
+        r = Rectangle(self.cable_diameter, 5 * self.cable_diameter) @ cable_loc
         b -= extrude(r, -self.cable_depth)
-        return b
+
+        self._bottom = b
+        return self._bottom
 
     def cable(self):
-        return extrude(Circle(0.5), 5) @ (
-            Location(
-                (
-                    -self.body_length / 2 + self.cable_depth,
-                    0,
-                    (self.cable_diameter) / 2,
-                ),
-                (0, -90, 0),
-            )
+        # select the face of the inset in x direction
+        loc = self.bottom().faces(Axis.X)[-2].origin_location
+        # create one cable of length 5 there
+        cable = extrude(Circle(0.5), 5) * loc
+
+        # return 3 cables, "* Pos" means locate relative to the object location
+        return (
+            cable * Pos(y=-self.cable_diameter)
+            + cable
+            + cable * Pos(y=self.cable_diameter)
         )
 
     def body(self):
-        b = Box(
-            self.body_length,
-            self.body_width,
-            self.body_height,
-            centered=(True, True, False),
-        ) @ Pos(z=self.bottom_height)
-        return fillet(b, b.edges(Axis.Z), self.f)
+        if self._body is not None:
+            return self._body
+
+        # get the top plane of the bottom
+        plane = Plane(self.bottom().faces().max())
+
+        # create a box, not centered in z direction on this plane
+        b = (
+            Box(
+                self.body_length,
+                self.body_width,
+                self.body_height,
+                centered=(True, True, False),
+            )
+            @ plane
+        )
+
+        self._body = fillet(b, b.edges(Axis.Z), self.f)
+
+        return self._body
 
     def top(self):
+        if self._top is not None:
+            return self._top
+
+        # get the top plane of the body
+        plane = Plane(self.body().faces().max())
+
         polygon = (
             (-self.body_length / 2, 0.0),
             (self.body_length / 2, 0.0),
@@ -118,57 +150,94 @@ class MG92B:
             (-self.body_length / 2, self.top_wing_distance),
             (-self.body_length / 2, 0.0),
         )
-        self.poly = polygon
-        t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
-        t = fillet(t, t.edges(Axis.Z), self.f)
-        t = t @ Pos(z=self.bottom_height + self.body_height)
 
+        # create the polygon, extrude it and rotate it upwards to the XZ plane
+        t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
+
+        t = fillet(t, t.edges(Axis.Z), self.f)
+
+        # finally lift it up to top body plane
+        t = t @ plane
+
+        # create the holes in the wings.
+        # First, remember all edges before the action
         last = t.edges()
+
+        # Since we don't restrict the depth of the Bore, we can define the locations on the XY plane
         for loc in Locations((-self.hole_distance / 2, 0), (self.hole_distance / 2, 0)):
             t -= Bore(t, self.hole_diameter / 2) @ loc
-        self.holes = (t.edges(GeomType.CIRCLE) - last).min_group()
 
-        offset = t.faces().max().center_location.position.Z
+        # Finally get the circles of all new edges and select the two lowest
+        self.fix_holes = (t.edges(GeomType.CIRCLE) - last).min_group()
+
+        # Get the height of the overall servo by now
+        offset = t.faces().max().origin_location.position.Z
+        # and set x to be the right center for the motor
         loc = Pos((self.body_length - self.body_width) / 2, 0, offset)
+
+        # create the motor housing
         motor = extrude(Circle(self.motor_diameter / 2), self.motor_height) @ loc
         motor = fillet(motor, motor.edges().max(), self.f)
+
+        # get the max face of the motor in z direction
         plane = Plane(motor.faces().max())
+        # and add the second cylinder on top of the motor
         motor += extrude(Circle(3.65), 0.5) @ plane
+
+        # add the motor to the top
         t += motor
 
-        loc.position -= Vector(self.motor_diameter / 2, 0)
+        # shift the location in x for the center of the gear box
+        loc.position -= Vector(self.motor_diameter / 2, 0, 0)
+
+        # create the gear at this location
         gear = extrude(Circle(self.gear_diameter / 2), self.motor_height) @ loc
         gear = fillet(gear, gear.edges().max(), self.f)
+
+        # add the geat to the top
         t += gear
 
+        # create the spline axis as cylinder on top of the result
         spline = extrude(Circle(self.spline_radius1), self.spline_height1) @ Plane(
             t.faces().max()
         )
+
+        # create the spline gear as cylinder on top of the new result
         spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ Plane(
             spline.faces().max()
         )
+        # select the spline gear top face
         self.spline_hole = spline.edges(GeomType.CIRCLE).max()
+
+        # and drill a hole into it
         spline -= Bore(spline, 1, self.spline_height2) @ Plane(spline.faces().max())
         spline = chamfer(spline, spline.edges().max(), 0.3)
-        t += spline
-        return t
+
+        self._top = t + spline
+
+        return self._top
+
+    def create(self):
+        # assemble the servo
+        servo = self.bottom() + self.body() + self.top() + self.cable()
+
+        # and add joints using the origin_location of edges (absolute locations)
+        RevoluteJoint("spline", servo, self.spline_hole.origin_location.z_axis)
+        RigidJoint("cable_side_hole", servo, self.fix_holes.min(Axis.X).origin_location)
+        RigidJoint(
+            "spline_side_hole",
+            servo,
+            self.fix_holes.max(Axis.X).origin_location * Rot(z=180),
+        )
+
+        return servo
 
 
-servo = MG92B("mg92b")
-bottom = servo.bottom()
-loc = Location(
-    (
-        -servo.body_length / 2 + servo.cable_depth,
-        0,
-        -(servo.bottom_height - servo.cable_diameter) / 2,
-    ),
-    (0, -90, 0),
+servo = MG92B("mg92b").create()
+
+show(
+    servo,
+    *[obj.symbol for obj in servo.joints.values()],
+    transparent=True,
+    reset_camera=True
 )
-cable2 = servo.cable()
-cable1 = cable2.moved(Pos(y=-1))
-cable3 = cable2.moved(Pos(y=1))
-body = servo.body()
-top = servo.top()
-mg92b = bottom + cable1 + cable2 + cable3 + body + top
-
-show(mg92b, *servo.holes, servo.spline_hole, transparent=False)
