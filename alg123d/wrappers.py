@@ -149,6 +149,9 @@ class AlgCompound(Compound):
 
         return self.located(loc)
 
+    def __mul__(self, loc: Location) -> AlgCompound:
+        return self.moved(loc)
+
     def __mod__(self, position):
         if self.dim == 1:
             return Wire.make_wire(self.edges()).tangent_at(position)
