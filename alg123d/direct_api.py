@@ -189,26 +189,44 @@ ShapeList.max_group = _shapelist_max_group
 #
 
 
-def axis_symbol(axis: Axis, l=1) -> Edge:
-    return Edge.make_line(axis.position, axis.position + axis.direction * l)
+def axis_symbol(self, l=1) -> Edge:
+    return Edge.make_line(self.position, self.position + self.direction * l)
 
 
-def location_symbol(location: Location, l=1) -> Compound:
-    plane = Plane(location)
+def location_symbol(self, l=1) -> Compound:
+    plane = Plane(self)
     x = Edge.make_line(plane.origin, plane.origin + plane.x_dir * l)
     y = Edge.make_line(plane.origin, plane.origin + plane.y_dir * l)
     z = Edge.make_line(plane.origin, plane.origin + plane.z_dir * l)
     return Compound.make_compound([x, y, z])
 
 
-def plane_symbol(plane: Axis, l: float = 1) -> Compound:
-    c = Edge.make_circle(l).located(plane.to_location())
-    x = Edge.make_line(plane.origin, plane.origin + plane.x_dir * l / 2)
-    y = Edge.make_line(plane.origin, plane.origin + plane.y_dir * l / 2)
-    z = Edge.make_line(plane.origin, plane.origin + plane.z_dir * l)
+def plane_symbol(self, l: float = 1) -> Compound:
+    c = Edge.make_circle(l).located(self.to_location())
+    x = Edge.make_line(self.origin, self.origin + self.x_dir * l / 2)
+    y = Edge.make_line(self.origin, self.origin + self.y_dir * l / 2)
+    z = Edge.make_line(self.origin, self.origin + self.z_dir * l)
     return Compound.make_compound([c, x, y, z])
 
 
-Axis.symbol = property(axis_symbol)
-Location.symbol = property(location_symbol)
-Plane.symbol = property(plane_symbol)
+Axis.symbol = axis_symbol
+Location.symbol = location_symbol
+Plane.symbol = plane_symbol
+
+
+def _revolutejoint_symbol(self) -> Compound:
+    """A CAD symbol representing the axis of rotation as bound to part"""
+    radius = self.parent.bounding_box().diagonal_length() / 30
+
+    return Compound.make_compound(
+        [
+            Edge.make_line((0, 0, 0), (0, 0, radius * 2)),
+            Edge.make_line((0, 0, 0), (self.angle_reference * radius * 2).to_tuple()),
+            Edge.make_circle(
+                radius, start_angle=self.range[0], end_angle=self.range[1]
+            ),
+        ]
+    ).move(self.parent.location * self.relative_axis.to_location())
+
+
+RevoluteJoint.symbol = property(_revolutejoint_symbol)
