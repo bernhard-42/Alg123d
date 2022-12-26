@@ -59,6 +59,7 @@ class AlgCompound(Compound):
 
         self.mates = {}
         self.joints = {}
+        self.metadata = {}
         # Don't call super().__init__() since we don't need .for_construction
 
     @classmethod
