@@ -22,15 +22,15 @@ class MG92B:
 
         self.bottom_height = 2.8
 
-        self.side_height = 1
-        self.top_cable_side_height = 2.2
-        self.wing_thickness = 2.1
-        self.top_wing_distance = 3.9
-        self.offset = 1.0
+        self.top_cable_side_height = 1
+        self.top_height = 2.2
+        self.wing_height = 2.1
+        self.top_height_under_wing = 3.9
 
         self.gap = 0.25
 
-        self.motor_height = 4.6
+        self.motor_height1 = 4.6
+        self.motor_height2 = 0.5
         self.motor_diameter = 11.5
         self.gear_diameter = 6
 
@@ -41,6 +41,7 @@ class MG92B:
         self._bottom = None
         self._body = None
         self._top = None
+        self._spline = None
 
     def bottom(self):
         if self._bottom is not None:
@@ -112,45 +113,43 @@ class MG92B:
         polygon = (
             (-self.body_length / 2, 0.0),
             (self.body_length / 2, 0.0),
-            (self.body_length / 2, self.top_wing_distance),
-            (self.overall_length / 2, self.top_wing_distance),
+            (self.body_length / 2, self.top_height_under_wing),
+            (self.overall_length / 2, self.top_height_under_wing),
             (
                 self.overall_length / 2,
-                self.top_wing_distance + self.wing_thickness,
+                self.top_height_under_wing + self.wing_height,
             ),
             (
                 self.body_length / 2,
-                self.top_wing_distance + self.wing_thickness,
+                self.top_height_under_wing + self.wing_height,
             ),
             (
                 self.body_length / 2,
-                self.top_wing_distance
-                + self.wing_thickness
-                + self.top_cable_side_height,
+                self.top_height_under_wing + self.wing_height + self.top_height,
             ),
             (
                 self.body_length / 2 - self.top_length,
-                self.top_wing_distance
-                + self.wing_thickness
+                self.top_height_under_wing + self.wing_height + self.top_height,
+            ),
+            (
+                -self.body_length / 2,
+                self.top_height_under_wing
+                + self.wing_height
                 + self.top_cable_side_height,
             ),
             (
                 -self.body_length / 2,
-                self.top_wing_distance + self.wing_thickness + self.side_height,
-            ),
-            (
-                -self.body_length / 2,
-                self.top_wing_distance + self.wing_thickness,
+                self.top_height_under_wing + self.wing_height,
             ),
             (
                 -self.overall_length / 2,
-                self.top_wing_distance + self.wing_thickness,
+                self.top_height_under_wing + self.wing_height,
             ),
-            (-self.overall_length / 2, self.top_wing_distance),
-            (-self.body_length / 2, self.top_wing_distance),
+            (-self.overall_length / 2, self.top_height_under_wing),
+            (-self.body_length / 2, self.top_height_under_wing),
             (-self.body_length / 2, 0.0),
         )
-
+        self.poly = polygon
         # create the polygon, extrude it and rotate it upwards to the XZ plane
         t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
 
@@ -176,13 +175,13 @@ class MG92B:
         loc = Pos((self.body_length - self.body_width) / 2, 0, offset)
 
         # create the motor housing
-        motor = extrude(Circle(self.motor_diameter / 2), self.motor_height) @ loc
+        motor = extrude(Circle(self.motor_diameter / 2), self.motor_height1) @ loc
         motor = fillet(motor, motor.edges().max(), self.f)
 
         # get the max face of the motor in z direction
         plane = Plane(motor.faces().max())
         # and add the second cylinder on top of the motor
-        motor += extrude(Circle(3.65), 0.5) @ plane
+        motor += extrude(Circle(3.65), self.motor_height2) @ plane
 
         # add the motor to the top
         t += motor
@@ -191,38 +190,44 @@ class MG92B:
         loc.position -= Vector(self.motor_diameter / 2, 0, 0)
 
         # create the gear at this location
-        gear = extrude(Circle(self.gear_diameter / 2), self.motor_height) @ loc
+        gear = extrude(Circle(self.gear_diameter / 2), self.motor_height1) @ loc
         gear = fillet(gear, gear.edges().max(), self.f)
 
         # add the geat to the top
         t += gear
+        self._top = t
+
+        return self._top
+
+    def spline(self):
+        # get the top plane of the body
+        plane = Plane(self.top().faces().max())
 
         # create the spline axis as cylinder on top of the result
-        spline = extrude(Circle(self.spline_radius1), self.spline_height1) @ Plane(
-            t.faces().max()
-        )
+        spline = extrude(Circle(self.spline_radius1), self.spline_height1) @ plane
 
         # create the spline gear as cylinder on top of the new result
-        spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ Plane(
-            spline.faces().max()
-        )
+        plane = Plane(spline.faces().max())
+        spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ plane
+
         # select the spline gear top face
         self.spline_hole = spline.edges(GeomType.CIRCLE).max()
 
         # and drill a hole into it
         spline -= Bore(spline, 1, self.spline_height2) @ Plane(spline.faces().max())
-        spline = chamfer(spline, spline.edges().max(), 0.3)
 
-        self._top = t + spline
+        self._spline = chamfer(spline, spline.edges().max(), 0.3)
 
-        return self._top
+        return self._spline
 
     def create(self):
         # assemble the servo
-        servo = self.bottom() + self.body() + self.top() + self.cable()
+        servo = self.bottom() + self.body() + self.top() + self.cable() + self.spline()
 
         # and add joints using the origin_location of edges (absolute locations)
-        RevoluteJoint("spline", servo, self.spline_hole.origin_location.z_axis)
+        RevoluteJoint(
+            "spline", servo, self.spline_hole.origin_location.z_axis, range=(270, 90)
+        )
         RigidJoint("cable_side_hole", servo, self.fix_holes.min(Axis.X).origin_location)
         RigidJoint(
             "spline_side_hole",
@@ -230,6 +235,19 @@ class MG92B:
             self.fix_holes.max(Axis.X).origin_location * Rot(z=180),
         )
 
+        height_under_wing = self.fix_holes.min(Axis.X).origin_location.position.Z
+        height = self.top().faces().max().origin_location.position.Z
+
+        servo.metadata = {
+            "hole_distance": self.hole_distance,
+            "hole_radius": self.hole_diameter / 2,
+            "spline_radius": self.spline_radius2,
+            "spline_height": self.spline_height1 + self.spline_height2,
+            "body_height_under_wings": height_under_wing,
+            "body_height": height,
+            "body_width": self.body_width,
+        }
+        servo.poly = self.poly
         return servo
 
 
@@ -239,5 +257,9 @@ show(
     servo,
     *[obj.symbol for obj in servo.joints.values()],
     transparent=True,
-    reset_camera=True
+    reset_camera=True,
+    grid=True,
+    axes=True,
+    axes0=True,
+    # ticks=50,
 )
