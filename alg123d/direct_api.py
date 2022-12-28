@@ -3,38 +3,51 @@ from typing import List
 from build123d.direct_api import *
 from build123d.build_enums import *
 
+
 #
-# The world location of a face at the center
+# World locations
 #
 
+# of a face at the center
 
-def _face_origin_location(self) -> Location:
-    origin = self.center()
+
+def _face_center_location(self) -> Location:
+    origin = self.center(CenterOf.MASS)
     x_dir = Vector(self._geom_adaptor().Position().XDirection())
     z_dir = self.normal_at(origin)
-    return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
+    return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).location
 
 
-Face.origin_location = property(_face_origin_location)
+Face.center_location = property(_face_center_location)
+
+#  of an edge at its origin
 
 
 def _edge_origin_location(self) -> Location:
-    z_dir = self.normal()
 
-    vertices = self.vertices()
-    if len(vertices) == 1:  # e.g. a single closed spline
-        origin = self.center(CenterOf.BOUNDING_BOX)
-        # Use the vector defined by the vertex and the origin as x direction
-        x_dir = Vector((vertices[0] - origin).to_tuple()).normalized()
+    if self.geom_type() == "LINE":
+        return self.to_axis().to_location()
     else:
-        origin = Vector(vertices[0].to_tuple())
-        # Use the vector defined by the first and the last vertex as x direction
-        x_dir = Vector((vertices[0] - vertices[-1]).to_tuple()).normalized()
+        origin = self.position_at(0)
+        z_dir = self.normal()
+        x_dir = self.tangent_at(0)
+        return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).location
 
-    return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
+
+def _edge_center_location(self) -> Location:
+    if self.is_closed():
+        origin = self.center(CenterOf.MASS)
+        z_dir = self.normal()
+        # Use the vector defined by the single vertex and the origin as x direction
+        x_dir = Vector((self.vertices()[0] - origin).to_tuple()).normalized()
+        return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).to_location()
+
+    else:
+        raise RuntimeError("center_location only exists for closed edges")
 
 
 Edge.origin_location = property(_edge_origin_location)
+Edge.center_location = property(_edge_center_location)
 
 #
 # Location monkey patching
