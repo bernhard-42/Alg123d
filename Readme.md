@@ -43,7 +43,11 @@ Alg123d defines a `class AlgCompound(build123d.Compound)` and uses two concepts,
     f = Box(1, 2, 3) & Cylinder(0.2, 5)
     ```
 
-Note, `b`, `c` and `f` are instances of `AlgCompound` and can be viewed with every viewer that can show `build123d.Compound`s
+Notes:
+
+-   `b`, `c` and `f` are instances of `AlgCompound` and can be viewed with every viewer that can show `build123d.Compound`s
+-   Some advanced concepts for performance reasons can be found in [Performance](./docs/performance.md)
+-   Some shortcuts can be found in [Shortcuts](./docs/shortcuts.md)
 
 ### Placement at locations
 
@@ -55,7 +59,9 @@ The generic form of object placement is
 alg_compound @ (plane * location)
 ```
 
-and describes an `alg_compound`being placed on the`plane`and then moved relativ to the`plane`by `location`.
+and describes an `alg_compound`being placed on the`plane`and then moved relative to the`plane` by `location`.
+
+Details can be found in [Locations](./docs/locations.md).
 
 Examples:
 
@@ -90,7 +96,7 @@ Examples:
     Box(1, 2, 3) @ (Plane.XZ * Pos(1, 2, 3))
     ```
 
--   Box on plane `Plane.XZ` moved to `(x=1, y=2, z=3)` on this plane and rotated there by the angles `(x=0, y=100, z=45)`:
+-   Box on plane `Plane.XZ` moved to `(x=1, y=2, z=3)` relative to this plane and rotated there by the angles `(x=0, y=100, z=45)` around `Plane.XZ` axes:
 
     ```python
     Box(1, 2, 3) @ (Plane.XZ * Pos(1, 2, 3) * Rot(0, 100, 45))
@@ -99,7 +105,7 @@ Examples:
 
     Note: `Pos * Rot` is the same as using `Location` directly
 
--   Box on plane `Plane.XZ` rotated on this plane by the angles `(x=0, y=100, z=45)` (using the x-, y- and z-axis of the `XZ` plane) and then moved to `(x=1, y=2, z=3)` of the `XZ` plane:
+-   Box on plane `Plane.XZ` rotated on this plane by the angles `(x=0, y=100, z=45)` (using the x-, y- and z-axis of the `XZ` plane) and then moved to `(x=1, y=2, z=3)` relative to the `XZ` plane:
 
     ```python
     Box(1, 2, 3) @ (Plane.XZ * Rot(0, 100, 45) * Pos(0,1,2))
@@ -153,6 +159,8 @@ Proxying the build123d operators `position_at` and `tangent_at` of line objects 
 
 -   3-dim: `extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`
 -   2-dim: `make_face`
+
+An algebraic definition can be found in [Algebra](./docs/algebra.md)
 
 ## Examples
 
