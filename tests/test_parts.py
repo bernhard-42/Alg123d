@@ -1,7 +1,6 @@
 from math import sin, pi
 
 from alg123d import *
-from alg123d.shortcuts import *
 
 set_defaults(axes=True, axes0=True, transparent=False)
 

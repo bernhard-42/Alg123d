@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 thru_hole = Cylinder(radius=3, height=2)
 thru_hole -= Bore(thru_hole, radius=1)

@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 width = 1.6
 fillet_radius = 0.08

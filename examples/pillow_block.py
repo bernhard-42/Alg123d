@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 height, width, thickness, padding = 60, 80, 10, 12
 screw_shaft_radius, screw_head_radius, screw_head_height = 1.5, 3, 3

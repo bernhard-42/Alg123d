@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 pipes = Box(10, 10, 10) @ Rot(10, 20, 30)
 

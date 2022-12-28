@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 l1 = Line((0, 0), (12, 0))
 l2 = RadiusArc(l1 @ 1, (15, 20), 50)

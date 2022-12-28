@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 powerup = Spline(
     [(0, 0, 0), (50, 0, 50), (100, 0, 0)],

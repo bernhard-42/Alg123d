@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 import build123d as bd
 import cadquery as cq
 
@@ -86,10 +85,6 @@ with bd.BuildSketch() as s:
 a = from_bd(s)
 a2 = from_bd(s.faces())
 a1 = from_bd(s.edges())
-show(
-    a, 
-    a2 @ Pos(2, 0, 0),
-    a1 @ Pos(4, 0, 0)
-)
+show(a, a2 @ Pos(2, 0, 0), a1 @ Pos(4, 0, 0))
 
 # %%

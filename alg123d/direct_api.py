@@ -50,7 +50,7 @@ Edge.origin_location = property(_edge_origin_location)
 Edge.center_location = property(_edge_center_location)
 
 #
-# Location monkey patching
+# Location monkey patching and helpers
 #
 
 # Axis of locations
@@ -81,8 +81,18 @@ Location.z_axis = property(_location_z_axis)
 Location.plane = property(_location_plane)
 
 
+class Pos(Location):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super().__init__((x, y, z))
+
+
+class Rot(Location):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super().__init__((0, 0, 0), (x, y, z))
+
+
 #
-# Plane monkey patching
+# Plane monkey patching and helpers
 #
 
 
@@ -91,6 +101,24 @@ def _plane_location(self):
 
 
 Plane.location = property(_plane_location)
+
+
+class Planes:
+    def __init__(self, objs: List[Union[Plane, Location, Face]]) -> List[Plane]:
+        self.objects = [Plane(obj) for obj in objs]
+        self.index = 0
+
+    def __iter__(self):
+        self.index = 0
+        return self
+
+    def __next__(self):
+        if self.index < len(self.objects):
+            plane = self.objects[self.index]
+            self.index += 1
+            return plane
+        else:
+            raise StopIteration
 
 
 #

@@ -1,7 +1,6 @@
 import numpy as np
 
 from alg123d import *
-from alg123d.shortcuts import *
 
 
 thickness = 2

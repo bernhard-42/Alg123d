@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 b = Box(3, 3, 3)
 for plane in Planes(b.faces()):

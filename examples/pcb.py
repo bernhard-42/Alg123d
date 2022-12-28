@@ -1,7 +1,6 @@
 from itertools import product
 
 from alg123d import *
-from alg123d.shortcuts import *
 
 pcb = Rectangle(70, 30)
 

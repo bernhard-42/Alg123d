@@ -1,5 +1,4 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 blocks = Box(1, 2, 1, centered=(True, False, False)) @ Pos(-1, -1, 0)
 blocks += Box(1, 1, 2, centered=(True, False, False))
