@@ -20,7 +20,7 @@
 | `loc.y_axis`                      | `Axis(p.origin, p.y_dir)` for `p=Plane(loc)`                                                                                                                              |
 | `loc.z_axis`                      | `Axis(p.origin, p.z_dir)` for `p=Plane(loc)`                                                                                                                              |
 | `edge.origin_location`            | Location at the start point of an edge</br>if `edge` is a "LINE": `edge.to_axis().to_location()`</br> else `Location(orgin=edge @ 0, x_dir=edge % 0, z_dir=edge.normal()` |
-| `edge.center_location`            | Location at the center of a closed `Edge` with `x_dir` from `origin` to `vertex` on edge                                                                                  |
+| `edge.center_location`            | Location at the center of a closed `Edge` with `x_dir` going from `origin` to `vertex` of the edge                                                                        |
 | `face.center_location`            | Location at the center of a `Face`                                                                                                                                        |
 
 with
