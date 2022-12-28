@@ -58,13 +58,13 @@ with
 
 ## ShapeLists
 
-| Shortcut                | Long form / description                           |
-| ----------------------- | ------------------------------------------------- |
-| `ls.max(axis, wrapped)` | `ls.sort_by(axis)[-1]`                            |
-| `ls.min(axis, wrapped)` | `ls.sort_by(axis)[0]`                             |
-| `ls.min_group(axis)`    | `ls.group_by(axis)[-1]`                           |
-| `ls.max_group(axis)`    | `ls.group_by(axis)[-1]`                           |
-| `sl.__sub__(other)`     | Difference between two `ShapeList`s: `sl - other` |
+| Shortcut                | Long form / description                      |
+| ----------------------- | -------------------------------------------- |
+| `ls.max(axis, wrapped)` | `ls.sort_by(axis)[-1]`                       |
+| `ls.min(axis, wrapped)` | `ls.sort_by(axis)[0]`                        |
+| `ls.min_group(axis)`    | `ls.group_by(axis)[-1]`                      |
+| `ls.max_group(axis)`    | `ls.group_by(axis)[0]`                       |
+| `sl.__sub__(other)`     | Difference of two `ShapeList`s: `sl - other` |
 
 with
 
@@ -73,11 +73,11 @@ with
 
 ## Symbols
 
-| Shortcut               | Long form / description                                         |
-| ---------------------- | --------------------------------------------------------------- |
-| `loc.symbol(size=1)`   | returns `SVG.axis` at `loc` with `size`                         |
-| `plane.symbol(size=1)` | returns `SVG.axis` at `plane.location` with `size` and a circle |
-| `axis.symbol(size=1)`  | returns an arrow of length `size`                               |
+| Shortcut               | Long form / description                                                           |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `loc.symbol(size=1)`   | returns `SVG.axis` at `loc` with `size`                                           |
+| `plane.symbol(size=1)` | returns `SVG.axis` at `plane.location` with `size` and a circle around the origin |
+| `axis.symbol(size=1)`  | returns an arrow of length `size`                                                 |
 
 with
 
