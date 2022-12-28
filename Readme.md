@@ -163,7 +163,7 @@ Proxying the build123d operators `position_at` and `tangent_at` of line objects 
 Notes:
 
 -   An algebraic definition can be found in [Algebra](./docs/algebra.md)
--   The API description can be found in [Algebra](./docs/api.md)
+-   The API description can be found in [API](./docs/api.md)
 
 ## Examples
 
