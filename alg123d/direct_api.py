@@ -97,14 +97,6 @@ Plane.location = property(_plane_location)
 # Shape monkey patching
 #
 
-_shape_vertices_orig = Shape.vertices
-_shape_edges_orig = Shape.edges
-_shape_compounds_orig = Shape.compounds
-_shape_wires_orig = Shape.wires
-_shape_faces_orig = Shape.faces
-_shape_shells_orig = Shape.shells
-_shape_solids_orig = Shape.solids
-
 
 def _filter(
     objs,
@@ -124,7 +116,8 @@ def _shape_vertices(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_vertices_orig(self), filter_by, reverse, tolerance)
+    vertices = ShapeList([Vertex(downcast(i)) for i in self._entities(Vertex.__name__)])
+    return _filter(vertices, filter_by, reverse, tolerance)
 
 
 def _shape_edges(
@@ -133,7 +126,14 @@ def _shape_edges(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_edges_orig(self), filter_by, reverse, tolerance)
+    edges = ShapeList(
+        [
+            Edge(i)
+            for i in self._entities(Edge.__name__)
+            if not BRep_Tool.Degenerated_s(TopoDS.Edge_s(i))
+        ]
+    )
+    return _filter(edges, filter_by, reverse, tolerance)
 
 
 def _shape_compounds(
@@ -142,7 +142,8 @@ def _shape_compounds(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_compounds_orig(self), filter_by, reverse, tolerance)
+    compounds = ShapeList([Compound(i) for i in self._entities(Compound.__name__)])
+    return _filter(compounds, filter_by, reverse, tolerance)
 
 
 def _shape_wires(
@@ -151,7 +152,8 @@ def _shape_wires(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_wires_orig(self), filter_by, reverse, tolerance)
+    wires = ShapeList([Wire(i) for i in self._entities(Wire.__name__)])
+    return _filter(wires, filter_by, reverse, tolerance)
 
 
 def _shape_faces(
@@ -160,7 +162,8 @@ def _shape_faces(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_faces_orig(self), filter_by, reverse, tolerance)
+    faces = ShapeList([Face(i) for i in self._entities(Face.__name__)])
+    return _filter(faces, filter_by, reverse, tolerance)
 
 
 def _shape_shells(
@@ -169,7 +172,8 @@ def _shape_shells(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_shells_orig(self), filter_by, reverse, tolerance)
+    shells = ShapeList([Shell(i) for i in self._entities(Shell.__name__)])
+    return _filter(shells, filter_by, reverse, tolerance)
 
 
 def _shape_solids(
@@ -178,7 +182,8 @@ def _shape_solids(
     reverse: bool = False,
     tolerance: float = 1e-5,
 ):
-    return _filter(_shape_solids_orig(self), filter_by, reverse, tolerance)
+    solids = ShapeList([Solid(i) for i in self._entities(Solid.__name__)])
+    return _filter(solids, filter_by, reverse, tolerance)
 
 
 Shape.vertices = _shape_vertices
