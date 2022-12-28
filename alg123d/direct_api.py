@@ -51,8 +51,9 @@ Edge.center_location = property(_edge_center_location)
 
 #
 # Location monkey patching
-# Axis of locations
 #
+
+# Axis of locations
 
 
 def _location_x_axis(self) -> Axis:
@@ -70,9 +71,15 @@ def _location_z_axis(self) -> Axis:
     return Axis(p.origin, p.z_dir)
 
 
+def _location_plane(self) -> Plane:
+    return Plane(self)
+
+
 Location.x_axis = property(_location_x_axis)
 Location.y_axis = property(_location_y_axis)
 Location.z_axis = property(_location_z_axis)
+Location.plane = property(_location_plane)
+
 
 #
 # Shape monkey patching
