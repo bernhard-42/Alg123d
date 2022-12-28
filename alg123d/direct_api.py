@@ -82,6 +82,18 @@ Location.plane = property(_location_plane)
 
 
 #
+# Plane monkey patching
+#
+
+
+def _plane_location(self):
+    return Location(self)
+
+
+Plane.location = property(_plane_location)
+
+
+#
 # Shape monkey patching
 #
 
