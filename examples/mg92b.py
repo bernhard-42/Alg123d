@@ -55,7 +55,7 @@ class MG92B:
             centered=(True, True, False),
         )
         # before filleting, caclulate the location for the cable inset
-        cable_loc = b.faces().min(Axis.X).origin_location
+        cable_loc = b.faces().min(Axis.X).center_location
         cable_loc *= Pos(x=-(self.bottom_height - self.cable_diameter) / 2)
 
         b = fillet(b, b.edges(Axis.Z), self.f)
@@ -70,15 +70,15 @@ class MG92B:
 
     def cable(self):
         # select the face of the inset in x direction
-        loc = self.bottom().faces(Axis.X)[-2].origin_location
+        loc = self.bottom().faces(Axis.X)[-2].center_location
         # create one cable of length 5 there
-        cable = extrude(Circle(0.5), 5) * loc
+        cable = extrude(Circle(0.5), 5)
 
-        # return 3 cables, "* Pos" means locate relative to the object location
+        # return 3 cables at location loc with "* Pos" means locate relative to the object location
         return (
-            cable * Pos(y=-self.cable_diameter)
-            + cable
-            + cable * Pos(y=self.cable_diameter)
+            cable @ (loc * Pos(y=-self.cable_diameter))
+            + cable @ loc
+            + cable @ (loc * Pos(y=self.cable_diameter))
         )
 
     def body(self):
@@ -170,7 +170,7 @@ class MG92B:
         self.fix_holes = (t.edges(GeomType.CIRCLE) - last).min_group()
 
         # Get the height of the overall servo by now
-        offset = t.faces().max().origin_location.position.Z
+        offset = t.faces().max().center_location.position.Z
         # and set x to be the right center for the motor
         loc = Pos((self.body_length - self.body_width) / 2, 0, offset)
 
@@ -224,19 +224,19 @@ class MG92B:
         # assemble the servo
         servo = self.bottom() + self.body() + self.top() + self.cable() + self.spline()
 
-        # and add joints using the origin_location of edges (absolute locations)
+        # and add joints using the center_location of edges (absolute locations)
         RevoluteJoint(
-            "spline", servo, self.spline_hole.origin_location.z_axis, range=(270, 90)
+            "spline", servo, self.spline_hole.center_location.z_axis, range=(270, 90)
         )
-        RigidJoint("cable_side_hole", servo, self.fix_holes.min(Axis.X).origin_location)
+        RigidJoint("cable_side_hole", servo, self.fix_holes.min(Axis.X).center_location)
         RigidJoint(
             "spline_side_hole",
             servo,
-            self.fix_holes.max(Axis.X).origin_location * Rot(z=180),
+            self.fix_holes.max(Axis.X).center_location * Rot(z=180),
         )
 
-        height_under_wing = self.fix_holes.min(Axis.X).origin_location.position.Z
-        height = self.top().faces().max().origin_location.position.Z
+        height_under_wing = self.fix_holes.min(Axis.X).center_location.position.Z
+        height = self.top().faces().max().center_location.position.Z
 
         servo.metadata = {
             "hole_distance": self.hole_distance,

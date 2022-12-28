@@ -233,7 +233,7 @@ def axis_symbol(self, l=1) -> Edge:
             Plane(
                 origin=self.position + (1 - i / 100) * l * self.direction,
                 z_dir=self.direction,
-            ).to_location()
+            ).location
         )
         for i in (1, 2, 3)
     ]
@@ -246,7 +246,7 @@ def location_symbol(self, l=1) -> Compound:
 
 
 def plane_symbol(self, l: float = 1) -> Compound:
-    loc = self.to_location()
+    loc = self.location
     circle = Edge.make_circle(l * 0.8).located(loc)
     axes = SVG.axes(axes_scale=l).locate(loc)
 

@@ -143,15 +143,12 @@ class AlgCompound(Compound):
             loc = obj
 
         elif isinstance(obj, Plane):
-            loc = obj.to_location()
+            loc = obj.location
 
         else:
             raise ValueError(f"Cannot multiply with {obj}")
 
         return self.located(loc)
-
-    def __mul__(self, loc: Location) -> AlgCompound:
-        return self.moved(loc)
 
     def __mod__(self, position):
         if self.dim == 1:
