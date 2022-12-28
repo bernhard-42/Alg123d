@@ -51,6 +51,7 @@ An `AlgCompund` does not have any location or rotation paramater. It will be rel
 The generic form is `alg_compound @ (plane * location)`
 
 -   `Box(1,2,3)`
+
     Box at `origin = (0,0,0)` without rotation
 
 -   Box at `origin = (0,1,0)` without rotation:
