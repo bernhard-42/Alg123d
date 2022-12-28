@@ -2,20 +2,19 @@
 
 ## Credits
 
-Alg123d is based to (maybe 90%) on [build123d](https://github.com/gumyr/build123d), so most of the credit goes to Roger Maitland.
+Alg123d is a thin facade on top of [build123d](https://github.com/gumyr/build123d), so most of the credit goes to Roger Maitland.
 
 ## Design philosophy
 
 1. Explicit is better than implicit
 2. Minimum boilerplate
-3. Readbility
-4. Interoperability with build123d and CadQuery
+3. Interoperability with build123d and CadQuery
 
 So Alg123d
 
--   removes all implicit computations (e.g. Build contexts, Location context, pending_xxx, last selection) to get compliant with 1) and improve on 2)
--   adds some (what I think useful) shortcuts and direct API changes to improve on 2) and 3)
--   adds conversion functions to act on 4)
+-   removes all implicit computations (e.g. Build contexts, Location contexts, pending_xxx and last selection) to get compliant with 1 and improve on 2
+-   adds shortcuts and direct API changes to improve on 2
+-   adds conversion functions to act on 3
 
 ## Overview
 
@@ -23,12 +22,16 @@ Alg123d consists of basically one class: `class AlgCompound(build123d.Compound)`
 
 **Additional properties:**
 
--   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=zero, 1=line, 2=sketch, 3=part
--   `joints`: To support build123d's joint connectors directly on `AlgCompound`'s, default = `{}`
--   `mates`: To support manual assemblies with `MAssembly`, default =`{}`
+-   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part
+-   `metadata`: Expose metadata of an AlgCompound (e.g. sizes or distances) for later use with the compound, default = `{}`
+-   `joints`: Support build123d's joint connectors directly on `AlgCompound`'s, default = `{}`
+-   `mates`: Support manual assemblies with `MAssembly`, default =`{}`
 
-If one doesn't use `build123d.Joint` or `alg123d.MAsembly`, `mates` and `joints` can be safely ignored.
 `dim` is used to check compatibility of algebra operationes, see below.
+
+`metadata` is a free form dict that is not used by any CAD algorithm.
+
+`joints` and `mates` can be safely ignored if one doesn't use `build123d.Joint` or `alg123d.MAsembly`.
 
 **Additional user facing operators:**
 
@@ -36,11 +39,10 @@ If one doesn't use `build123d.Joint` or `alg123d.MAsembly`, `mates` and `joints`
 -   `-`: `(AlgCompound, AlgCompound) -> AlgCompound`: Cut first object with second object
 -   `&`: `(AlgCompound, AlgCompound) -> AlgCompound`: Intersect two objects
 -   `@`: `(AlgCompound, Plane|Location) -> AlgCompound`: Change absolute location of an AlgCompound
--   `*`: `(AlgCompound, Plane|Location) -> AlgCompound`: Move location of an AlgCompound relatively
 
 Another important operator is used from build123d:
 
--   `*`: `(Location, Location) -> Location`: Multiple (concatenate) two locations
+-   `*`: `(Location, Location) -> Location`: Multiply (concatenate) two locations
 -   `*`: `(Plane, Location) -> Plane`: Change location of a plane
 
 Proxying build123d operators `position_at` and `tangent_at` to a line object (`dim==1` only)
@@ -61,14 +63,40 @@ Proxying build123d operators `position_at` and `tangent_at` to a line object (`d
 
 ## Shortcuts
 
+| Shortcut       | Long form                        | Description   |
+| -------------- | -------------------------------- | ------------- |
+| `Rot(x, y, z)` | `Location((0, 0, 0), (x, y, z))` | Create a      |
+| `Rot(x=a)`     | `Location((0, 0, 0), (a, 0, 0))` | rotation only |
+| `Rot(y=a)`     | `Location((0, 0, 0), (0, a, 0))` | Location      |
+| `Rot(z=a)`     | `Location((0, 0, 0), (0, 0, a))` |               |
+| ---            | ---                              | ---           |
+| `Pos(x, y, z)` | `Location((x, y, z), (0, 0, 0))` | Create a      |
+| `Pos(x=a)`     | `Location((a, 0, 0), (0, 0, 0))` | position only |
+| `Pos(y=a)`     | `Location((0, a, 0), (0, 0, 0))` | Location      |
+| `Pos(z=a)`     | `Location((0, 0, a), (0, 0, 0))` |               |
+| ---            | ---                              | ---           |
+
 _Location classes_:
 
 -   `Rot`: Create a rotation only Location
 -   `Pos`: Create a position only Location
 
-_Plane classes_:
+_Plane class_:
 
+-   `Location.x_axis`
+-   `Location.y_axis`
+-   `Location.z_axis`
+-   `Location.plane`
 -   `Planes`: Transform a mixed list of faces and locations to a list of planes
+
+_Face class_
+
+-   `Face.center_location`
+
+_Edge class_
+
+-   `Edge.origin_location`
+-   `Edge.center_location`
 
 _Conversions_:
 
@@ -290,432 +318,3 @@ e = extrude(s, 0.3)
 ```
 
 ![Example](./images/example.png)
-
-## Performance considerations
-
-Creating lots of Shapes in a loop means for every step `fuse`and `clean` will be called. In an example like the below, both functions get slower and slower the more objects are already fused. Overall it takes on my machine 11.5 sec.
-
-```python
-holes = AlgCompound()
-r = Rectangle(2, 2)
-for loc in GridLocations(4, 4, 20, 20):
-    if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2:
-        holes += r @ loc
-
-c = Circle(diam / 2) - holes
-```
-
-One way to avoid it is to use the `LazyAlgCompound` context. It will just collect all objects and at exit of the context call `fuse` once with all objects and `clean` once. Overall it takes 0.326 sec.
-
-```python
-with LazyAlgCompound() as holes:
-    r = Rectangle(2, 2)
-    for loc in GridLocations(4, 4, 20, 20):
-        if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2:
-            holes += r @ loc
-
-c = Circle(diam / 2) - holes
-```
-
-Another option is to use the vectorized operations, e.g. `AlgCompound - List[AlgCompound]`. It is another syntax for the `LazyAlgCompound` approach above and slightly faster. Overall it takes 0.264 sec.
-
-```python
-r = Rectangle(2, 2)
-holes = [
-    r @ loc
-    for loc in GridLocations(4, 4, 20, 20)
-    if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - 1.8) ** 2
-]
-
-c = Circle(diam / 2) - holes
-```
-
-## API
-
-### 3-dim objects (parts)
-
-```python
-Box(
-    length: float,
-    width: float,
-    height: float,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
-    )
-
-Cylinder(
-    radius: float,
-    height: float,
-    arc_size: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
-)
-
-Cone(
-    bottom_radius: float,
-    top_radius: float,
-    height: float,
-    arc_size: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
-)
-
-Sphere(
-    radius: float,
-    arc_size1: float = -90,
-    arc_size2: float = 90,
-    arc_size3: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
-)
-
-Torus(
-    major_radius: float,
-    minor_radius: float,
-    minor_start_angle: float = 0,
-    minor_end_angle: float = 360,
-    major_angle: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
-)
-
-Wedge(
-    dx: float,
-    dy: float,
-    dz: float,
-    xmin: float,
-    zmin: float,
-    xmax: float,
-    zmax: float
-)
-
-CounterBore(
-    part: AlgCompound,
-    radius: float,
-    counter_bore_radius: float,
-    counter_bore_depth: float,
-    depth: float = None
-)
-
-CounterSink(
-    part: AlgCompound,
-    radius: float,
-    counter_sink_radius: float,
-    counter_sink_angle: float = 82,
-    depth: float = None
-)
-
-Bore(
-    part: AlgCompound,
-    radius: float,
-    depth: float = None
-)
-```
-
-### 3-dim functions
-
-```python
-extrude(
-    to_extrude: Compound,
-    amount: float = None,
-    both: bool = False,
-    taper: float = 0.0
-) -> AlgCompound
-
-extrude_until(
-    face: Face | AlgCompound,
-    limit: AlgCompound
-    taper: float = 0.0
-) -> AlgCompound
-
-loft(
-    sections: List[AlgCompound | Face],
-    ruled: bool = False
-) -> AlgCompound
-
-revolve(
-    profiles: List[Compound | Face] | Compound | Face,
-    axis: Axis,
-    arc: float = 360.0
-) -> AlgCompound
-
-sweep(
-    sections: List[Compound | Face],
-    path: Edge | Wire = None,
-    multisection: bool = False,
-    is_frenet: bool = False,
-    transition: Transition = Transition.TRANSFORMED,
-    normal: Union[Vector, tuple[float, float], tuple[float, float, float]] = None,
-    binormal: Edge | Wire = None
-) -> AlgCompound
-
-section(
-    part: AlgCompound,
-    by: List[Plane],
-    height: float = 0.0
-) -> AlgCompound
-
-shell(
-    objects: List[AlgCompound] | AlgCompound],
-    amount: float,
-    openings: Face | List[Face] = None,
-    kind: Kind = Kind.ARC
-)  -> AlgCompound
-```
-
-### 2-dim objects (sketches)
-
-```python
-Circle(
-    radius: float,
-    centered: bool | Tuple[bool, bool] = (True, True)
-)
-
-Ellipse(
-    x_radius: float,
-    y_radius: float,
-    centered: bool | Tuple[bool, bool] = (True, True)
-)
-
-Rectangle(
-    width: float,
-    height: float,
-    centered: bool | Tuple[bool, bool] = (True, True)
-)
-
-Polygon(
-    pts: List[Vector | tuple[float, float] | tuple[float, float, float]]
-    )
-
-RegularPolygon(
-    radius: float,
-    side_count: int,
-    centered: bool | Tuple[bool, bool] = (True, True)
-)
-
-Text(
-    txt: str,
-    fontsize: float,
-    font: str = 'Arial',
-    font_path: str = None,
-    font_style: FontStyle = FontStyle.REGULAR,
-    halign: Halign = Halign.LEFT,
-    valign: Valign = Valign.CENTER,
-    path: Edge | Wire = None,
-    position_on_path: float = 0.0
-)
-
-Trapezoid(
-    width: float,
-    height: float,
-    left_side_angle: float,
-    right_side_angle: float = None,
-    centered: bool | Tuple[bool, bool] = (True, True)
-)
-
-SlotArc(
-    arc: Edge | Wire,
-    height: float
-)
-
-SlotCenterPoint(
-    center: Vector | tuple[float, float] | tuple[float, float, float],
-    point: Vector | tuple[float, float] | tuple[float, float, float],
-    height: float
-)
-
-SlotCenterToCenter(
-    center_separation: float,
-    height: float
-)
-
-SlotOverall(
-    width: float,
-    height: float
-)
-```
-
-### 2-dim functions
-
-```python
-make_face(
-    objs: AlgCompound, | List[Edge]
-)  -> AlgCompound
-```
-
-### 1-dim objects (lines)
-
-```python
-Line(
-    start: Vector | tuple[float, float] | tuple[float, float, float],
-    end: Vector | tuple[float, float] | tuple[float, float, float]
-)
-
-Bezier(
-    cntl_pts: Iterable[Vector | tuple[float, float] | tuple[float, float, float]],
-    weights: List[float] = None
-)
-
-PolarLine(
-    start: Vector | tuple[float, float] | tuple[float, float, float],
-    length: float,
-    angle: float = None,
-    direction: Vector | tuple[float, float] | tuple[float, float, float] = None
-)
-
-Polyline(
-    pts: List[Vector | tuple[float, float] | tuple[float, float, float]],
-    close: bool = False
-)
-
-Spline(
-    pts: Iterable[Vector | tuple[float, float] | tuple[float, float, float]],
-    tangents: Iterable[Vector | tuple[float, float] | tuple[float, float, float]] = None,
-    tangent_scalars: Iterable[float] = None,
-    periodic: bool = False
-)
-
-Helix(
-    pitch: float,
-    height: float,
-    radius: float,
-    direction: Vector | tuple[float, float] | tuple[float, float, float] = (0, 0, 1),
-    cone_angle: float = 0,
-    lefthand: bool = False
-)
-
-CenterArc(
-    center: Vector | tuple[float, float] | tuple[float, float, float],
-    radius: float,
-    start_angle: float,
-    arc_size: float
-)
-
-EllipticalCenterArc(
-    center: Vector | tuple[float, float] | tuple[float, float, float],
-    x_radius: float,
-    y_radius: float,
-    start_angle: float = 0.0,
-    end_angle: float = 90.0,
-    angular_direction: AngularDirection = AngularDirection.COUNTER_CLOCKWISE,
-    plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00))
-)
-
-RadiusArc(
-    start_point: Vector | tuple[float, float] | tuple[float, float, float],
-    end_point: Vector | tuple[float, float] | tuple[float, float, float],
-    radius: float
-)
-
-SagittaArc(
-    start_point: Vector | tuple[float, float] | tuple[float, float, float],
-    end_point: Vector | tuple[float, float] | tuple[float, float, float],
-    sagitta: float
-)
-
-TangentArc(
-    start_point: Vector | tuple[float, float] | tuple[float, float, float],
-    end_point: Vector | tuple[float, float] | tuple[float, float, float],
-    tangent: Union[Vector, tuple[float, float], tuple[float, float, float]],
-    tangent_from_first: bool = True
-)
-
-ThreePointArc(
-    p1: Vector | tuple[float, float] | tuple[float, float, float],
-    p2: Vector | tuple[float, float] | tuple[float, float, float],
-    p3: Vector | tuple[float, float] | tuple[float, float, float]
-)
-
-JernArc(
-    start: Vector | tuple[float, float] | tuple[float, float, float],
-    tangent: Vector | tuple[float, float] | tuple[float, float, float],
-    radius: float,
-    arc_size: float,
-    plane: Plane = Plane(o=(0.00, 0.00, 0.00), x=(1.00, 0.00, 0.00), z=(0.00, 0.00, 1.00))
-)
-```
-
-### Shortcuts
-
-Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the namespace:
-
-_Location classes_:
-
-```python
-Pos(x: float = 0, y: float = 0, z: float = 0) -> Location
-Rot(x: float = 0, y: float = 0, z: float = 0) -> Location
-```
-
-_Plane classes_:
-
-```python
-Planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]
-```
-
-_Conversions_
-
-```python
-from_cq(obj) -> AlgCompound
-to_cq(obj) -> cq.Compound
-from_bd(obj) -> AlgCompound
-to_bd(obj) -> build123d.Compound
-```
-
-## Algebraic definition
-
-### Objects and object arithmetic
-
-$A^n$ is the set of all `AlgCompounds a` with `a.dim = n` for $n = 1,2,3$
-
-$e_n$ := `Zero` , for $n = 1,2,3$ , are `AlgCompounds a` with `a.dim = n` and `a.wrapped = None`
-
-**Sets of predefined basic shapes:**
-
-$B^3 := \lbrace$`Zero`, `Box`, `Cylinder`, `Cone`, `Sphere`, `Torus`, `Wedge`, `Bore`, `CounterBore`, `CounterSink`$\rbrace$
-
-$B^2 := \lbrace$`Zero`, `Rectangle`, `Circle`, `Ellipse`, `Rectangle`, `Polygon`, `RegularPolygon`, `Text`, `Trapezoid`, `SlotArc`, `SlotCenterPoint`, `SlotCenterToCenter`, `SlotOverall`$\rbrace$
-
-$B^1 := \lbrace$`Zero`, `Bezier`, `PolarLine`, `Polyline`, `Spline`, `Helix`, `CenterArc`, `EllipticalCenterArc`, `RadiusArc`, `SagittaArc`, `TangentArc`, `ThreePointArc`, `JernArc`$\rbrace$
-
-with $B^n \subset A^n$
-
-**Operations:**
-
-$+: A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a + b$ , for $n=1,2,3$
-
-$\\;\\;\\;\\;\\;\\; a + b :=$ `a.fuse(b)`
-
-$-: A^n \rightarrow A^n$ with $a \mapsto -a$ , for $n=2,3$
-
-$\\;\\;\\;\\;\\;\\; b + (-a)$ := `b.cut(a)` (implicit definition)
-
-$\\& : A^n \times A^n \rightarrow A^n$ with $(a,b) \mapsto a \\; \\& \\; b$ , for $n=2,3$
-
-$\\;\\;\\;\\;\\;\\; a \\; \\& \\; b :=$ `a.intersect(b)` (note: $a \\; \\& \\; b = (a + b) + -(a + (-b)) + -(b + (-a))$ )
-
-**Abelian groups**
-
-$( A^1, e_1, +)$ is an abelian semigroup
-
-$( A^n, e_n, +, -)$ is an abelian group for $n=2,3$
-
-Note: The implementation `a - b = a.cut(b)` needs to be read as $a + (-b)$ since the group does not have a binary $-$ operation. As such, $a - (b - c) = a + -(b + -c)) \ne a - b + c$
-
-### Locations, planes and location arithmentic
-
-$L  := \lbrace$ `Location` $((x,y,z), (a,b,c)): x,y,z \in R \land a,b,c \in R\rbrace$ with $a,b,c$ being angles in degrees
-
-$P  := \lbrace$ `Plane` $(o,x,z): o,x,z ∈ R^3 \land \|x\| = \|z\| = 1\rbrace$
-
-For $n = 1, 2, 3$:
-
-$*: L \times L \rightarrow L$ (multiply two locations $l_1, l_2 \in L$, i.e. `l1 * l2`)
-
-$*: P \times L \rightarrow P$ (locate plane $p \in P$ at location $l \in L$, i.e. `Plane(p.to_location() * l)`)
-
-Neutral element: $l_0 \in L$: `Location()`
-
-Inverse element: $l^{-1} \in L$: `l.inverse()`
-
-### Placing objects on planes and at locations
-
-For $n = 1, 2, 3$:
-
-$@: A^n \times L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
-
-$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ on a plane $p \in P$, i.e. `a.located(p.to_location())`)
