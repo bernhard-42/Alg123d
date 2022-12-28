@@ -190,23 +190,30 @@ ShapeList.max_group = _shapelist_max_group
 
 
 def axis_symbol(self, l=1) -> Edge:
-    return Edge.make_line(self.position, self.position + self.direction * l)
+    edge = Edge.make_line(self.position, self.position + self.direction * l)
+    circles = [
+        Edge.make_circle(l / 200 * i).locate(
+            Plane(
+                origin=self.position + (1 - i / 100) * l * self.direction,
+                z_dir=self.direction,
+            ).to_location()
+        )
+        for i in (1, 2, 3)
+    ]
+    return Edge.fuse(edge, *circles)
 
 
 def location_symbol(self, l=1) -> Compound:
-    plane = Plane(self)
-    x = Edge.make_line(plane.origin, plane.origin + plane.x_dir * l)
-    y = Edge.make_line(plane.origin, plane.origin + plane.y_dir * l)
-    z = Edge.make_line(plane.origin, plane.origin + plane.z_dir * l)
-    return Compound.make_compound([x, y, z])
+    axes = SVG.axes(axes_scale=l).locate(self)
+    return Compound.make_compound(axes)
 
 
 def plane_symbol(self, l: float = 1) -> Compound:
-    c = Edge.make_circle(l).located(self.to_location())
-    x = Edge.make_line(self.origin, self.origin + self.x_dir * l / 2)
-    y = Edge.make_line(self.origin, self.origin + self.y_dir * l / 2)
-    z = Edge.make_line(self.origin, self.origin + self.z_dir * l)
-    return Compound.make_compound([c, x, y, z])
+    loc = self.to_location()
+    circle = Edge.make_circle(l * 0.8).located(loc)
+    axes = SVG.axes(axes_scale=l).locate(loc)
+
+    return Compound.make_compound(list(axes) + [circle])
 
 
 Axis.symbol = axis_symbol
