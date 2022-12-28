@@ -1,6 +1,6 @@
 # Shortcuts and extensions
 
-## Location shortcuts
+## Locations
 
 | Shortcut                          | Long form / description                                                                                                                                                   |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -23,34 +23,43 @@
 | `Edge.center_location`            | Location at the center of a closed `Edge`                                                                                                                                 |
 | `Face.center_location`            | Location at the center of a `Face`                                                                                                                                        |
 
-## Plane shortcuts
+## Planes
 
 | Shortcut         | Long form / description                                           |
 | ---------------- | ----------------------------------------------------------------- |
 | `Planes(list)`   | Transform a mixed list of faces and locations to a list of planes |
-| `Plane.location` | `plane.to_location()`                                             |
+| `plane.location` | `plane.to_location()`                                             |
 
-## Shape shortcuts
+## Shapes
 
-| Shortcut                                   | Long form / description                                |
-| ------------------------------------------ | ------------------------------------------------------ |
-| `vertices(filter_by, reverse, tolerance)`  | `vertices().filter_by(filter_by, reverse, tolerance)`  |
-| `edges(filter_by, reverse, tolerance)`     | `edges().filter_by(filter_by, reverse, tolerance)`     |
-| `compounds(filter_by, reverse, tolerance)` | `compounds().filter_by(filter_by, reverse, tolerance)` |
-| `wires(filter_by, reverse, tolerance)`     | `wires().filter_by(filter_by, reverse, tolerance)`     |
-| `faces(filter_by, reverse, tolerance)`     | `faces().filter_by(filter_by, reverse, tolerance)`     |
-| `shells(filter_by, reverse, tolerance)`    | `shells().filter_by(filter_by, reverse, tolerance)`    |
-| `solids(filter_by, reverse, tolerance)`    | `solids().filter_by(filter_by, reverse, tolerance)`    |
+| Shortcut                                      | Long form / description                                   |
+| --------------------------------------------- | --------------------------------------------------------- |
+| `ac.vertices(filter_by, reverse, tolerance)`  | `ac.vertices().filter_by(filter_by, reverse, tolerance)`  |
+| `ac.edges(filter_by, reverse, tolerance)`     | `ac.edges().filter_by(filter_by, reverse, tolerance)`     |
+| `ac.compounds(filter_by, reverse, tolerance)` | `ac.compounds().filter_by(filter_by, reverse, tolerance)` |
+| `ac.wires(filter_by, reverse, tolerance)`     | `ac.wires().filter_by(filter_by, reverse, tolerance)`     |
+| `ac.faces(filter_by, reverse, tolerance)`     | `ac.faces().filter_by(filter_by, reverse, tolerance)`     |
+| `ac.shells(filter_by, reverse, tolerance)`    | `ac.shells().filter_by(filter_by, reverse, tolerance)`    |
+| `ac.solids(filter_by, reverse, tolerance)`    | `ac.solids().filter_by(filter_by, reverse, tolerance)`    |
 
-## ShapeList shortcuts
+with
 
-| Shortcut             | Long form / description             |
-| -------------------- | ----------------------------------- |
-| `__sub__(other)`     | Difference between 2 `ShapeList`s   |
-| `max(axis, wrapped)` | `list_of_shapes.sort_by(axis)[-1]`  |
-| `min(axis, wrapped)` | `list_of_shapes.sort_by(axis)[0]`   |
-| `min_group(axis)`    | `list_of_shapes.group_by(axis)[-1]` |
-| `max_group(axis)`    | `list_of_shapes.group_by(axis)[-1]` |
+-   `ac` being an `AlgCompound`
+
+## ShapeLists
+
+| Shortcut                | Long form / description                           |
+| ----------------------- | ------------------------------------------------- |
+| `ls.max(axis, wrapped)` | `ls.sort_by(axis)[-1]`                            |
+| `ls.min(axis, wrapped)` | `ls.sort_by(axis)[0]`                             |
+| `ls.min_group(axis)`    | `ls.group_by(axis)[-1]`                           |
+| `ls.max_group(axis)`    | `ls.group_by(axis)[-1]`                           |
+| `sl.__sub__(other)`     | Difference between two `ShapeList`s: `sl - other` |
+
+with
+
+-   `ls` being a list of `Shape`s
+-   `sl` a `ShapeList`
 
 ## Symbols
 
