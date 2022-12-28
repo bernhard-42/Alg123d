@@ -61,43 +61,6 @@ Proxying build123d operators `position_at` and `tangent_at` to a line object (`d
 -   3-dim: {`extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`}
 -   2-dim: {`make_face`}
 
-## Shortcuts
-
-| Shortcut       | Long form                        | Description   |
-| -------------- | -------------------------------- | ------------- |
-| `Rot(x, y, z)` | `Location((0, 0, 0), (x, y, z))` | Create a      |
-| `Rot(x=a)`     | `Location((0, 0, 0), (a, 0, 0))` | rotation only |
-| `Rot(y=a)`     | `Location((0, 0, 0), (0, a, 0))` | Location      |
-| `Rot(z=a)`     | `Location((0, 0, 0), (0, 0, a))` |               |
-| ---            | ---                              | ---           |
-| `Pos(x, y, z)` | `Location((x, y, z), (0, 0, 0))` | Create a      |
-| `Pos(x=a)`     | `Location((a, 0, 0), (0, 0, 0))` | position only |
-| `Pos(y=a)`     | `Location((0, a, 0), (0, 0, 0))` | Location      |
-| `Pos(z=a)`     | `Location((0, 0, a), (0, 0, 0))` |               |
-| ---            | ---                              | ---           |
-
-_Location classes_:
-
--   `Rot`: Create a rotation only Location
--   `Pos`: Create a position only Location
-
-_Plane class_:
-
--   `Location.x_axis`
--   `Location.y_axis`
--   `Location.z_axis`
--   `Location.plane`
--   `Planes`: Transform a mixed list of faces and locations to a list of planes
-
-_Face class_
-
--   `Face.center_location`
-
-_Edge class_
-
--   `Edge.origin_location`
--   `Edge.center_location`
-
 _Conversions_:
 
 -   `from_cq`: Load a CadQuery object into Alg123d
@@ -246,7 +209,6 @@ ShapeList.max_group(self, axis: Axis = Axis.Z) -> ShapeList
 
 ```python
 from alg123d import *
-from alg123d.shortcuts import *
 width = 1.6
 fillet_radius = 0.08
 dist = 0.9
