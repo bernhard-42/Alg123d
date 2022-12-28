@@ -73,11 +73,11 @@ with
 
 ## Symbols
 
-| Shortcut               | Long form / description                                                           |
-| ---------------------- | --------------------------------------------------------------------------------- |
-| `loc.symbol(size=1)`   | returns `SVG.axis` at `loc` with `size`                                           |
-| `plane.symbol(size=1)` | returns `SVG.axis` at `plane.location` with `size` and a circle around the origin |
-| `axis.symbol(size=1)`  | returns an arrow of length `size`                                                 |
+| Shortcut               | Long form / description                                                                             |
+| ---------------------- | --------------------------------------------------------------------------------------------------- |
+| `loc.symbol(size=1)`   | returns `SVG.axis` at `loc` with `size`                                                             |
+| `plane.symbol(size=1)` | returns a `Compound`of an `SVG.axis` at `plane.location` with `size` and a circle around the origin |
+| `axis.symbol(size=1)`  | returns a `Compound` of an arrow of length `size`                                                   |
 
 with
 
