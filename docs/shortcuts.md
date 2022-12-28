@@ -1,5 +1,16 @@
 # Shortcuts and extensions
 
+## Planes
+
+| Shortcut         | Long form / description                                           |
+| ---------------- | ----------------------------------------------------------------- |
+| `Planes(list)`   | Transform a mixed list of faces and locations to a list of planes |
+| `plane.location` | `plane.to_location()`                                             |
+
+with
+
+-   `plane` being a `Plane`
+
 ## Locations
 
 | Shortcut                          | Long form / description                                                                                                                                                   |
@@ -29,21 +40,11 @@ with
 -   `edge` being an `Edge`
 -   `face` being an `Face`
 
-## Planes
-
-| Shortcut         | Long form / description                                           |
-| ---------------- | ----------------------------------------------------------------- |
-| `Planes(list)`   | Transform a mixed list of faces and locations to a list of planes |
-| `plane.location` | `plane.to_location()`                                             |
-
-with
-
--   `plane` being a `Plane`
-
-## Shapes
+## ShapeLists
 
 | Shortcut                                      | Long form / description                                   |
 | --------------------------------------------- | --------------------------------------------------------- |
+| Simple filters                                |                                                           |
 | `ac.vertices(filter_by, reverse, tolerance)`  | `ac.vertices().filter_by(filter_by, reverse, tolerance)`  |
 | `ac.edges(filter_by, reverse, tolerance)`     | `ac.edges().filter_by(filter_by, reverse, tolerance)`     |
 | `ac.compounds(filter_by, reverse, tolerance)` | `ac.compounds().filter_by(filter_by, reverse, tolerance)` |
@@ -51,23 +52,17 @@ with
 | `ac.faces(filter_by, reverse, tolerance)`     | `ac.faces().filter_by(filter_by, reverse, tolerance)`     |
 | `ac.shells(filter_by, reverse, tolerance)`    | `ac.shells().filter_by(filter_by, reverse, tolerance)`    |
 | `ac.solids(filter_by, reverse, tolerance)`    | `ac.solids().filter_by(filter_by, reverse, tolerance)`    |
+| Better readability                            |                                                           |
+| `ls.max(axis, wrapped)`                       | `ls.sort_by(axis)[-1]`                                    |
+| `ls.min(axis, wrapped)`                       | `ls.sort_by(axis)[0]`                                     |
+| `ls.min_group(axis)`                          | `ls.group_by(axis)[-1]`                                   |
+| `ls.max_group(axis)`                          | `ls.group_by(axis)[0]`                                    |
+| Difference                                    |                                                           |
+| `sl.__sub__(other)`                           | Difference of two `ShapeList`s: `sl - other`              |
 
 with
 
 -   `ac` being an `AlgCompound`
-
-## ShapeLists
-
-| Shortcut                | Long form / description                      |
-| ----------------------- | -------------------------------------------- |
-| `ls.max(axis, wrapped)` | `ls.sort_by(axis)[-1]`                       |
-| `ls.min(axis, wrapped)` | `ls.sort_by(axis)[0]`                        |
-| `ls.min_group(axis)`    | `ls.group_by(axis)[-1]`                      |
-| `ls.max_group(axis)`    | `ls.group_by(axis)[0]`                       |
-| `sl.__sub__(other)`     | Difference of two `ShapeList`s: `sl - other` |
-
-with
-
 -   `ls` being a list of `Shape`s
 -   `sl` being a `ShapeList`
 
