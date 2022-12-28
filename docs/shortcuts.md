@@ -2,26 +2,26 @@
 
 ## Location shortcuts
 
-| Shortcut                          | Long form / description                                                                                                                                                   |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create a position only `Location` |                                                                                                                                                                           |
-| `Pos(x, y, z)`                    | `Location((x, y, z), (0, 0, 0))`                                                                                                                                          |
-| `Pos(x=a)`                        | `Location((a, 0, 0), (0, 0, 0))`                                                                                                                                          |
-| `Pos(y=a)`                        | `Location((0, a, 0), (0, 0, 0))`                                                                                                                                          |
-| `Pos(z=a)`                        | `Location((0, 0, a), (0, 0, 0))`                                                                                                                                          |
-| Create a rotation only `Location` |                                                                                                                                                                           |
-| `Rot(x, y, z)`                    | `Location((0, 0, 0), (x, y, z))`                                                                                                                                          |
-| `Rot(x=a)`                        | `Location((0, 0, 0), (a, 0, 0))`                                                                                                                                          |
-| `Rot(y=a)`                        | `Location((0, 0, 0), (0, a, 0))`                                                                                                                                          |
-| `Rot(z=a)`                        | `Location((0, 0, 0), (0, 0, a))`                                                                                                                                          |
-| Properties                        |                                                                                                                                                                           |
-| `loc.plane`                       | `Plane(loc)`                                                                                                                                                              |
-| `loc.x_axis`                      | `Axis(p.origin, p.x_dir)` for `p=Plane(loc)`                                                                                                                              |
-| `loc.y_axis`                      | `Axis(p.origin, p.y_dir)` for `p=Plane(loc)`                                                                                                                              |
-| `loc.z_axis`                      | `Axis(p.origin, p.z_dir)` for `p=Plane(loc)`                                                                                                                              |
-| `Edge.origin_location`            | Location at the start point of an edge</br>if `edge` is a "LINE": `edge.to_axis</br>().to_location()` else `Location(orgin=edge @ 0, x_dir=edge % 0, z_dir=edge.normal()` |
-| `Edge.center_location`            | Location at the center of a closed `Edge`                                                                                                                                 |
-| `Face.center_location`            | Location at the center of a `Face`                                                                                                                                        |
+| Shortcut                          | Long form / description                                                                                                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Create a position only `Location` |                                                                                                                                                                                |
+| `Pos(x, y, z)`                    | `Location((x, y, z), (0, 0, 0))`                                                                                                                                               |
+| `Pos(x=a)`                        | `Location((a, 0, 0), (0, 0, 0))`                                                                                                                                               |
+| `Pos(y=a)`                        | `Location((0, a, 0), (0, 0, 0))`                                                                                                                                               |
+| `Pos(z=a)`                        | `Location((0, 0, a), (0, 0, 0))`                                                                                                                                               |
+| Create a rotation only `Location` |                                                                                                                                                                                |
+| `Rot(x, y, z)`                    | `Location((0, 0, 0), (x, y, z))`                                                                                                                                               |
+| `Rot(x=a)`                        | `Location((0, 0, 0), (a, 0, 0))`                                                                                                                                               |
+| `Rot(y=a)`                        | `Location((0, 0, 0), (0, a, 0))`                                                                                                                                               |
+| `Rot(z=a)`                        | `Location((0, 0, 0), (0, 0, a))`                                                                                                                                               |
+| Properties                        |                                                                                                                                                                                |
+| `loc.plane`                       | `Plane(loc)`                                                                                                                                                                   |
+| `loc.x_axis`                      | `Axis(p.origin, p.x_dir)` for `p=Plane(loc)`                                                                                                                                   |
+| `loc.y_axis`                      | `Axis(p.origin, p.y_dir)` for `p=Plane(loc)`                                                                                                                                   |
+| `loc.z_axis`                      | `Axis(p.origin, p.z_dir)` for `p=Plane(loc)`                                                                                                                                   |
+| `Edge.origin_location`            | Location at the start point of an edge</br>if `edge` is a "LINE": `edge.to_axis</br>().to_location()`</br> else `Location(orgin=edge @ 0, x_dir=edge % 0, z_dir=edge.normal()` |
+| `Edge.center_location`            | Location at the center of a closed `Edge`                                                                                                                                      |
+| `Face.center_location`            | Location at the center of a `Face`                                                                                                                                             |
 
 ## Plane shortcuts
 
