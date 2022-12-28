@@ -10,28 +10,90 @@ Alg123d is a thin facade on top of [build123d](https://github.com/gumyr/build123
 2. Minimum boilerplate
 3. Interoperability with build123d and CadQuery
 
-So Alg123d
+## Overview
 
--   removes all implicit computations (e.g. Build contexts, Location contexts, pending_xxx and last selection) to get compliant with 1 and improve on 2
--   adds shortcuts and direct API changes to improve on 2
--   adds conversion functions to act on 3
+Alg123d removes all implicit computations (e.g. Build contexts, Location contexts, pending*\* and last*\*) from build123d. It adds a few direct API extensions to make some statements shorter or better readable and provides a set of conversion functions.
+
+It uses two concepts, "Object arithmetic" and "Placement at Locations"
+
+### Object arithmetic
+
+**Object creation**
+
+```python
+b = Box(1,2,3)
+```
+
+is an `AlgCompound` placed on the `XY` plane. It is a subclass of `build123d.Compound` and can be immediately shown and used in arithmetic operations.
+
+**Fusing a box and a cylinder**
+
+```python
+f = Box(1,2,3) + Cylinder(0.2, 5)
+```
+
+**Cutting a cylinder from a box**
+
+```python
+f = Box(1,2,3) - Cylinder(0.2, 5)
+```
+
+**Intersecting a box and a cylinder**
+
+```python
+f = Box(1,2,3) & Cylinder(0.2, 5)
+```
+
+### Placement at locations
+
+An `AlgCompund` does not have any location or rotation paramater. It will be relocated with the `@` operator (see below) which will then be reflected in the `location` property of the underlying `build123d.Compound`.
+
+The generic form is `alg_compound @ (plane * location)`
+
+-   `Box(1,2,3)`
+    Box at `origin = (0,0,0)` without rotation
+
+-   Box at `origin = (0,1,0)` without rotation:
+
+    ```python
+    b = Box(1,2,3) @ Pos((0,1,0))
+    b = Box(1,2,3) @ Pos(y=1)
+    ```
+
+-   Box at `origin = (0,0,0)` with `rotation = (0, 100, 45)`:
+
+    ```python
+    b = Box(1,2,3) @ Rot((0, 100, 45))
+    ```
+
+-   Box at `origin = (0,1,0)` with `rotation = (0, 100, 45)`:
+
+    ```python
+    b = Box(1,2,3) @ Location((0,1,0), (0,100,45))
+    ```
+
+-   Box on plane `Plane.YZ`:
+
+    ```python
+    b = Box(1,2,3) @ Plane.XZ
+    ```
+
+-   Box on plane `Plane.YZ` rotated around `X` by 45°:
+
+    ```python
+    b = Box(1,2,3) @ (Plane.XZ * Rot(x=45))
+    ```
 
 ## Overview
 
-Alg123d consists of basically one class: `class AlgCompound(build123d.Compound)`
+Alg123d consists of one class: `class AlgCompound(build123d.Compound)`
 
 **Additional properties:**
 
--   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part
--   `metadata`: Expose metadata of an AlgCompound (e.g. sizes or distances) for later use with the compound, default = `{}`
--   `joints`: Support build123d's joint connectors directly on `AlgCompound`'s, default = `{}`
--   `mates`: Support manual assemblies with `MAssembly`, default =`{}`
-
-`dim` is used to check compatibility of algebra operationes, see below.
-
-`metadata` is a free form dict that is not used by any CAD algorithm.
-
-`joints` and `mates` can be safely ignored if one doesn't use `build123d.Joint` or `alg123d.MAsembly`.
+-   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part (used to check compatibility of algebra operationes)
+-   `joints`: Support build123d's `Joint` connectors directly on `AlgCompound`'s, default = `{}`
+-   `mates`: Support manual assemblies with `alg123d.MAssembly`, default =`{}`
+-   `metadata`: Expose metadata of an AlgCompound (e.g. sizes or distances) for later use with the compound, default = `{}` (free form dict that is not used by any CAD algorithm)
 
 **Additional user facing operators:**
 
@@ -61,147 +123,7 @@ Proxying build123d operators `position_at` and `tangent_at` to a line object (`d
 -   3-dim: {`extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`}
 -   2-dim: {`make_face`}
 
-_Conversions_:
-
--   `from_cq`: Load a CadQuery object into Alg123d
--   `to_cq`: Convert Alg123d object to CadQuery
--   `from_bd`: Load a Build123d object into Alg123d
--   `to_bd`: Convert Alg123d object to Build123d
-
 ## Usage
-
-### Object creation
-
-```python
-b = Box(1,2,3)
-```
-
-is an `AlgCompound` placed on the `XY` plane. It can be immediately shown. `AlgCompund`s do not have any location or rotation paramater. They will be relocated with the `@` operator (see below) which will then be reflected in the `location` property of the underlying `build123d.Compound`.
-
-### Object arithmetic
-
--   Fusing a box and a cylinder:
-
-    ```python
-    f = Box(1,2,3) + Cylinder(0.2, 5)
-    ```
-
--   Cutting a cylinder from a box
-
-    ```python
-    f = Box(1,2,3) - Cylinder(0.2, 5)
-    ```
-
--   Intersecting a box and a cylinder
-
-    ```python
-    f = Box(1,2,3) & Cylinder(0.2, 5)
-    ```
-
-### Location handling
-
--   Box at `origin = (0,0,0)` without rotation:
-
-    ```python
-    b = Box(1,2,3)
-    ```
-
--   Box at `origin = (0,1,0)` without rotation:
-
-    ```python
-    b = Box(1,2,3) @ Pos((0,1,0))
-    b = Box(1,2,3) @ Pos((y=1)
-    ```
-
--   Box at `origin = (0,0,0)` with `rotation = (0, 100, 45)`:
-
-    ```python
-    b = Box(1,2,3) @ Rot((0, 100, 45))
-    ```
-
--   Box at `origin = (0,1,0)` with `rotation = (0, 100, 45)`:
-
-    ```python
-    b = Box(1,2,3) @ Location((0,1,0), (0,100,45))
-    ```
-
--   Box on plane `Plane.YZ`:
-
-    ```python
-    b = Box(1,2,3) @ Plane.XZ
-    ```
-
--   Box on plane `Plane.YZ` rotated around `X` by 45°:
-
-    ```python
-    b = Box(1,2,3) @ (Plane.XZ * Rot(x=45))
-    ```
-
-### Direct API extension
-
-**Location**
-
-Return x-, y- or z-axis of a location:
-
-```python
-Location.x_axis(self) -> Axis
-Location.y_axis(self) -> Axis
-Location.z_axis(self) -> Axis
-```
-
-**Shape**
-
-Add filters to shape accessors:
-
-With the following types
-
-```Python
-filter_by: Union[Axis, GeomType]
-reverse: bool
-tolerance: float
-```
-
-the following extensions are the same as e.g. `faces().filter_by(filter_by, reverse, tolerance)`
-
-```python
-Shape.vertices(self, filter_by=None, reverse=False, tolerance=1e-5)
-Shape.edges(self, filter_by=None, reverse=False, tolerance=1e-5)
-Shape.compounds(self, filter_by=None, reverse=False, tolerance=1e-5)
-Shape.wires(self, filter_by=None, reverse=False, tolerance=1e-5)
-Shape.faces(self, filter_by=None, reverse=False, tolerance=1e-5)
-Shape.shells(self, filter_by=None, reverse=False, tolerance=1e-5)
-Shape.solids(self, filter_by=None, reverse=False, tolerance=1e-5)
-```
-
-**ShapeList**
-
-Allow two `ShapeList`s to be subtracted:
-
-```python
-ShapeList.__sub__(self, other: List[Shape]) -> ShapeList
-```
-
-Use case:
-
-```python
-last = obj.faces()
-obj = my_transformation(obj)
-new_faces = obj.faces() - last
-```
-
-Get min or max element/group of a ShapeList. Simply for readability:
-
-`obj.faces().min(axis)` is easier to read then `obj.faces().sort_by(axis)[0]`
-`obj.faces().max_group(axis)` is easier to read then `obj.faces().group_by(axis)[-1]`
-
-```python
-ShapeList.max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
-ShapeList.min(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
-ShapeList.min_group(self, axis: Axis = Axis.Z) -> ShapeList
-ShapeList.max_group(self, axis: Axis = Axis.Z) -> ShapeList
-```
-
-`min` and `max` can also return an `AlgCompound` if `wrapped=True`
 
 ### Examples
 
