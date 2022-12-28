@@ -298,24 +298,82 @@ JernArc(
 )
 ```
 
-## Shortcuts
+## Direct API extension
 
-Usually used by importing `import alg123d.shortcuts as S` to avoid polluting the namespace:
-
-_Location classes_:
+**Locations**
 
 ```python
 Pos(x: float = 0, y: float = 0, z: float = 0) -> Location
 Rot(x: float = 0, y: float = 0, z: float = 0) -> Location
 ```
 
-_Plane classes_:
+```python
+Location.x_axis(self) -> Axis
+Location.y_axis(self) -> Axis
+Location.z_axis(self) -> Axis
+```
+
+**Planes**
 
 ```python
 Planes(objs: List[Union[Plane, Location, Face]]) -> List[Plane]
 ```
 
-_Conversions_
+**Shape**
+
+Add filters to shape accessors:
+
+With the following types
+
+```Python
+filter_by: Union[Axis, GeomType]
+reverse: bool
+tolerance: float
+```
+
+the following extensions are the same as e.g. `faces().filter_by(filter_by, reverse, tolerance)`
+
+```python
+Shape.vertices(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.edges(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.compounds(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.wires(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.faces(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.shells(self, filter_by=None, reverse=False, tolerance=1e-5)
+Shape.solids(self, filter_by=None, reverse=False, tolerance=1e-5)
+```
+
+**ShapeList**
+
+Allow two `ShapeList`s to be subtracted:
+
+```python
+ShapeList.__sub__(self, other: List[Shape]) -> ShapeList
+```
+
+Use case:
+
+```python
+last = obj.faces()
+obj = my_transformation(obj)
+new_faces = obj.faces() - last
+```
+
+Get min or max element/group of a ShapeList. Simply for readability:
+
+`obj.faces().min(axis)` is easier to read then `obj.faces().sort_by(axis)[0]`
+`obj.faces().max_group(axis)` is easier to read then `obj.faces().group_by(axis)[-1]`
+
+```python
+ShapeList.max(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+ShapeList.min(self, axis: Axis = Axis.Z, wrapped=False) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]
+ShapeList.min_group(self, axis: Axis = Axis.Z) -> ShapeList
+ShapeList.max_group(self, axis: Axis = Axis.Z) -> ShapeList
+```
+
+`min` and `max` can also return an `AlgCompound` if `wrapped=True`
+
+### Conversions
 
 ```python
 from_cq(obj) -> AlgCompound
