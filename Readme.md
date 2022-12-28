@@ -160,7 +160,10 @@ Proxying the build123d operators `position_at` and `tangent_at` of line objects 
 -   3-dim: `extrude`, `extrude_until`, `loft`, `revolve`, `sweep`, `section`, `shell`
 -   2-dim: `make_face`
 
-An algebraic definition can be found in [Algebra](./docs/algebra.md)
+Notes:
+
+-   An algebraic definition can be found in [Algebra](./docs/algebra.md)
+-   The API description can be found in [Algebra](./docs/api.md)
 
 ## Examples
 
