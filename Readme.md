@@ -35,17 +35,18 @@ If one doesn't use `build123d.Joint` or `alg123d.MAsembly`, `mates` and `joints`
 -   `+`: `(AlgCompound, AlgCompound) -> AlgCompound`: Fuse two objects
 -   `-`: `(AlgCompound, AlgCompound) -> AlgCompound`: Cut first object with second object
 -   `&`: `(AlgCompound, AlgCompound) -> AlgCompound`: Intersect two objects
--   `@`: `(AlgCompound, Plane|Location) -> AlgCompound`: Change location of an AlgCompound
-
-Proxying build123d operators `position_at` and `tangent_at` to a line object (`dim==1` only)
-
--   `@`: `(AlgCompound, float) -> Vector`: `position_at` for AlgCompound with `dim==1`
--   `%`: `(AlgCompound, float) -> Vector`: `tangent_at` for AlgCompound with `dim==1`
+-   `@`: `(AlgCompound, Plane|Location) -> AlgCompound`: Change absolute location of an AlgCompound
+-   `*`: `(AlgCompound, Plane|Location) -> AlgCompound`: Move location of an AlgCompound relatively
 
 Another important operator is used from build123d:
 
 -   `*`: `(Location, Location) -> Location`: Multiple (concatenate) two locations
 -   `*`: `(Plane, Location) -> Plane`: Change location of a plane
+
+Proxying build123d operators `position_at` and `tangent_at` to a line object (`dim==1` only)
+
+-   `@`: `(AlgCompound, float) -> Vector`: `position_at` for AlgCompound with `dim==1`
+-   `%`: `(AlgCompound, float) -> Vector`: `tangent_at` for AlgCompound with `dim==1`
 
 **Objects:**
 
