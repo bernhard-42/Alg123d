@@ -29,8 +29,7 @@ sides = [
     (dice.faces().max(Axis.X), [0, 2, 3, 5]),  # 4
 ]
 
-for side in sides:
-    dice -= eyes(*side)
+dice -= [eyes(*side) for side in sides]
 
 
 if "show_object" in locals():
