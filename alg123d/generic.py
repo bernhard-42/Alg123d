@@ -1,3 +1,4 @@
+import copy
 from typing import List, Tuple, Union
 import build123d as bd
 from .direct_api import *
@@ -37,7 +38,14 @@ def mirror(
     objects: Union[List[AlgCompound], AlgCompound],
     about: Plane = Plane.XZ,
 ) -> AlgCompound:
-    return create_compound(bd.Mirror, objects, params=dict(about=about))
+
+    mirrored = [copy.deepcopy(o).mirror(about) for o in objects]
+    return AlgCompound(Compound.make_compound(mirrored))
+
+    # TODO: remove when mirror is fxed in build123d
+    #     context._add_to_context(*mirrored, mode=mode)
+    #     super().__init__(Compound.make_compound(mirrored).wrapped)
+    # return create_compound(bd.Mirror, objects, params=dict(about=about))
 
 
 def offset(
