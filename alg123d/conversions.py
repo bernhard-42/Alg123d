@@ -1,5 +1,5 @@
 from typing import List, Union
-from .wrappers import AlgCompound
+from .algcompound import AlgCompound
 from .direct_api import *
 
 __all__ = [

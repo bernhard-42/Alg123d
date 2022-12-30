@@ -1,7 +1,7 @@
 from typing import List, Tuple, Union
 import build123d as bd
 from .direct_api import *
-from .wrappers import create_compound, AlgCompound
+from .algcompound import create_compound, AlgCompound
 
 __all__ = ["chamfer", "fillet", "mirror", "offset", "scale", "split"]
 

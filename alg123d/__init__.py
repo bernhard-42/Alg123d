@@ -5,7 +5,7 @@ from .generic import *
 from .part import *
 from .sketch import *
 from .line import *
-from .wrappers import AlgCompound, LazyAlgCompound
+from .algcompound import AlgCompound, LazyAlgCompound
 
 from .assembly import *
 

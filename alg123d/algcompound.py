@@ -57,9 +57,10 @@ class AlgCompound(Compound):
         else:
             raise RuntimeError(f"{objs} not supported")
 
-        self.mates = {}
-        self.joints = {}
-        self.metadata = {}
+        if self.dim == 3:
+            self.joints = {}
+            self.metadata = {}
+
         # Don't call super().__init__() since we don't need .for_construction
 
     @classmethod
