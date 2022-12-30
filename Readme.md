@@ -128,8 +128,10 @@ Alg123d consists of one class: `class AlgCompound(build123d.Compound)`
 **Additional properties:**
 
 -   `dim`: Dimensionality of the `AlgCompound a` with `a.dim in [0,1,2,3]`: 0=empty, 1=line, 2=sketch, 3=part (used to check compatibility of algebra operationes)
+
+For `dim == 3` the following two properties are added:
+
 -   `joints`: Support build123d's `Joint` connectors directly on `AlgCompound`'s, default = `{}`
--   `mates`: Support manual assemblies with `alg123d.MAssembly`, default =`{}`
 -   `metadata`: Expose metadata of an AlgCompound (e.g. sizes or distances) for later use with the compound, default = `{}` (free form dict that is not used by any CAD algorithm)
 
 **Additional operators:**
