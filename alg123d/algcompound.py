@@ -228,7 +228,7 @@ def create_compound(
     if len(solids) > 1:
         return AlgCompound(solids[0].fuse(*solids[1:]).clean())
     else:
-        return AlgCompound(compound)
+        return AlgCompound(compound).clean()
 
 
 class LazyAlgCompound(AlgCompound):
