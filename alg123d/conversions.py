@@ -24,7 +24,7 @@ def from_bd(obj):
     if hasattr(obj, "_obj_name"):
         return AlgCompound(getattr(obj, obj._obj_name))
     else:
-        return obj
+        return AlgCompound.make_compound([Shape.cast(o.wrapped) for o in obj])
 
 
 def to_bd(obj):
