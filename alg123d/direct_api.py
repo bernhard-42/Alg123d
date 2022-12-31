@@ -82,8 +82,11 @@ Location.plane = property(_location_plane)
 
 
 class Pos(Location):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        super().__init__((x, y, z))
+    def __init__(self, x: Union[float, Vertex, Vector] = 0, y: float = 0, z: float = 0):
+        if isinstance(x, (Vertex, Vector)):
+            super().__init__(x.to_tuple())
+        else:
+            super().__init__((x, y, z))
 
 
 class Rot(Location):
