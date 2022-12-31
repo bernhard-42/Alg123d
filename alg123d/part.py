@@ -215,12 +215,20 @@ class Bore(AlgCompound):
 
 
 def extrude(
-    to_extrude: Compound,
+    to_extrude: Union[Face, Compound, List[Union[Face, Compound]]],
     amount: float = None,
     both: bool = False,
     taper: float = 0.0,
 ) -> AlgCompound:
-    faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
+    faces = []
+    for obj in to_tuple(to_extrude):
+        if isinstance(obj, Compound):
+            faces += obj.faces()
+        elif isinstance(obj, Face):
+            faces.append(obj)
+        else:
+            raise ValueError(f"Type {type(obj)} not supported for extrude")
+
     return create_compound(
         bd.Extrude,
         dim=3,
