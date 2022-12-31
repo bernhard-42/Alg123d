@@ -50,14 +50,6 @@ show(
 
 # Build123d <-> Alg123d
 
-
-def from_bd(obj):
-    if hasattr(obj, "_obj_name"):
-        return AlgCompound(getattr(obj, obj._obj_name))
-    else:
-        return AlgCompound.make_compound([Shape.cast(o.wrapped) for o in obj])
-
-
 with bd.BuildPart() as b:
     with bd.Workplanes(Plane.XZ):
         bd.Cylinder(1, 1)
