@@ -168,6 +168,18 @@ class AlgCompound(Compound):
 
         return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
 
+    def wires(self) -> ShapeList:
+        if self.dim == 1:
+            return ShapeList(Wire.combine(self.edges()))
+        else:
+            return super().wires()
+
+    def wire(self) -> Wire:
+        if self.dim == 1:
+            return self.wires()[0]
+        else:
+            raise RuntimeError("wire exists for dim==1 only")
+
 
 #
 # Function wrapper
