@@ -10,8 +10,12 @@ from .algcompound import AlgCompound, LazyAlgCompound
 from .assembly import *
 
 try:
-    from cq_vscode import show, show_object, set_defaults, reset_show, Animation
+    if os.environ.get("JPY_SESSION_NAME") is not None:
+        from jupyter_cadquery import show, show_object, set_defaults, open_viewer
+        print("Loaded show, show_object, set_defaults, open_viewer")
+    else:
+        from cq_vscode import show, show_object, set_defaults, reset_show, Animation
+        print("Loaded show, show_object, set_defaults, reset_show and Animation")
 
-    print("Loaded show, show_object, set_defaults, reset_show and Animation")
 except Exception as ex:
     ...
