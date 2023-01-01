@@ -192,17 +192,15 @@ a, b = 40, 4
 ex13 = Cylinder(radius=50, height=10)
 plane = Plane(ex13.faces().max())
 
-sinks = [
-    CounterSink(ex13, radius=b, counter_sink_radius=2 * b) @ loc
+ex13 -= [
+    CounterSink(ex13, radius=b, counter_sink_radius=2 * b) @ (plane * loc)
     for loc in PolarLocations(radius=a, count=4)
 ]
-ex13 -= sinks
-
-bores = [
-    CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b) @ loc
+ex13 -= [
+    CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b)
+    @ (plane * loc)
     for loc in PolarLocations(radius=a, count=4, start_angle=45, stop_angle=360 + 45)
 ]
-ex13 -= bores
 
 show(ex13)
 

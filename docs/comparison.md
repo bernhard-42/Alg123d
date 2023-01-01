@@ -297,9 +297,11 @@
     ex11 = Box(length, width, thickness)
     ex11 = chamfer(ex11, ex11.edges().max_group(), 4)
     ex11 = fillet(ex11, ex11.edges(Axis.Z), 5)
+
     last = ex11.edges()
     ex11 -= Bore(ex11, radius=width / 4)
     ex11 = fillet(ex11, (ex11.edges() - last).max(), 2)
+
     plane = Plane(ex11.faces().max())
     sk11 = [
         RegularPolygon(radius=5, side_count=5) @ (plane * loc)
@@ -380,17 +382,14 @@
     ex13 = Cylinder(radius=50, height=10)
     plane = Plane(ex13.faces().max())
 
-    sinks = [
-        CounterSink(ex13, radius=b, counter_sink_radius=2 * b) @ loc
+    ex13 -= [
+        CounterSink(ex13, radius=b, counter_sink_radius=2 * b) @ (plane * loc)
         for loc in PolarLocations(radius=a, count=4)
     ]
-    ex13 -= sinks
-
-    bores = [
-        CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b) @ loc
+    ex13 -= [
+        CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b) @ (plane * loc)
         for loc in PolarLocations(radius=a, count=4, start_angle=45, stop_angle=360 + 45)
     ]
-    ex13 -= bores
     ```
 
 ## Example 14
