@@ -10,7 +10,7 @@ from .algcompound import AlgCompound, LazyAlgCompound
 from .assembly import *
 
 try:
-    if os.environ.get("JPY_SESSION_NAME") is not None:
+    if os.environ.get("JPY_PARENT_PID") is not None:
         from jupyter_cadquery import show, show_object, set_defaults, open_viewer
         print("Loaded show, show_object, set_defaults, open_viewer")
     else:
