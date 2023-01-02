@@ -225,7 +225,10 @@ class MG92B:
 
         # and add joints using the center_location of edges (absolute locations)
         RevoluteJoint(
-            "spline", servo, self.spline_hole.center_location.z_axis, range=(270, 90)
+            "spline",
+            servo,
+            self.spline_hole.center_location.z_axis,
+            angular_range=(270, 90),
         )
         RigidJoint("cable_side_hole", servo, self.fix_holes.min(Axis.X).center_location)
         RigidJoint(

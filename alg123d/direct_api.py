@@ -236,8 +236,8 @@ def _shapelist_sub(self, other: List[Shape]) -> ShapeList:
     return ShapeList(d1.values())
 
 
-# def _shapelist_max(self, axis: Axis = Axis.Z, wrapped=False) => wrappers.py
-# def _shapelist_min(self, axis: Axis = Axis.Z, wrapped=False) => wrappers.py
+# def _shapelist_max(self, axis: Axis = Axis.Z, wrapped=False) => algcompound.py
+# def _shapelist_min(self, axis: Axis = Axis.Z, wrapped=False) => algcompound.py
 
 
 def _shapelist_min_group(self, axis: Axis = Axis.Z) -> ShapeList:
@@ -258,17 +258,13 @@ ShapeList.max_group = _shapelist_max_group
 
 
 def axis_symbol(self, l=1) -> Edge:
-    edge = Edge.make_line(self.position, self.position + self.direction * l)
-    circles = [
-        Edge.make_circle(l / 200 * i).locate(
-            Plane(
-                origin=self.position + (1 - i / 100) * l * self.direction,
-                z_dir=self.direction,
-            ).location
-        )
-        for i in (1, 2, 3)
-    ]
-    return Edge.fuse(edge, *circles)
+    edge = Edge.make_line(self.position, self.position + self.direction * 0.95 * l)
+    plane = Plane(
+        origin=self.position + 0.95 * l * self.direction,
+        z_dir=self.direction,
+    )
+    cone = Solid.make_cone(l / 60, 0, l / 20, plane)
+    return Compound.make_compound([edge] + cone.faces())
 
 
 def location_symbol(self, l=1) -> Compound:
@@ -298,7 +294,9 @@ def _revolutejoint_symbol(self) -> Compound:
             Edge.make_line((0, 0, 0), (0, 0, radius * 2)),
             Edge.make_line((0, 0, 0), (self.angle_reference * radius * 2).to_tuple()),
             Edge.make_circle(
-                radius, start_angle=self.range[0], end_angle=self.range[1]
+                radius,
+                start_angle=self.angular_range[0],
+                end_angle=self.angular_range[1],
             ),
         ]
     ).move(self.parent.location * self.relative_axis.to_location())

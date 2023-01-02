@@ -1,14 +1,19 @@
 from alg123d import *
-from alg123d.shortcuts import *
 
 import build123d as bd
 import cadquery as cq
 import time
 
 
+# %%
 
+with SkipClean():
+    s1 = Sphere(1) - Box(0.5, 2, 2)
+
+show(s1)
 
 # %%
+
 
 with bd.BuildSketch() as s:
     with bd.Locations(bd.Location((1, 2, 3), (10, 20, 30))):
@@ -363,7 +368,7 @@ show(p, p.faces().group_by(Axis.Y)[0], transparent=True)
 
 locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
 
-s AlgCompound()
+s = AlgCompound()
 for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
     c_plane = plane * outer_loc * locs[i]
     s += Circle(1) @ c_plane

@@ -6,9 +6,23 @@ import build123d as bd
 from .direct_api import *
 from .utils import to_list
 
-__all__ = ["DelayClean", "LazyAlgCompound", "AlgCompound", "create_compound"]
+__all__ = ["SkipClean", "LazyAlgCompound", "AlgCompound", "create_compound"]
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
+
+#
+# SkipClean context
+#
+
+
+class SkipClean:
+    clean = True
+
+    def __enter__(self):
+        SkipClean.clean = False
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        SkipClean.clean = True
 
 
 #
@@ -104,23 +118,26 @@ class AlgCompound(Compound):
                 if len(objs) == 1:
                     compound = objs[0]
                 else:
-                    compound = objs.pop().fuse(*objs).clean()
+                    compound = objs.pop().fuse(*objs)
             else:
                 raise RuntimeError("Can only add to an empty AlgCompound object")
         elif objs[0].dim == 0:  # Cover operation with empty AlgCompound object
             compound = self
         else:
             if mode == Mode.ADD:
-                compound = self.fuse(*objs).clean()
+                compound = self.fuse(*objs)
 
             elif self.dim == 1:
                 raise RuntimeError("Lines can only be added")
 
             else:
                 if mode == Mode.SUBTRACT:
-                    compound = self.cut(*objs).clean()
+                    compound = self.cut(*objs)
                 elif mode == Mode.INTERSECT:
-                    compound = self.intersect(*objs).clean()
+                    compound = self.intersect(*objs)
+
+        if SkipClean.clean:
+            compound = compound.clean()
 
         return AlgCompound(compound)
 
@@ -220,9 +237,19 @@ def create_compound(
 
     solids = compound.solids()
     if len(solids) > 1:
-        return AlgCompound(solids[0].fuse(*solids[1:]).clean())
+        result = AlgCompound(solids[0].fuse(*solids[1:]))
     else:
-        return AlgCompound(compound).clean()
+        result = AlgCompound(compound)
+
+    if SkipClean.clean:
+        return result.clean()
+    else:
+        return result
+
+
+#
+# LazyCompound
+#
 
 
 class LazyAlgCompound(AlgCompound):
@@ -262,7 +289,7 @@ class LazyAlgCompound(AlgCompound):
 
 
 #
-# ShapeList
+# ShapeList monkey patching (needing AlgCompound)
 #
 
 

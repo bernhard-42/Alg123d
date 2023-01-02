@@ -19,8 +19,9 @@ leaf = l1 + l2 + l3 + l4 + l5 + l6 + l7 + r1 + r2 + r3 + r4 + r5 + s
 leaf += mirror(leaf, about=Plane.YZ)
 leaf = make_face(leaf)
 
-west_field = Rectangle(0.5, 1, centered=(False, False)) @ Pos(-1, 0)
-east_field = mirror(west_field, Plane.YZ)
+field = Rectangle(0.5, 1, centered=(False, False))
+west_field = field @ Pos(-1, 0)
+east_field = field @ Pos(0.5, 0)
 centre_field = Rectangle(1, 1, centered=(True, False)) - leaf
 
 
