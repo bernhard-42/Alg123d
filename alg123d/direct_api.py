@@ -258,17 +258,13 @@ ShapeList.max_group = _shapelist_max_group
 
 
 def axis_symbol(self, l=1) -> Edge:
-    edge = Edge.make_line(self.position, self.position + self.direction * l)
-    circles = [
-        Edge.make_circle(l / 200 * i).locate(
-            Plane(
-                origin=self.position + (1 - i / 100) * l * self.direction,
-                z_dir=self.direction,
-            ).location
-        )
-        for i in (1, 2, 3)
-    ]
-    return Edge.fuse(edge, *circles)
+    edge = Edge.make_line(self.position, self.position + self.direction * 0.95 * l)
+    plane = Plane(
+        origin=self.position + 0.95 * l * self.direction,
+        z_dir=self.direction,
+    )
+    cone = Solid.make_cone(l / 60, 0, l / 20, plane)
+    return Compound.make_compound([edge] + cone.faces())
 
 
 def location_symbol(self, l=1) -> Compound:
