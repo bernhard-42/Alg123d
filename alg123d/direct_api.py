@@ -298,7 +298,9 @@ def _revolutejoint_symbol(self) -> Compound:
             Edge.make_line((0, 0, 0), (0, 0, radius * 2)),
             Edge.make_line((0, 0, 0), (self.angle_reference * radius * 2).to_tuple()),
             Edge.make_circle(
-                radius, start_angle=self.range[0], end_angle=self.range[1]
+                radius,
+                start_angle=self.angular_range[0],
+                end_angle=self.angular_range[1],
             ),
         ]
     ).move(self.parent.location * self.relative_axis.to_location())
