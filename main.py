@@ -4,41 +4,34 @@ import build123d as bd
 import cadquery as cq
 import time
 
+s = cq.Workplane().sphere(10).translate((10, 0, 0))
+# s = s.shell(0.5)
+# s = s.cut(cq.Workplane().box(4,4,50).translate((10, 0, 0)))
+# show(s)
 
 # %%
 
-with SkipClean():
-    s1 = Sphere(1) - Box(0.5, 2, 2)
+s2 = Sphere(10) @ Pos(10, 0, 0)
+# s2 = from_cq(s)
 
-show(s1)
+# t2 = s2.wrapped
+# t3 = s3.wrapped
+
+loc = s2.location
+rv = offset(s2.moved(loc.inverse()), 1).moved(loc)
+# s2 -= Box(9,9,9, centered=False)
+
+show(s2, rv, transparent=True)
 
 # %%
 
+with bd.BuildPart() as p:
+    with bd.Locations((10, 0, 0)):
+        s = bd.Sphere(10)
+    # bd.Offset(amount=1)
 
-with bd.BuildSketch() as s:
-    with bd.Locations(bd.Location((1, 2, 3), (10, 20, 30))):
-        bd.Rectangle(1, 2)
-show(s)
+show(p, transparent=True)
 
-# %%
-def _location_x_axis(self) -> Axis:
-    p = Plane(self)
-    return Axis(p.origin, p.x_dir)
-
-
-def _location_y_axis(self) -> Axis:
-    p = Plane(self)
-    return Axis(p.origin, p.y_dir)
-
-
-def _location_z_axis(self) -> Axis:
-    p = Plane(self)
-    return Axis(p.origin, p.z_dir)
-
-
-Location.x_axis = property(_location_x_axis)
-Location.y_axis = property(_location_y_axis)
-Location.z_axis = property(_location_z_axis)
 # %%
 
 from build123d import *
