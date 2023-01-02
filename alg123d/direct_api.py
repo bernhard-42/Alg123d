@@ -236,8 +236,8 @@ def _shapelist_sub(self, other: List[Shape]) -> ShapeList:
     return ShapeList(d1.values())
 
 
-# def _shapelist_max(self, axis: Axis = Axis.Z, wrapped=False) => wrappers.py
-# def _shapelist_min(self, axis: Axis = Axis.Z, wrapped=False) => wrappers.py
+# def _shapelist_max(self, axis: Axis = Axis.Z, wrapped=False) => algcompound.py
+# def _shapelist_min(self, axis: Axis = Axis.Z, wrapped=False) => algcompound.py
 
 
 def _shapelist_min_group(self, axis: Axis = Axis.Z) -> ShapeList:
