@@ -37,10 +37,9 @@ rail = extrude(din, rail_length)
 
 plane = Plane(rail.faces().max(Axis.Y))
 
-# with LazyAlgCompound as slot_faces:
-slot_faces = AlgCompound()
-for loc in GridLocations(0, slot_pitch, 1, rail_length // slot_pitch - 1):
-    slot_faces += SlotOverall(slot_length, slot_width) @ (plane * loc)
+with LazyAlgCompound() as slot_faces:
+    for loc in GridLocations(0, slot_pitch, 1, rail_length // slot_pitch - 1):
+        slot_faces += SlotOverall(slot_length, slot_width) @ (plane * loc)
 
 slots = extrude(slot_faces, -height)
 

@@ -13,18 +13,19 @@ handle_path = handle_center_line.edges()[0]
 
 
 # Create the cross sections - added to pending_faces
-sections = AlgCompound()
-for i in range(segment_count + 1):
-    plane = Plane(
-        origin=handle_path @ (i / segment_count),
-        z_dir=handle_path % (i / segment_count),
-    )
-    if i % segment_count == 0:
-        section = Circle(1) @ plane
-    else:
-        section = Rectangle(1.25, 3) @ plane
-        section = fillet(section, section.vertices(), radius=0.2)
-    sections += section
+
+with LazyAlgCompound() as sections:
+    for i in range(segment_count + 1):
+        plane = Plane(
+            origin=handle_path @ (i / segment_count),
+            z_dir=handle_path % (i / segment_count),
+        )
+        if i % segment_count == 0:
+            section = Circle(1) @ plane
+        else:
+            section = Rectangle(1.25, 3) @ plane
+            section = fillet(section, section.vertices(), radius=0.2)
+        sections += section
 
 # Create the handle by sweeping along the path
 handle = sweep(sections.faces(), path=handle_path, multisection=True)

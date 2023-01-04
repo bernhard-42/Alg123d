@@ -15,7 +15,10 @@ r4 = ThreePointArc(l4 @ 1, (l4 @ 1 + l5 @ 0) * 0.5 + Vector(-0.002, -0.002), l5 
 r5 = TangentArc(l6 @ 1, l7 @ 0, tangent=l6 % 1)
 s = Spline((l5 @ 1, l6 @ 0), tangents=(l5 % 1, l6 % 0), tangent_scalars=(2, 2))
 
-leaf = l1 + l2 + l3 + l4 + l5 + l6 + l7 + r1 + r2 + r3 + r4 + r5 + s
+# leaf = l1 + l2 + l3 + l4 + l5 + l6 + l7 + r1 + r2 + r3 + r4 + r5 + s
+# The vectorized version is faster:
+leaf = l1 + [l2, l3, l4, l5, l6, l7, r1, r2, r3, r4, r5, s]
+
 leaf += mirror(leaf, about=Plane.YZ)
 leaf = make_face(leaf)
 
