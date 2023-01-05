@@ -1,5 +1,6 @@
 import build123d as bd
-from build123d.build_common import MM, CM, M, IN, FT
+from build123d.build_common import CM, FT, IN, MM, M
+
 from .direct_api import *
 
 __all__ = [

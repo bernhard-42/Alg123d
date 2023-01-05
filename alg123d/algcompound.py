@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from collections.abc import Iterable
 from typing import List
 
 import build123d as bd
+
 from .direct_api import *
 from .utils import to_list
 

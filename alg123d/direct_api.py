@@ -1,8 +1,7 @@
 from typing import List
 
-from build123d.direct_api import *
 from build123d.build_enums import *
-
+from build123d.direct_api import *
 
 #
 # World locations

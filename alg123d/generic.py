@@ -1,8 +1,10 @@
 import copy
 from typing import List, Tuple, Union
+
 import build123d as bd
+
+from .algcompound import AlgCompound, create_compound
 from .direct_api import *
-from .algcompound import create_compound, AlgCompound
 
 __all__ = ["chamfer", "fillet", "mirror", "offset", "scale", "split"]
 

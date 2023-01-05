@@ -1,5 +1,7 @@
 from typing import List
+
 import build123d as bd
+
 from .algcompound import AlgCompound, create_compound
 from .direct_api import *
 from .utils import to_tuple

@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import overload, Union, Tuple, Dict, List, overload
-from webcolors import name_to_rgb
 from enum import Enum, auto
+from typing import Dict, List, Tuple, Union, overload
+
+from webcolors import name_to_rgb
 
 from .direct_api import *
 
