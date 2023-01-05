@@ -322,7 +322,7 @@ ribs += Rectangle(0.5 * MM, 17.5 * MM)
 ribs += Circle(radius=5.51 * MM / 2)
 
 ribs = extrude(ribs @ (0, 0, 4), 10)
-key_cap += min_solid(ribs - key_cap, wrapped=True)
+key_cap += (ribs - key_cap).solids().min()
 
 # Find the face on the bottom of the ribs to build onto
 rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]

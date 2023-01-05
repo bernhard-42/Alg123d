@@ -108,6 +108,8 @@ class AlgCompound(Compound):
         return self._create(bd.BuildPart, cls, part=part, params=params)
 
     def _place(self, mode: Mode, *objs: AlgCompound):
+        objs = [o if isinstance(o, AlgCompound) else AlgCompound(o) for o in objs]
+
         if not (objs[0].dim == 0 or self.dim == 0 or self.dim == objs[0].dim):
             raise RuntimeError(
                 f"Cannot combine objects of different dimensionality: {self.dim} and {objs[0].dim}"

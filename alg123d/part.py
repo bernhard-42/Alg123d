@@ -248,7 +248,7 @@ def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgComp
     axis = Axis(f.center(), f.normal_at(f.center()))
 
     ex = extrude(f, z_max) - limit
-    return ex.solids().min(axis, wrapped=True) + limit
+    return limit + ex.solids().min(axis)
 
 
 def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False) -> AlgCompound:
