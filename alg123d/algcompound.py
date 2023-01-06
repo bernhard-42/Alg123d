@@ -195,6 +195,12 @@ class AlgCompound(Compound):
         else:
             raise RuntimeError("wire exists for dim==1 only")
 
+    def face(self) -> Face:
+        if self.dim == 2:
+            return self.faces()[0]
+        else:
+            raise RuntimeError("wire exists for dim==1 only")
+
 
 #
 # Function wrapper
@@ -297,19 +303,19 @@ class LazyAlgCompound(AlgCompound):
 #
 
 
-def _shapelist_max(
-    self, sort_by: Union[Axis, SortBy] = Axis.Z, wrapped=False
-) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
-    obj = self.sort_by(sort_by)[-1]
-    return AlgCompound(obj) if wrapped else obj
+# def _shapelist_max(
+#     self, sort_by: Union[Axis, SortBy] = Axis.Z, wrapped=False
+# ) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
+#     obj = self.sort_by(sort_by)[-1]
+#     return AlgCompound(obj) if wrapped else obj
 
 
-def _shapelist_min(
-    self, sort_by: Union[Axis, SortBy] = Axis.Z, wrapped=False
-) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
-    obj = self.sort_by(sort_by)[0]
-    return AlgCompound(obj) if wrapped else obj
+# def _shapelist_min(
+#     self, sort_by: Union[Axis, SortBy] = Axis.Z, wrapped=False
+# ) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
+#     obj = self.sort_by(sort_by)[0]
+#     return AlgCompound(obj) if wrapped else obj
 
 
-ShapeList.min = _shapelist_min
-ShapeList.max = _shapelist_max
+# ShapeList.min = _shapelist_min
+# ShapeList.max = _shapelist_max

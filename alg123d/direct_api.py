@@ -239,17 +239,17 @@ def _shapelist_sub(self, other: List[Shape]) -> ShapeList:
 # def _shapelist_min(self, axis: Axis = Axis.Z, wrapped=False) => algcompound.py
 
 
-def _shapelist_min_group(self, sort_by: Union[Axis, SortBy] = Axis.Z) -> ShapeList:
-    return self.group_by(sort_by)[0]
+# def _shapelist_min_group(self, sort_by: Union[Axis, SortBy] = Axis.Z) -> ShapeList:
+#     return self.group_by(sort_by)[0]
 
 
-def _shapelist_max_group(self, sort_by: Union[Axis, SortBy] = Axis.Z) -> ShapeList:
-    return self.group_by(sort_by)[-1]
+# def _shapelist_max_group(self, sort_by: Union[Axis, SortBy] = Axis.Z) -> ShapeList:
+#     return self.group_by(sort_by)[-1]
 
 
 ShapeList.__sub__ = _shapelist_sub
-ShapeList.min_group = _shapelist_min_group
-ShapeList.max_group = _shapelist_max_group
+# ShapeList.min_group = _shapelist_min_group
+# ShapeList.max_group = _shapelist_max_group
 
 #
 # Symbols
