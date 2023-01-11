@@ -240,17 +240,29 @@ def extrude(
     )
 
 
-def extrude_until(face: Union[Face, AlgCompound], limit: AlgCompound) -> AlgCompound:
-    if isinstance(face, Face):
-        f = face
-    elif isinstance(face, Compound):
-        f = face.faces()[0]
+def extrude_until(
+    face: Union[Face, AlgCompound],
+    limit: AlgCompound,
+    direction: VectorLike = None,
+    until: Until = Until.NEXT,
+) -> AlgCompound:
+    if direction is None:
+        if isinstance(face, Face):
+            f = face
+        elif isinstance(face, Compound):
+            f = face.faces()[0]
 
-    z_max = limit.bounding_box().diagonal_length()
-    axis = Axis(f.center(), f.normal_at(f.center()))
+        z_max = limit.bounding_box().diagonal_length()
+        axis = Axis(f.center(), f.normal_at(f.center()))
 
-    ex = extrude(f, z_max) - limit
-    return limit + ex.solids().min(axis)
+        ex = extrude(f, z_max)
+        if until == Until.NEXT:
+            return AlgCompound((ex - limit).solids().min(axis))
+        else:
+            parts = limit & ex
+            return AlgCompound((ex - limit).solids().min(axis)) + parts
+    else:
+        return AlgCompound(Solid.extrude_until(face, limit, direction, until))
 
 
 def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False) -> AlgCompound:
