@@ -46,7 +46,7 @@ def unwrap(compound: Compound) -> Compound:
 
 
 class AlgCompound(Compound):
-    def __init__(self, obj: Union[Compound, Solid, Face, Edge] = None):
+    def __init__(self, obj: Union[Compound, Solid, Face, Edge] = None, label=None):
         if isinstance(obj, Compound):
             objs = list(unwrap(obj))
         elif isinstance(obj, (Solid, Face, Edge)):
@@ -55,29 +55,26 @@ class AlgCompound(Compound):
             raise TypeError(f"Unknown type {obj}")
 
         if obj is None:
+            dummy = Solid.make_sphere(1)
+            super().__init__(Compound.make_compound([dummy]).wrapped, label=label)
             self.dim = 0
             self.wrapped = None
 
         elif all([isinstance(obj, (Edge, Wire)) for obj in objs]):
+            super().__init__(Compound.make_compound(objs).wrapped, label=label)
             self.dim = 1
-            self.wrapped = Compound.make_compound(objs).wrapped
 
         elif all([isinstance(obj, Face) for obj in objs]):
+            super().__init__(Compound.make_compound(objs).wrapped, label=label)
             self.dim = 2
-            self.wrapped = Compound.make_compound(objs).wrapped
 
         elif all([isinstance(obj, Solid) for obj in objs]):
+            super().__init__(Compound.make_compound(objs).wrapped, label=label)
             self.dim = 3
-            self.wrapped = Compound.make_compound(objs).wrapped
+            self.metadata = {}
 
         else:
             raise RuntimeError(f"{objs} not supported")
-
-        if self.dim == 3:
-            self.joints = {}
-            self.metadata = {}
-
-        # Don't call super().__init__() since we don't need .for_construction
 
     @classmethod
     def make_compound(cls, objs: Shape):
