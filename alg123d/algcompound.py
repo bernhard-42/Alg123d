@@ -189,17 +189,38 @@ class AlgCompound(Compound):
 
         return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
 
+    def edge(self) -> Edge:
+        if self.dim == 1:
+            if len(self.edges()) == 1:
+                return self.edges()[0]
+            else:
+                raise RuntimeError("Line has more than 1 edge")
+        else:
+            raise RuntimeError("edge() exists for dim==1 only")
+
     def wire(self) -> Wire:
         if self.dim == 1:
             return Wire.combine(self.edges())[0]
         else:
-            raise RuntimeError("wire exists for dim==1 only")
+            raise RuntimeError("wire() exists for dim==1 only")
 
     def face(self) -> Face:
         if self.dim == 2:
-            return self.faces()[0]
+            if len(self.faces()) == 1:
+                return self.faces()[0]
+            else:
+                raise RuntimeError("Sketch has more than 1 face")
         else:
-            raise RuntimeError("wire exists for dim==1 only")
+            raise RuntimeError("face() exists for dim==2 only")
+
+    def solid(self) -> Solid:
+        if self.dim == 3:
+            if len(self.solids()) == 1:
+                return self.solids()[0]
+            else:
+                raise RuntimeError("Part has more than 1 solid")
+        else:
+            raise RuntimeError("solid() exists for dim==3 only")
 
 
 #
