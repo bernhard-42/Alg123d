@@ -12,11 +12,6 @@ class JointBox(AlgCompound):
         radius: float = 0.0,
         taper: float = 0.0,
     ):
-        # Store the attributes so the object can be copied
-        self.length = length
-        self.width = width
-        self.height = height
-
         # Create the object
         rect = Rectangle(length, width)
         obj = extrude(rect, amount=height, taper=taper)

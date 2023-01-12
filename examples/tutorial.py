@@ -395,3 +395,68 @@ ex24 += loft(faces)
 show(ex24)
 
 # %%
+
+rad, offs = 50, 10
+
+sk25_1 = RegularPolygon(radius=rad, side_count=5)
+sk25_2 = RegularPolygon(radius=rad, side_count=5) @ Plane.XY.offset(15)
+sk25_2 = offset(sk25_2, offs)
+sk25_3 = RegularPolygon(radius=rad, side_count=5) @ Plane.XY.offset(30)
+sk25_3 = offset(sk25_3, offs, Kind.INTERSECTION)
+
+ex25 = extrude([sk25_1, sk25_2, sk25_3], 1)
+
+show(ex25, transparent=True)
+
+# %%
+
+length, width, thickness, wall = 80.0, 60.0, 10.0, 2.0
+
+ex26 = Box(length, width, thickness)
+topf = ex26.faces().max()
+ex26 = shell(ex26, -wall, openings=topf)
+
+show(ex26)
+
+# %%
+
+length, width, thickness = 80.0, 60.0, 10.0
+
+ex27 = Box(length, width, thickness)
+sk27 = Circle(width / 4) @ Plane(ex27.faces().min())
+ex27 -= extrude(sk27, -thickness)
+ex27 = split(ex27, Plane(ex27.faces().max(Axis.Y)).offset(-width / 2))
+
+show(ex27)
+# %%
+
+width, thickness = 80.0, 10.0
+
+sk28 = RegularPolygon(radius=width / 4, side_count=3)
+tmp28 = extrude(sk28, thickness)
+ex28 = Sphere(radius=width / 2)
+for p in Planes(tmp28.faces().group_by(Axis.Z)[1]):
+    ex28 -= Bore(ex28, thickness / 2) @ p
+
+show(ex28, transparent=True)
+
+# %%
+
+L, w, t, b, h, n = 60.0, 18.0, 9.0, 0.9, 90.0, 8.0
+
+l1 = Line((0, 0), (0, w / 2))
+l2 = ThreePointArc(l1 @ 1, (L / 2.0, w / 2.0 + t), (L, w / 2.0))
+l3 = Line(l2 @ 1, Vector((l2 @ 1).X, 0, 0))
+ln29 = l1 + l2 + l3
+ln29 += mirror(ln29)
+sk29 = make_face(ln29)
+ex29 = extrude(sk29, amount=h + b)
+ex29 = fillet(ex29, ex29.edges(), w / 8)
+
+neck = Circle(t) @ Plane(ex29.faces().max())
+ex29 += extrude(neck, n)
+necktopf = ex29.faces().max()
+ex29 = shell(ex29, -b, openings=necktopf)
+
+show(ex29, transparent=True)
+# %%
