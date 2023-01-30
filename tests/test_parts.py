@@ -2,7 +2,23 @@ from math import sin, pi
 
 from alg123d import *
 
-set_defaults(axes=True, axes0=True, transparent=False)
+# from build123d import *
+# from cq_vscode import show
+
+# s = Solid.make_sphere(1)
+# c = Solid.make_cylinder(0.2, 4)
+
+# e = s.cut(c)
+# %%
+
+# set_defaults(axes=True, axes0=True, transparent=False)
+
+# c = Face.make_from_wires(Wire.make_circle(2)).located(Location((20, 0, 0)))
+# a = Solid.revolve(c, -180, Axis.Y)
+# f = Face.make_rect(3.9, 20)
+# e = Solid.extrude_until(f, a, (0, 0, 1))
+
+# show(f, a, e)
 
 # %%
 
@@ -136,9 +152,50 @@ show(a)
 
 c = Circle(2) @ Pos(20, 0, 0)
 a = revolve(c, -Axis.Y, 180)
-a = extrude_until(Rectangle(20, 4), a)
+f = Rectangle(20, 4)
+e = extrude_until(f, a)
 
+show(e, a, alphas=(1, 0.5))
+
+# %%
+
+e = extrude_until(f, a, until=Until.LAST)
+
+show(e, a, alphas=(1, 0.5))
+
+# %%
+# BROKEN
+e = extrude_until(Rectangle(20, 3.9).faces()[0], a, (0, 0, 1), until=Until.NEXT)
+
+show(e)
+
+# %%
+f = Rectangle(20, 3.9).faces()[0]
+e = extrude_until(f, a, (0, 0, 1), until=Until.LAST)
+
+show(f, a, e)
+
+# %%
+
+c = ThreePointArc((0, 0, -5), (0, -5, 0), (0, 5, 1.5))
+f = Circle(0.5) @ (Plane.XZ * Pos(y=-5))
+t = sweep(f.face(), path=c.wire())
+
+f2 = Rectangle(0.9999, 8) @ (Plane.XZ * Pos(z=-7))
+a = Solid.extrude_until(f2.faces()[0], t, (0, -1, 0))
+show(a, t)
+
+# %%
+
+f2 = Rectangle(0.999, 8) @ (Plane.XZ * Pos(z=-7))
+a = Solid.extrude_until(f2.faces()[0], t, (0, -1, 0), Until.LAST)
 show(a)
+
+# %%
+
+a = extrude_until(f2, t)
+show(a)
+
 # %%
 
 pts = [(-2, 5), (-12, 5), (-12, 10), (10, 10)]
@@ -147,7 +204,7 @@ f = make_face(l) @ Plane.XZ
 flange = extrude(f, 10, both=True) @ Rot(10, 20, -30)
 
 rect = Rectangle(8, 8) @ Rot(0, 10, 0)
-flange = extrude_until(rect.faces()[0], flange)
+flange += extrude_until(rect.face(), flange)
 
 show(rect, flange)
 
