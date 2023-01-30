@@ -314,26 +314,3 @@ class LazyAlgCompound(AlgCompound):
             self._collected_objects.pop().fuse(*self._collected_objects).clean().wrapped
         )
         del self._collected_objects
-
-
-#
-# ShapeList monkey patching (needing AlgCompound)
-#
-
-
-# def _shapelist_max(
-#     self, sort_by: Union[Axis, SortBy] = Axis.Z, wrapped=False
-# ) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
-#     obj = self.sort_by(sort_by)[-1]
-#     return AlgCompound(obj) if wrapped else obj
-
-
-# def _shapelist_min(
-#     self, sort_by: Union[Axis, SortBy] = Axis.Z, wrapped=False
-# ) -> Union[AlgCompound, Solid, Face, Wire, Edge, Vertex]:
-#     obj = self.sort_by(sort_by)[0]
-#     return AlgCompound(obj) if wrapped else obj
-
-
-# ShapeList.min = _shapelist_min
-# ShapeList.max = _shapelist_max
