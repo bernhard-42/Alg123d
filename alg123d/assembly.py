@@ -70,6 +70,18 @@ class Color:
         else:
             raise ValueError(f"Cannot define color from {args}")
 
+    @property
+    def rgb(self):
+        return (self.r, self.g, self.b)
+
+    @property
+    def rgba(self):
+        return (self.r, self.g, self.b, self.a)
+
+    @property
+    def percentage(self):
+        return (self.r / 255, self.g / 255, self.b / 255)
+
     def to_tuple(self, percentage=False):
         if percentage:
             return (self.r / 255, self.g / 255, self.b / 255, self.a)
