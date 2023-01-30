@@ -30,14 +30,15 @@ class Circle(AlgCompound):
     def __init__(
         self,
         radius: float,
+        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
         centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 2
+        if not isinstance(align, Align):
+            align = (align,) * 2
 
         params = dict(
             radius=radius,
-            centered=centered,
+            align = align,
         )
         super().__init__(self.create_sketch(bd.Circle, params=params))
 
@@ -47,15 +48,15 @@ class Ellipse(AlgCompound):
         self,
         x_radius: float,
         y_radius: float,
-        centered: Union[bool, Tuple[bool, bool]] = (True, True),
+        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 2
+        if isinstance(align, Align):
+            align = (align,) * 2
 
         params = dict(
             x_radius=x_radius,
             y_radius=y_radius,
-            centered=centered,
+            align = align,
         )
         super().__init__(self.create_sketch(bd.Ellipse, params=params))
 
@@ -65,15 +66,15 @@ class Rectangle(AlgCompound):
         self,
         width: float,
         height: float,
-        centered: Union[bool, Tuple[bool, bool]] = (True, True),
+        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 2
+        if isinstance(align, Align):
+            align = (align,) * 2
 
         params = dict(
             width=width,
             height=height,
-            centered=centered,
+            align = align,
         )
         super().__init__(self.create_sketch(bd.Rectangle, params=params))
 
@@ -82,14 +83,14 @@ class Polygon(AlgCompound):
     def __init__(
         self,
         pts: List[VectorLike],
-        # centered: Union[bool, Tuple[bool, bool]] = (True, True),
+        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
-        # if isinstance(centered, bool):
-        #     centered = (centered,) * 2
+        if isinstance(align, Align):
+            align = (align,) * 2
 
-        # params = dict(
-        #     centered=centered,
-        # )
+        params = dict(
+            align = align,
+        )
         params = {}
         super().__init__(self.create_sketch(bd.Polygon, objects=pts, params=params))
 
@@ -99,15 +100,15 @@ class RegularPolygon(AlgCompound):
         self,
         radius: float,
         side_count: int,
-        centered: Union[bool, Tuple[bool, bool]] = (True, True),
+        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 2
+        if isinstance(align, Align):
+            align = (align,) * 2
 
         params = dict(
             radius=radius,
             side_count=side_count,
-            centered=centered,
+            align = align,
         )
         super().__init__(self.create_sketch(bd.RegularPolygon, params=params))
 
@@ -120,8 +121,7 @@ class Text(AlgCompound):
         font: str = "Arial",
         font_path: str = None,
         font_style: FontStyle = FontStyle.REGULAR,
-        halign: Halign = Halign.LEFT,
-        valign: Valign = Valign.CENTER,
+        align: tuple[Align, Align] = (Align.CENTER, Align.CENTER),
         path: Union[Edge, Wire] = None,
         position_on_path: float = 0.0,
     ):
@@ -131,8 +131,7 @@ class Text(AlgCompound):
             font=font,
             font_path=font_path,
             font_style=font_style,
-            halign=halign,
-            valign=valign,
+            align=align,
             path=path,
             position_on_path=position_on_path,
         )
@@ -146,17 +145,17 @@ class Trapezoid(AlgCompound):
         height: float,
         left_side_angle: float,
         right_side_angle: float = None,
-        centered: Union[bool, Tuple[bool, bool]] = (True, True),
+        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 2
+        if isinstance(align, Align):
+            align = (align,) * 2
 
         params = dict(
             width=width,
             height=height,
             left_side_angle=left_side_angle,
             right_side_angle=right_side_angle,
-            centered=centered,
+            align = align,
         )
         super().__init__(self.create_sketch(bd.Trapezoid, params=params))
 

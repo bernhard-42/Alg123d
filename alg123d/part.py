@@ -36,16 +36,16 @@ class Box(AlgCompound):
         length: float,
         width: float,
         height: float,
-        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
+        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 3
+        if isinstance(align, Align):
+            align = (align,) * 3
 
         params = dict(
             length=length,
             width=width,
             height=height,
-            centered=centered,
+            align=align,
         )
         super().__init__(self.create_part(bd.Box, params=params))
 
@@ -56,16 +56,16 @@ class Cylinder(AlgCompound):
         radius: float,
         height: float,
         arc_size: float = 360,
-        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
+        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 3
+        if isinstance(align, Align):
+            align = (align,) * 3
 
         params = dict(
             radius=radius,
             height=height,
             arc_size=arc_size,
-            centered=centered,
+            align=align,
         )
         super().__init__(self.create_part(bd.Cylinder, params=params))
 
@@ -77,17 +77,17 @@ class Cone(AlgCompound):
         top_radius: float,
         height: float,
         arc_size: float = 360,
-        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
+        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 3
+        if isinstance(align, Align):
+            align = (align,) * 3
 
         params = dict(
             bottom_radius=bottom_radius,
             top_radius=top_radius,
             height=height,
             arc_size=arc_size,
-            centered=centered,
+            align=align,
         )
         super().__init__(self.create_part(bd.Cone, params=params))
 
@@ -99,17 +99,17 @@ class Sphere(AlgCompound):
         arc_size1: float = -90,
         arc_size2: float = 90,
         arc_size3: float = 360,
-        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
+        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 3
+        if isinstance(align, Align):
+            align = (align,) * 3
 
         params = dict(
             radius=radius,
             arc_size1=arc_size1,
             arc_size2=arc_size2,
             arc_size3=arc_size3,
-            centered=centered,
+            align=align,
         )
         super().__init__(self.create_part(bd.Sphere, params=params))
 
@@ -122,10 +122,10 @@ class Torus(AlgCompound):
         minor_start_angle: float = 0,
         minor_end_angle: float = 360,
         major_angle: float = 360,
-        centered: Union[bool, Tuple[bool, bool, bool]] = (True, True, True),
+        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
     ):
-        if isinstance(centered, bool):
-            centered = (centered,) * 3
+        if isinstance(align, Align):
+            align = (align,) * 3
 
         params = dict(
             major_radius=major_radius,
@@ -133,7 +133,7 @@ class Torus(AlgCompound):
             minor_start_angle=minor_start_angle,
             minor_end_angle=minor_end_angle,
             major_angle=major_angle,
-            centered=centered,
+            align=align,
         )
         super().__init__(self.create_part(bd.Torus, params=params))
 
@@ -148,6 +148,7 @@ class Wedge(AlgCompound):
         zmin: float,
         xmax: float,
         zmax: float,
+        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
     ):
         params = dict(
             dx=dx,
@@ -157,6 +158,7 @@ class Wedge(AlgCompound):
             zmin=zmin,
             xmax=xmax,
             zmax=zmax,
+            align=align,
         )
         super().__init__(self.create_part(bd.Wedge, params=params))
 
