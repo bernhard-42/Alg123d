@@ -7,7 +7,7 @@ import time
 s = cq.Workplane().sphere(10).translate((10, 0, 0))
 # s = s.shell(0.5)
 # s = s.cut(cq.Workplane().box(4,4,50).translate((10, 0, 0)))
-# show(s)
+show(s)
 
 # %%
 
