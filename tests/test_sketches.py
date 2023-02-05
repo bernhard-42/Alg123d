@@ -40,6 +40,17 @@ show(Rectangle(1, 2, align=Align.MAX))
 
 # %%
 
+show(RectangleRounded(1, 2, 0.1))
+
+# %%
+
+show(RectangleRounded(1, 2, 0.1, align=Align.MIN))
+
+# %%
+
+show(RectangleRounded(1, 2, 0.1, align=Align.MAX))
+# %%
+
 pts = [(0, 1), (1, 0), (1, 1), (0, 1)]
 show(Polygon(pts))
 

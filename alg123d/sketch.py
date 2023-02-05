@@ -9,6 +9,7 @@ __all__ = [
     "Circle",
     "Ellipse",
     "Rectangle",
+    "RectangleRounded",
     "Polygon",
     "RegularPolygon",
     "Text",
@@ -76,6 +77,26 @@ class Rectangle(AlgCompound):
             align=align,
         )
         super().__init__(self.create_sketch(bd.Rectangle, params=params))
+
+
+class RectangleRounded(AlgCompound):
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        radius: float,
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+    ):
+        if isinstance(align, Align):
+            align = (align,) * 2
+
+        params = dict(
+            width=width,
+            height=height,
+            align=align,
+            radius=radius,
+        )
+        super().__init__(self.create_sketch(bd.RectangleRounded, params=params))
 
 
 class Polygon(AlgCompound):
