@@ -38,6 +38,7 @@ class LocationList:
 
 class Locations(LocationList):
     def __init__(self, *pts: Union[VectorLike, Vertex, Location]):
+        bd.Workplanes(Plane.XY).__enter__()
         super().__init__(bd.Locations(*pts))
 
 
@@ -50,6 +51,7 @@ class PolarLocations(LocationList):
         stop_angle: float = 360.0,
         rotate: bool = True,
     ):
+        bd.Workplanes(Plane.XY).__enter__()
         super().__init__(
             bd.PolarLocations(radius, count, start_angle, stop_angle, rotate)
         )
@@ -67,6 +69,7 @@ class GridLocations(LocationList):
         if isinstance(align, Align):
             align = (align,) * 2
 
+        bd.Workplanes(Plane.XY).__enter__()
         super().__init__(
             bd.GridLocations(x_spacing, y_spacing, x_count, y_count, align)
         )
@@ -83,4 +86,5 @@ class HexLocations(LocationList):
         if isinstance(align, Align):
             align = (align,) * 2
 
+        bd.Workplanes(Plane.XY).__enter__()
         super().__init__(bd.HexLocations(apothem, x_count, y_count, align))
