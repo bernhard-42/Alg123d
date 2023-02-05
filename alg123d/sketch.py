@@ -90,7 +90,6 @@ class Polygon(AlgCompound):
         params = dict(
             align = align,
         )
-        params = {}
         super().__init__(self.create_sketch(bd.Polygon, objects=pts, params=params))
 
 
