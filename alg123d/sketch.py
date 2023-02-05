@@ -30,14 +30,14 @@ class Circle(AlgCompound):
     def __init__(
         self,
         radius: float,
-        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
         if isinstance(align, Align):
             align = (align,) * 2
 
         params = dict(
             radius=radius,
-            align = align,
+            align=align,
         )
         super().__init__(self.create_sketch(bd.Circle, params=params))
 
@@ -47,7 +47,7 @@ class Ellipse(AlgCompound):
         self,
         x_radius: float,
         y_radius: float,
-        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
         if isinstance(align, Align):
             align = (align,) * 2
@@ -55,7 +55,7 @@ class Ellipse(AlgCompound):
         params = dict(
             x_radius=x_radius,
             y_radius=y_radius,
-            align = align,
+            align=align,
         )
         super().__init__(self.create_sketch(bd.Ellipse, params=params))
 
@@ -65,7 +65,7 @@ class Rectangle(AlgCompound):
         self,
         width: float,
         height: float,
-        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
         if isinstance(align, Align):
             align = (align,) * 2
@@ -73,7 +73,7 @@ class Rectangle(AlgCompound):
         params = dict(
             width=width,
             height=height,
-            align = align,
+            align=align,
         )
         super().__init__(self.create_sketch(bd.Rectangle, params=params))
 
@@ -82,13 +82,13 @@ class Polygon(AlgCompound):
     def __init__(
         self,
         pts: List[VectorLike],
-        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
         if isinstance(align, Align):
             align = (align,) * 2
 
         params = dict(
-            align = align,
+            align=align,
         )
         super().__init__(self.create_sketch(bd.Polygon, objects=pts, params=params))
 
@@ -98,7 +98,7 @@ class RegularPolygon(AlgCompound):
         self,
         radius: float,
         side_count: int,
-        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
         if isinstance(align, Align):
             align = (align,) * 2
@@ -106,7 +106,7 @@ class RegularPolygon(AlgCompound):
         params = dict(
             radius=radius,
             side_count=side_count,
-            align = align,
+            align=align,
         )
         super().__init__(self.create_sketch(bd.RegularPolygon, params=params))
 
@@ -119,10 +119,13 @@ class Text(AlgCompound):
         font: str = "Arial",
         font_path: str = None,
         font_style: FontStyle = FontStyle.REGULAR,
-        align: tuple[Align, Align] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
         path: Union[Edge, Wire] = None,
         position_on_path: float = 0.0,
     ):
+        if isinstance(align, Align):
+            align = (align,) * 2
+
         params = dict(
             txt=txt,
             fontsize=fontsize,
@@ -143,7 +146,7 @@ class Trapezoid(AlgCompound):
         height: float,
         left_side_angle: float,
         right_side_angle: float = None,
-        align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
     ):
         if isinstance(align, Align):
             align = (align,) * 2
@@ -153,7 +156,7 @@ class Trapezoid(AlgCompound):
             height=height,
             left_side_angle=left_side_angle,
             right_side_angle=right_side_angle,
-            align = align,
+            align=align,
         )
         super().__init__(self.create_sketch(bd.Trapezoid, params=params))
 

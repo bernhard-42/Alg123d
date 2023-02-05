@@ -25,7 +25,7 @@ clock_face -= [
         str(hour + 1),
         fontsize=clock_radius * 0.175,
         font_style=FontStyle.BOLD,
-        halign=Halign.CENTER,
+        align=Align.CENTER,
     )
     @ loc
     for hour, loc in enumerate(

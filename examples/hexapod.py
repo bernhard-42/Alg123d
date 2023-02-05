@@ -44,7 +44,12 @@ class Base:
         for name, pos in self.base_hinges.items():
             last = base.edges()
             base -= (
-                Cylinder(diam / 2 + tol, thickness, centered=(True, True, False)) @ pos
+                Cylinder(
+                    diam / 2 + tol,
+                    thickness,
+                    align=(Align.CENTER, Align.CENTER, Align.MIN),
+                )
+                @ pos
             )
             self.base_edges[name] = (base.edges() - last).min()
 
@@ -100,7 +105,12 @@ class Stand:
 
         for plane in [Plane(faces[0]), Plane(faces[-1])]:
             stand += (
-                Box(thickness, width / 2, thickness, centered=(True, True, False))
+                Box(
+                    thickness,
+                    width / 2,
+                    thickness,
+                    align=(Align.CENTER, Align.CENTER, Align.MIN),
+                )
                 @ plane
             )
 

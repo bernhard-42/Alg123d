@@ -2,14 +2,12 @@ from alg123d import *
 
 # simple
 
-simple = extrude(
-    Text("O", fontsize=10, halign=Halign.CENTER, valign=Valign.CENTER), amount=5
-)
+simple = extrude(Text("O", fontsize=10, align=Align.CENTER), amount=5)
 
 # both
 
 both = extrude(
-    Text("O", fontsize=10, halign=Halign.CENTER, valign=Valign.CENTER),
+    Text("O", fontsize=10, align=Align.CENTER),
     amount=5,
     both=True,
 )
@@ -20,9 +18,7 @@ multiple = Box(10, 10, 10)
 t = AlgCompound()
 for plane in Planes(multiple.faces()):
     for loc in GridLocations(5, 5, 2, 2):
-        t += Text("Ω", fontsize=3, halign=Halign.CENTER, valign=Valign.CENTER) @ (
-            plane * loc
-        )
+        t += Text("Ω", fontsize=3, align=Align.CENTER) @ (plane * loc)
 multiple = multiple + extrude(t, amount=1)
 
 # single minus multiple
@@ -33,8 +29,8 @@ for loc in Planes(single_multiple.faces()):
     single_multiple -= extrude(rect.faces()[0], amount=-2) @ loc
 
 # Non-planar surface
-non_planar = Cylinder(10, 20, centered=(True, False, True)) @ Rot(x=90)
-non_planar &= Box(10, 10, 10, centered=(True, True, False))
+non_planar = Cylinder(10, 20, align=(Align.CENTER, Align.MIN, Align.CENTER)) @ Rot(x=90)
+non_planar &= Box(10, 10, 10, align=(Align.CENTER, Align.CENTER, Align.MIN))
 non_planar = extrude(non_planar.faces().min(), 2)
 
 # Taper Extrude and Extrude to "next" while creating a Cherry MX key cap

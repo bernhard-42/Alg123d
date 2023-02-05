@@ -5,12 +5,12 @@ overall_width, top_width, height, thickness, fillet_radius = 35, 27, 7.5, 1, 0.8
 rail_length = 1000
 slot_width, slot_length, slot_pitch = 6.2, 15, 25
 
-din = Rectangle(overall_width, thickness, centered=(True, False))
-din += Rectangle(top_width, height, centered=(True, False))
+din = Rectangle(overall_width, thickness, align=(Align.CENTER, Align.MIN))
+din += Rectangle(top_width, height, align=(Align.CENTER, Align.MIN))
 din -= Rectangle(
     top_width - 2 * thickness,
     height - thickness,
-    centered=(True, False),
+    align=(Align.CENTER, Align.MIN),
 )
 
 inside_vertices = (

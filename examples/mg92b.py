@@ -51,7 +51,7 @@ class MG92B:
             self.body_length,
             self.body_width,
             self.bottom_height,
-            centered=(True, True, False),
+            align=(Align.CENTER, Align.CENTER, Align.MIN),
         )
         # before filleting, caclulate the location for the cable inset
         cable_loc = b.faces().min(Axis.X).center_location
@@ -93,7 +93,7 @@ class MG92B:
                 self.body_length,
                 self.body_width,
                 self.body_height,
-                centered=(True, True, False),
+                align=(Align.CENTER, Align.CENTER, Align.MIN),
             )
             @ plane
         )

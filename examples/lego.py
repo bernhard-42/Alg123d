@@ -57,7 +57,7 @@ for loc in Locations((0, 0, lego.vertices().max().Z)):
             length=block_length,
             width=block_width,
             height=wall_thickness,
-            centered=(True, True, False),
+            align=(Align.CENTER, Align.CENTER, Align.MIN),
         )
         @ loc
     )
@@ -68,7 +68,9 @@ plane = Plane(lego.faces().max())
 # Create a grid of pips
 for loc in GridLocations(lego_unit_size, lego_unit_size, pip_count, 2):
     lego += Cylinder(
-        radius=pip_diameter / 2, height=pip_height, centered=(True, True, False)
+        radius=pip_diameter / 2,
+        height=pip_height,
+        align=(Align.CENTER, Align.CENTER, Align.MIN),
     ) @ (plane * loc)
 
 if "show_object" in locals():

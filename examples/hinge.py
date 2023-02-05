@@ -27,31 +27,32 @@ class Hinge(AlgCompound):
         pin_diameter: float,
         inner: bool = True,
     ):
-
         # The profile of the hinge used to create the tabs
 
         hinge_profile = AlgCompound()
         for i, loc in enumerate(
-            GridLocations(0, length / 5, 1, 5, centered=(False, False))
+            GridLocations(0, length / 5, 1, 5, align=(Align.MIN, Align.MIN))
         ):
             if i % 2 == inner:
                 hinge_profile += (
-                    Rectangle(width, length / 5, centered=(False, False)) @ loc
+                    Rectangle(width, length / 5, align=(Align.MIN, Align.MIN)) @ loc
                 )
         hinge_profile += Rectangle(
-            width - barrel_diameter, length, centered=(False, False)
+            width - barrel_diameter, length, align=(Align.MIN, Align.MIN)
         )
         hinge_profile = extrude(hinge_profile, -barrel_diameter)
 
         # The hinge pin
         pin = Cylinder(
-            radius=pin_diameter / 2, height=length, centered=(True, True, False)
+            radius=pin_diameter / 2,
+            height=length,
+            align=(Align.CENTER, Align.CENTER, Align.MIN),
         )
 
         pin_head = Cylinder(
             radius=barrel_diameter / 2,
             height=pin_diameter,
-            centered=(True, True, False),
+            align=(Align.CENTER, Align.CENTER, Align.MIN),
         )
         pin_head = fillet(
             pin_head, pin_head.edges(GeomType.CIRCLE).max(), radius=pin_diameter / 3
