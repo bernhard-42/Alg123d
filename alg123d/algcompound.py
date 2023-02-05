@@ -153,7 +153,7 @@ class AlgCompound(Compound):
 
     def __mul__(self, loc: Location):
         return self.moved(loc)
-        
+
     def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
             if self.dim == 1:
