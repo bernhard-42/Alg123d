@@ -151,6 +151,9 @@ class AlgCompound(Compound):
     def __and__(self, other: Union[AlgCompound, List[AlgCompound]]):
         return self._place(Mode.INTERSECT, *to_list(other))
 
+    def __mul__(self, loc: Location):
+        return self.moved(loc)
+        
     def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
             if self.dim == 1:
