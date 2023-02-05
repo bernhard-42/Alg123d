@@ -2,23 +2,7 @@ from math import sin, pi
 
 from alg123d import *
 
-# from build123d import *
-# from cq_vscode import show
-
-# s = Solid.make_sphere(1)
-# c = Solid.make_cylinder(0.2, 4)
-
-# e = s.cut(c)
-# %%
-
-# set_defaults(axes=True, axes0=True, transparent=False)
-
-# c = Face.make_from_wires(Wire.make_circle(2)).located(Location((20, 0, 0)))
-# a = Solid.revolve(c, -180, Axis.Y)
-# f = Face.make_rect(3.9, 20)
-# e = Solid.extrude_until(f, a, (0, 0, 1))
-
-# show(f, a, e)
+set_defaults(axes=True, axes0=True, transparent=True)
 
 # %%
 
@@ -26,7 +10,11 @@ show(Box(1, 2, 3))
 
 # %%
 
-show(Box(1, 2, 3, centered=False))
+show(Box(1, 2, 3, align=Align.MIN))
+
+# %%
+
+show(Box(1, 2, 3, align=Align.MAX))
 
 # %%
 
@@ -34,15 +22,23 @@ show(Cylinder(1, 2))
 
 # %%
 
-show(Cylinder(1, 2, centered=False))
+show(Cylinder(1, 2, align=Align.MIN), Box(2,2,2, align=Align.MIN).edges())
 
 # %%
 
-show(Cylinder(1, 2).edges(), Cylinder(1, 2, 75))
+show(Cylinder(1, 2, align=Align.MAX), Box(2,2,2, align=Align.MAX).edges())
 
 # %%
 
-show(Cylinder(1, 2, centered=False).edges(), Cylinder(1, 2, 75, centered=False))
+show(Cylinder(1, 2, 75))
+
+# %%
+
+show(Cylinder(1, 2, 75, align=Align.MIN))
+
+# %%
+
+show(Cylinder(1, 2, 75, align=Align.MAX))
 
 # %%
 
@@ -58,7 +54,11 @@ show(Cone(1, 0, 2))
 
 # %%
 
-show(Cone(1, 0, 2, centered=False))
+show(Cone(1, 0, 2, align=Align.MIN), Box(2,2,2, align=Align.MIN).edges())
+
+# %%
+
+show(Cone(1, 0, 2, align=Align.MAX), Box(2,2,2, align=Align.MAX).edges())
 
 # %%
 
@@ -71,8 +71,14 @@ show(Sphere(1, arc_size2=45, arc_size3=75))
 # %%
 
 show(
-    Sphere(1, centered=False).faces(),
-    Sphere(1, arc_size2=45, arc_size3=75, centered=False),
+    Sphere(1, arc_size2=45, arc_size3=75, align=Align.MIN),
+    transparent=True,
+)
+
+# %%
+
+show(
+    Sphere(1, arc_size2=45, arc_size3=75, align=Align.MAX),
     transparent=True,
 )
 
@@ -82,7 +88,11 @@ show(Torus(1, 0.2))
 
 # %%
 
-show(Torus(1, 0.2, centered=False))
+show(Torus(1, 0.2, align=Align.MIN), Box(2.4,2.4,0.4, align=Align.MIN).edges())
+
+# %%
+
+show(Torus(1, 0.2, align=Align.MAX), Box(2.4,2.4,0.4, align=Align.MAX).edges())
 
 # %%
 
@@ -92,7 +102,7 @@ show(
 
 # %%
 
-show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5), Box(1, 1, 1, centered=False).edges())
+show(Wedge(1, 1, 1, 0.1, 0.1, 0.5, 0.5))
 
 # %%
 
@@ -164,13 +174,12 @@ e = extrude_until(f, a, until=Until.LAST)
 show(e, a, alphas=(1, 0.5))
 
 # %%
-# BROKEN
 e = extrude_until(Rectangle(20, 3.9).faces()[0], a, (0, 0, 1), until=Until.NEXT)
 
 show(e)
 
 # %%
-f = Rectangle(20, 3.9).faces()[0]
+f = Rectangle(20, 3.8).faces()[0]
 e = extrude_until(f, a, (0, 0, 1), until=Until.LAST)
 
 show(f, a, e)

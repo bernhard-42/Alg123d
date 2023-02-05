@@ -8,7 +8,11 @@ show(Circle(1))
 
 # %%
 
-show(Circle(1, centered=False))
+show(Circle(1, align=Align.MIN))
+
+# %%
+
+show(Circle(1, align=Align.MAX))
 
 # %%
 
@@ -16,11 +20,11 @@ show(Ellipse(1, 2))
 
 # %%
 
-show(Ellipse(1, 2, centered=False))
+show(Ellipse(1, 2, align=Align.MIN))
 
 # %%
 
-show(Ellipse(1, 2))
+show(Ellipse(1, 2, align=Align.MAX))
 
 # %%
 
@@ -28,7 +32,11 @@ show(Rectangle(1, 2))
 
 # %%
 
-show(Rectangle(1, 2, centered=False))
+show(Rectangle(1, 2, align=Align.MIN))
+
+# %%
+
+show(Rectangle(1, 2, align=Align.MAX))
 
 # %%
 
@@ -37,7 +45,11 @@ show(Polygon(pts))
 
 # %%
 
-# show(Polygon(pts, centered=False))
+show(Polygon(pts, align=Align.MIN))
+
+# %%
+
+show(Polygon(pts, align=Align.MAX))
 
 # %%
 
@@ -45,7 +57,11 @@ show(RegularPolygon(2, 7))
 
 # %%
 
-show(RegularPolygon(2, 7, centered=False))
+show(RegularPolygon(2, 7, align=Align.MIN))
+
+# %%
+
+show(RegularPolygon(2, 7, align=Align.MAX))
 
 # %%
 
@@ -53,8 +69,11 @@ show(Trapezoid(1, 2, 80), Rectangle(1, 2).edges())
 
 # %%
 
+show(Trapezoid(1, 2, 80, align=Align.MIN), Rectangle(1, 2, align=Align.MIN).edges())
 
-show(Trapezoid(1, 2, 80, centered=False), Rectangle(1, 2, centered=False).edges())
+# %%
+
+show(Trapezoid(1, 2, 80, align=Align.MAX), Rectangle(1, 2, align=Align.MAX).edges())
 
 # %%
 

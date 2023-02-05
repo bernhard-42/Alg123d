@@ -27,7 +27,7 @@ show(
 
 # %%
 
-a = Cylinder(1, 1, centered=False) @ Plane.XZ
+a = Cylinder(1, 1, align=Align.MIN) @ Plane.XZ
 s = a.solids()
 f = a.faces()
 e = a.edges()
