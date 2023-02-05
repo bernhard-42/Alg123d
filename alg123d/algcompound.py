@@ -96,6 +96,24 @@ class AlgCompound(Compound):
 
         return result
 
+    def _align(
+        self, align: Union[Align, Tuple(Align, Align), Tuple(Align, Align, Align)]
+    ) -> AlgCompound:
+        if align is not None:
+            if isinstance(align, Align):
+                align = (align,) * self.dim
+
+            bbox = self.bounding_box()
+            align_offset = []
+            for i in range(self.dim):
+                if align[i] == Align.MIN:
+                    align_offset.append(-bbox.mins[i])
+                elif align[i] == Align.CENTER:
+                    align_offset.append(-(bbox.mins[i] + bbox.maxs[i]) / 2)
+                elif align[i] == Align.MAX:
+                    align_offset.append(-bbox.maxs[i])
+            self.move(Location(Vector(*align_offset)))
+
     def create_line(self, cls, objects=None, params=None):
         result = self._create(bd.BuildLine, cls, objects=objects, params=params)
         return Compound.make_compound(result.edges())
