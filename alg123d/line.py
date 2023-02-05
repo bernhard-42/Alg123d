@@ -120,7 +120,6 @@ class EllipticalCenterArc(AlgCompound):
         start_angle: float = 0.0,
         end_angle: float = 90.0,
         angular_direction: AngularDirection = AngularDirection.COUNTER_CLOCKWISE,
-        plane: Plane = Plane.XY,
     ):
         params = dict(
             center=center,
@@ -129,7 +128,6 @@ class EllipticalCenterArc(AlgCompound):
             start_angle=start_angle,
             end_angle=end_angle,
             angular_direction=angular_direction,
-            plane=plane,
         )
         super().__init__(self.create_line(bd.EllipticalCenterArc, params=params))
 
@@ -187,13 +185,11 @@ class JernArc(AlgCompound):
         tangent: VectorLike,
         radius: float,
         arc_size: float,
-        plane: Plane = Plane.XY,
     ):
         params = dict(
             start=start,
             tangent=tangent,
             radius=radius,
             arc_size=arc_size,
-            plane=plane,
         )
         super().__init__(self.create_line(bd.JernArc, params=params))
