@@ -31,9 +31,8 @@ class Circle(AlgCompound):
         self,
         radius: float,
         align: Union[Align,tuple[Align, Align]] = (Align.CENTER, Align.CENTER),
-        centered: Union[bool, Tuple[bool, bool]] = (True, True),
     ):
-        if not isinstance(align, Align):
+        if isinstance(align, Align):
             align = (align,) * 2
 
         params = dict(
