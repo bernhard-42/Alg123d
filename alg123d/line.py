@@ -92,7 +92,7 @@ class Helix(AlgCompound):
             radius=radius,
             direction=direction,
             cone_angle=cone_angle,
-            lefhand=lefthand,
+            lefthand=lefthand,
         )
         super().__init__(self.create_line(bd.Helix, params=params))
 
