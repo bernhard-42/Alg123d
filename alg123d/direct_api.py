@@ -23,7 +23,6 @@ Face.center_location = property(_face_center_location)
 
 
 def _edge_origin_location(self) -> Location:
-
     if self.geom_type() == "LINE":
         return self.to_axis().to_location()
     else:
@@ -283,7 +282,7 @@ def location_symbol(self, l=1) -> Compound:
 
 def plane_symbol(self, l: float = 1) -> Compound:
     loc = self.location
-    circle = Edge.make_circle(l * 0.8).located(loc)
+    circle = Edge.make_circle(l * 0.8).locate(loc)
     axes = SVG.axes(axes_scale=l).locate(loc)
 
     return Compound.make_compound(list(axes) + [circle])
