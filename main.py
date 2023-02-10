@@ -1,633 +1,196 @@
 from alg123d import *
-
+from time import time
 import build123d as bd
+
+set_defaults(grid=(True, True, True), axes=True, axes0=True)
+
+MAX_HASH_KEY = 2147483647
+
+# %%
+
 import cadquery as cq
-import time
+from cq_vscode.show import _tessellate, _convert
+from ocp_tessellate.utils import numpy_to_json, Timer, numpy_to_buffer_json
 
-s = cq.Workplane().sphere(10).translate((10, 0, 0))
-# s = s.shell(0.5)
-# s = s.cut(cq.Workplane().box(4,4,50).translate((10, 0, 0)))
-show(s)
+b = cq.Workplane().box(1, 2, 3)
+s = cq.Workplane().box(1, 1, 1)
 
-# %%
+a = cq.Assembly(name="boxes")
+a.add(b, name="box1", loc=cq.Location((-2, 0, 0)))
+a.add(b, name="box2")
+a.add(b, name="box3", loc=cq.Location((2, 0, 0)))
+a.add(s, name="sphere", loc=cq.Location((0, 2, 0)))
 
-s2 = Sphere(10) @ Pos(10, 0, 0)
-# s2 = from_cq(s)
-
-# t2 = s2.wrapped
-# t3 = s3.wrapped
-
-loc = s2.location
-rv = offset(s2.moved(loc.inverse()), 1).moved(loc)
-# s2 -= Box(9,9,9, centered=False)
-
-show(s2, rv, transparent=True)
-
-# %%
-
-with bd.BuildPart() as p:
-    with bd.Locations((10, 0, 0)):
-        s = bd.Sphere(10)
-    # bd.Offset(amount=1)
-
-show(p, transparent=True)
-
-# %%
-
-from build123d import *
-from build123d.joints import JointBox
-
-base: JointBox = JointBox(10, 10, 10, taper=3).locate(
-    Location(Vector(1, 1, 1), (1, 1, 1), 30)
-)
-base_top_edges: ShapeList[Edge] = (
-    base.edges().filter_by(Axis.X, tolerance=30).sort_by(Axis.Z)[-2:]
-)
-
-show(base, base_top_edges)
-
-
-# %%
-loc = Location(Vector(1, 1, 1), (1, 1, 1), 30)
-base: JointBox = JointBox(10, 10, 10, taper=3).locate(loc)
-
-base_top_edges: ShapeList[Edge] = (
-    base.edges().group_by(loc.z_axis)[-1].filter_by(loc.x_axis)
-)
-show(base, base_top_edges)
-
-# %%
-class JointBox(AlgCompound):
-    def __init__(
-        self,
-        length: float,
-        width: float,
-        height: float,
-        radius: float = 0.0,
-    ):
-        # Store the attributes so the object can be copied
-        self.length = length
-        self.width = width
-        self.height = height
-        self.joints: dict[str, Joint] = {}
-
-        # Create the object
-        obj = Solid.make_box(length, width, height, Plane((-length / 2, -width / 2, 0)))
-        if radius != 0.0:
-            obj = obj.fillet(radius, obj.edges())
-        hole = Solid.make_cylinder(width / 4, length, Plane.YZ.offset(-length / 2))
-        obj = obj.cut(hole)
-
-        super().__init__(obj)
-
-
-# %%
-#
-# Base Object
-#
-
-base = JointBox(10, 10, 10).locate(Location(Vector(1, 1, 1), (1, 1, 1), 30))
-base.joints = {}
-base_top_edges = group_max(base.edges(), z_axis(base)).filter_by(x_axis(base))
-
-# %%
-
-#
-# Rigid Joint
-#
-fixed_arm = JointBox(1, 1, 5)
-
-j1 = RigidJoint("side", base, max_face(base, x_axis(base)).location)
-j2 = RigidJoint("top", fixed_arm, max_face(fixed_arm, Axis.Z).location * Rot(x=180))
-
-j1.connect_to(j2)
-
-show(base, fixed_arm, j1.symbol, j2.symbol)
-# %%
-#
-# Hinge
-#
-hinge_arm = JointBox(2, 1, 10)
-swing_arm_hinge_axis = max_edge(min_face(hinge_arm, Axis.X), Axis.Y).to_axis()
-base_hinge_axis = max_edge(max_face(base, x_axis(base)), y_axis(base)).to_axis()
-
-j3 = RevoluteJoint("hinge", base, axis=base_hinge_axis, range=(0, 360))
-j4 = RigidJoint("corner", hinge_arm, swing_arm_hinge_axis.to_location())
-
-j3.connect_to(j4, angle=180)
-
-show(base, hinge_arm, j3.symbol, j4.symbol)
-# show(base, fixed_arm, hinge_arm, j1.symbol, j2.symbol, j3.symbol, j4.symbol)
-
-# %%
-#
-# Slider
-#
-slider_arm = JointBox(4, 1, 2, 0.2)
-s1 = LinearJoint(
-    "slide",
-    base,
-    axis=Edge.make_mid_way(*base_top_edges, 0.67).to_axis(),
-    range=(0, 10),
-)
-s2 = RigidJoint("slide", slider_arm, Location(Vector(0, 0, 0)))
-s1.connect_to(s2, 8)
-
-#
-# Cylindrical
-#
-hole_axis = Axis(
-    base.faces().sort_by(Axis.Y)[0].center(),
-    -base.faces().sort_by(Axis.Y)[0].normal_at(),
-)
-screw_arm = JointBox(1, 1, 10, 0.49)
-j5 = CylindricalJoint("hole", base, hole_axis, linear_range=(-10, 10))
-j6 = RigidJoint("screw", screw_arm, screw_arm.faces().sort_by(Axis.Z)[-1].location)
-j5.connect_to(j6, -1, 90)
-
-#
-# PinSlotJoint
-#
-j7 = LinearJoint(
-    "slot",
-    base,
-    axis=Edge.make_mid_way(*base_top_edges, 0.33).to_axis(),
-    range=(0, 10),
-)
-pin_arm = JointBox(2, 1, 2)
-j8 = RevoluteJoint("pin", pin_arm, axis=Axis.Z, range=(0, 360))
-j7.connect_to(j8, position=6, angle=60)
-
-if "show_object" in locals():
-    show_object(base, name="base", options={"alpha": 0.8}, clear=True)
-    show_object(base.joints["side"].symbol, name="side joint")
-    show_object(base.joints["hinge"].symbol, name="hinge joint")
-    show_object(base.joints["slide"].symbol, name="slot joint")
-    show_object(base.joints["slot"].symbol, name="pin slot joint")
-    show_object(fixed_arm, name="fixed_arm", options={"alpha": 0.6})
-    show_object(hinge_arm, name="hinge_arm", options={"alpha": 0.6})
-    show_object(slider_arm, name="slider_arm", options={"alpha": 0.6})
-    show_object(pin_arm, name="pin_arm", options={"alpha": 0.6})
-    show_object(slider_arm.joints["slide"].symbol, name="slider attachment")
-    show_object(pin_arm.joints["pin"].symbol, name="pin axis")
-    show_object(screw_arm, name="screw_arm")
-    show_object(base.joints["hole"].symbol, name="hole")
-
-# %%
-c1 = Circle(10)
-c2 = Circle(10) @ Pos(7, 9)
-c3 = Circle(10) @ Pos(-7, 9)
-show(c1, c2, c3)
-
-# %%
-a = extrude(Rectangle(10, 20), 10, both=True)
-a.mates["top"] = Mate(max_face(a), name="top")
-
-c = Cone(2, 1, 10)
-c.mates["top"] = Mate(max_face(c), name="top") @ Rot(x=180)
-show(a, c, *a.mates.values(), *c.mates.values(), transparent=True)
-
-# %%
-
-c2 = c.moved(c.mates["top"].loc * a.mates["top"].loc.inverse())
-show(a, c2, transparent=True)
-
-# %%
-
-
-with bd.BuildPart() as a2:
-    with bd.BuildSketch() as s:
-        bd.Rectangle(1, 2)
-    bd.Extrude(amount=1, both=True)
-
-show(a2.part.wrapped)
-
-# %%
-from alg123d.wrappers import create_compound
-
-
-def extr(
-    to_extrude: Compound,
-    amount: float = None,
-    both: bool = False,
-    taper: float = 0.0,
-):
-    faces = [to_extrude] if isinstance(to_extrude, Face) else to_extrude.faces()
-    compound = create_compound(
-        bd.Extrude,
-        dim=3,
-        faces=faces,
-        planes=[Plane(face) for face in faces],
-        params=dict(amount=amount, both=both, taper=taper),
-    )
-    return compound
-
-
-a = extr(Rectangle(1, 2), 0.1, both=True)
 show(a)
-# %%
-r = Rectangle(1, 2)
-b = extrude(r, 1, both=True)
+
 # %%
 
-c = cq.Workplane("XZ").circle(1).extrude(1)
-s = c.solids()
-f = c.faces()
-e = c.edges()
+screw = Compound.import_step("../build123d/docs/M6-1x12-countersunk-screw.step")
+cq_screw = cq.importers.importStep("../build123d/docs/M6-1x12-countersunk-screw.step")
+locs = HexLocations(6, 10, 10).locations
 
-a = from_cq(c)
-a3 = from_cq(s)
-a2 = from_cq(f)
-a1 = from_cq(e)
+# %%
+import cadquery as cq
 
-print(a3.dim)
-print(a2.dim)
-print(a1.dim)
-show(a, a1, a2, a3)
+a = cq.Assembly(name="screws")
+for i, loc in enumerate([cq.Location(loc.wrapped) for loc in locs]):
+    a.add(cq_screw, loc=loc, name=f"screw{i}")
+
+data = _convert(a)
+# show(a, timeit=True)
 
 # %%
 
 
-a = Cylinder(1, 1) @ Plane.XZ
-s = a.solids()
-f = a.faces()
-e = a.edges()
-
-c = to_cq(a)
-c3 = to_cq(s)
-c2 = to_cq(f)
-c1 = to_cq(e)
-
-show(c3, c2, c1, show_parent=False)
+with Timer(True, "json", "bin json"):
+    data = numpy_to_binary_json(dict(shapes=shapes, states=states))
 
 # %%
 
-with bd.BuildPart() as flange:
-    with bd.BuildSketch(Plane.XZ):
-        with bd.BuildLine() as l:
-            p = bd.Polyline((-2, 5), (-12, 5), (-12, 10), (10, 10))
-            bd.Offset(amount=1)
-        bd.MakeFace()
-    bd.Extrude(amount=10, both=True)
+screw_references = [copy.copy(screw).locate(loc) for loc in locs]
+reference_assembly = AlgCompound(children=screw_references)
 
-with bd.BuildPart() as ex:
-    with bd.BuildSketch() as obj_under_test:
-        bd.Rectangle(8, 8)
-    bd.Extrude(amount=20)  # (1) extrude beyond top face
+# show(reference_assembly)
 
-with bd.BuildPart() as ex2:
-    bd.Add(ex.part)
-    bd.Add(
-        flange.part, mode=bd.Mode.SUBTRACT
-    )  # (2) subtract flange from the extruded solid
+# %%
+xy_loc = Location()
+# %%
+s3 = screw_references[3]
+s4 = screw_references[4]
 
-with bd.BuildPart() as flange2:
-    bd.Add(ex2.solids().sort_by()[0])  # and the take the bottom solid and add flange
-    bd.Add(flange.part)
 
-show(flange2)
+def splitcopy(obj):
+    loc = obj.location
+    shape = Box(0.1, 0.1, 0.1)
+    shape.wrapped.TShape(obj.wrapped.TShape())
+    # shape = copy.copy(obj)
+    # shape.locate(Location())
+    return shape, loc
+
+
+t4, l4 = splitcopy(s4)
+t3, l3 = splitcopy(s3)
+
+
+show(s3, s4, t3, t4)
+
+# %%
+screw_copies = [copy.deepcopy(screw).locate(loc) for loc in locs]
+copy_assembly = Compound(children=screw_copies)
+
+show(copy_assembly, timeit=True)
+# %%
+
+from copy import copy, deepcopy
+
+
+def pp_loc(l):
+    r = l.Transformation().GetRotation()
+    t = l.Transformation().TranslationPart()
+    print(r.X(), r.Y(), r.Z())
+    print(r.W(), r.X(), r.Y(), r.Z())
 
 
 # %%
-a = Box(1, 2, 3)
-l, f = a.edges(), a.faces()
-a -= CounterBore(a, 0.2, 0.3, 0.3) @ Plane(max_face(a))
 
-new_edges = diff(l, a.edges())
-new_faces = diff(f, a.faces())
-show(a, *new_edges, *new_faces, transparent=True)
+b = Box(1, 2, 3)
+s = Sphere(1)
+ss = copy(s)
+ss2 = s * Pos(2, 0, 0)
+sd = deepcopy(s)
+h = Box(0.5, 6, 0.5)
+# %%
+print("s  ", s.wrapped.TShape())
+print("ss ", ss.wrapped.TShape())
+print("ss2", ss2.wrapped.TShape())
+print("sd", sd.wrapped.TShape())
 
 # %%
 
-plan = Rectangle(18 * MM, 18 * MM)
-key_cap = extrude(plan, amount=10 * MM, taper=15)
-
-# Create a dished top
-key_cap -= Sphere(40 * MM) @ Location((0, -3 * MM, 47 * MM), (90, 0, 0))
-
-# Fillet all the edges except the bottom
-key_cap = fillet(
-    key_cap,
-    key_cap.edges().filter_by_position(Axis.Z, 0, 30 * MM, inclusive=(False, True)),
-    radius=1 * MM,
-)
-
-# Hollow out the key by subtracting a scaled version
-key_cap -= scale(key_cap, by=(0.925, 0.925, 0.85))
-
-
-# Add supporting ribs while leaving room for switch activation
-ribs = Rectangle(17.5 * MM, 0.5 * MM)
-ribs += Rectangle(0.5 * MM, 17.5 * MM)
-ribs += Circle(radius=5.51 * MM / 2)
-
-ribs = extrude(ribs @ (0, 0, 4), 10)
-key_cap += (ribs - key_cap).solids().min()
-
-# Find the face on the bottom of the ribs to build onto
-rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
-
-plane = Plane(rib_bottom)
-socket = Circle(radius=5.5 * MM / 2)
-socket -= Rectangle(4.1 * MM, 1.17 * MM)
-socket -= Rectangle(1.17 * MM, 4.1 * MM)
-key_cap += extrude(socket @ plane, amount=3.5 * MM)
-
-show(key_cap, transparent=True)
-
+print("s  ", str(s.wrapped.TShape()))
+print("ss ", str(ss.wrapped.TShape()))
+print("ss2", str(ss2.wrapped.TShape()))
+print("sd", str(sd.wrapped.TShape()))
 # %%
-pts = [(0, 1), (1, 0), (1, 1), (0, 1)]
-show(Polygon(pts))
-
-plane = Plane.ZX
-# %%
-
-cyl = Cylinder(1, 0.5)
-box = Box(0.3, 0.3, 0.5)
+show(s, ss)
 
 # %%
 
-p = cyl @ plane
-
-for loc in PolarLocations(0.7, 10):
-    p -= box @ (plane * loc)
-
-show(p)
-# %%
-
-show(p, p.faces().group_by(Axis.Y)[0], transparent=True)
+print("s", s.hash_code())
+print("ss", ss.hash_code())
+print("ss2", ss2.hash_code())
+print("sd", sd.hash_code())
 
 # %%
 
-locs = [Location((0, 0, 0), (0, a, 0)) for a in (0, 45, 90, 135)]
+c = s * Pos(-2, 0, 0) + b * Pos(2, 0, 0)
 
-s = AlgCompound()
-for i, outer_loc in enumerate(GridLocations(3, 3, 2, 2)):
-    c_plane = plane * outer_loc * locs[i]
-    s += Circle(1) @ c_plane
+print("c", c.hash_code())
+print("s", s.hash_code())
+print("b", b.hash_code())
+print("s", s.location)
+print("b", b.location)
 
-    for loc in PolarLocations(0.8, (i + 3) * 2):
-        s -= Rectangle(0.1, 0.3) @ (c_plane * loc * Rotation(0, 0, 45))
-
-e = extrude(s, 0.3)
-show(e, reset_camera=False)
-
+show(s, ss * Pos(2, 0, 0))
 # %%
 
-show(AlgCompound + Box(1, 1, 1))
-# %%
+s = s - h
+show(s, ss * Pos(2, 0, 0))
 
-show(Box(1, 2, 3) + AlgCompound)
-
-# %%
-
-show(Box(2, 3, 1) - AlgCompound)
 
 # %%
-
-show(Box(3, 2, 1) & AlgCompound)
-
-# %%
-
-show(AlgCompound + Rectangle(1, 1))
-# %%
-
-show(Rectangle(1, 2) + AlgCompound)
-
-# %%
-
-show(Rectangle(2, 2) - AlgCompound)
-
-# %%
-
-show(Rectangle(2, 1) & AlgCompound)
-
-# %%
-
-from build123d import *
-from cq_vscode import show
-import time
-
-s = time.time()
-with BuildPart() as key_cap:
-    # Start with the plan of the key cap and extrude it
-    with BuildSketch() as plan:
-        Rectangle(18 * MM, 18 * MM)
-    Extrude(amount=10 * MM, taper=15)
-    # Create a dished top
-    with Locations((0, -3 * MM, 47 * MM)):
-        Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
-    # Fillet all the edges except the bottom
-    Fillet(
-        *key_cap.edges().filter_by_position(
-            Axis.Z, 0, 30 * MM, inclusive=(False, True)
-        ),
-        radius=1 * MM,
-    )
-    # Hollow out the key by subtracting a scaled version
-    Scale(by=(0.925, 0.925, 0.85), mode=Mode.SUBTRACT)
-
-with BuildPart() as ribs:
-    # Add supporting ribs while leaving room for switch activation
-    with Workplanes(Plane(origin=(0, 0, 4 * MM))):
-        with BuildSketch():
-            Rectangle(17.5 * MM, 0.5 * MM)
-            Rectangle(0.5 * MM, 17.5 * MM)
-            Circle(radius=5.51 * MM / 2)
-    # Extrude the mount and ribs to the key cap underside
-    # Extrude(until=Until.NEXT)
-    Extrude(amount=10)
-    Add(key_cap.part, mode=Mode.SUBTRACT)
-
-with BuildPart() as key_cap2:
-    Add(ribs.solids().sort_by()[0])
-    Add(key_cap.part)
-
-    # Find the face on the bottom of the ribs to build onto
-    rib_bottom = key_cap2.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
-    # Add the switch socket
-    with Workplanes(rib_bottom):
-        with BuildSketch() as cruciform:
-            Circle(radius=5.5 * MM / 2)
-            Rectangle(4.1 * MM, 1.17 * MM, mode=Mode.SUBTRACT)
-            Rectangle(1.17 * MM, 4.1 * MM, mode=Mode.SUBTRACT)
-    Extrude(amount=3.5 * MM, mode=Mode.ADD)
-print(time.time() - s)
-
-show(key_cap2, transparent=True, reset_camera=False)
-
-# %%
-
-s = time.time()
-
-with BuildPart() as key_cap:
-    # Start with the plan of the key cap and extrude it
-    with BuildSketch() as plan:
-        Rectangle(18 * MM, 18 * MM)
-    Extrude(amount=10 * MM, taper=15)
-    # Create a dished top
-    with Locations((0, -3 * MM, 47 * MM)):
-        Sphere(40 * MM, mode=Mode.SUBTRACT, rotation=(90, 0, 0))
-    # Fillet all the edges except the bottom
-    Fillet(
-        *key_cap.edges().filter_by_position(
-            Axis.Z, 0, 30 * MM, inclusive=(False, True)
-        ),
-        radius=1 * MM,
-    )
-    # Hollow out the key by subtracting a scaled version
-    Scale(by=(0.925, 0.925, 0.85), mode=Mode.SUBTRACT)
-
-    # Add supporting ribs while leaving room for switch activation
-    with Workplanes(Plane(origin=(0, 0, 4 * MM))):
-        with BuildSketch():
-            Rectangle(17.5 * MM, 0.5 * MM)
-            Rectangle(0.5 * MM, 17.5 * MM)
-            Circle(radius=5.51 * MM / 2)
-    # Extrude the mount and ribs to the key cap underside
-    t2 = time.time()
-    Extrude(until=Until.NEXT)
-    print(time.time() - t2)
-    # Find the face on the bottom of the ribs to build onto
-    rib_bottom = key_cap.faces().filter_by_position(Axis.Z, 4 * MM, 4 * MM)[0]
-    # Add the switch socket
-    with Workplanes(rib_bottom):
-        with BuildSketch() as cruciform:
-            Circle(radius=5.5 * MM / 2)
-            Rectangle(4.1 * MM, 1.17 * MM, mode=Mode.SUBTRACT)
-            Rectangle(1.17 * MM, 4.1 * MM, mode=Mode.SUBTRACT)
-    Extrude(amount=3.5 * MM, mode=Mode.ADD)
-print(time.time() - s)
-
-show(key_cap, transparent=True, reset_camera=False)
-# %%
-def __neg__axis__(self):
-    return self.reverse()
-
-
-Axis.__neg__ = __neg__axis__
-
-# %%
-
-with BuildPart() as bp:
-    with BuildSketch() as sk:
-        with Locations((20, 0, 0)):
-            Circle(2)
-    Revolve(axis=-Axis.Y, revolution_arc=180)
-    with BuildSketch():
-        Rectangle(20, 4)
-    Extrude(until=Until.NEXT)
-
-# %%
-
-# %%
-
-import build123d as bd
-
-with bd.BuildPart() as bp:
-    with bd.BuildSketch() as sk:
-        with bd.Locations((20, 0, 0)):
-            bd.Circle(2)
-    bd.Revolve(axis=-bd.Axis.Y, revolution_arc=180)
-
-with bd.BuildPart() as ex:
-    with bd.BuildSketch():
-        bd.Rectangle(20, 4)
-    bd.Extrude(amount=30)
-    bd.Add(bp.part, mode=bd.Mode.SUBTRACT)
-
-with bd.BuildPart() as result:
-    bd.Add(ex.solids().sort_by()[0])
-    bd.Add(bp.part)
-
-show(result)
-
-# %%
-set_defaults(reset_camera=False)
-with bd.BuildSketch() as s:
-    r = bd.Rectangle(1, 2)
-    bd.Offset(amount=0.1, mode=bd.Mode.SUBTRACT)  # Fails with s.sketch.faces == []
-# show(s, r.located(Location((1.5, 0, 0))))
-print(list(s.sketch) == [])
-
-# %%
-
-with bd.BuildSketch() as s:
-    r = bd.Rectangle(1, 2)
-    bd.Offset(amount=-0.1, mode=bd.Mode.SUBTRACT)  # ok, face with holoe
-show(s, r.located(Location((1.5, 0, 0))))
-
-# %%
-
-with bd.BuildSketch() as s:
-    r = bd.Rectangle(1, 2)
-    bd.Offset(amount=0.1, mode=bd.Mode.ADD)  # ok, larger face, same as mode=REPLACE
-show(s, r.located(Location((1.5, 0, 0))))
-
-# %%
-with bd.BuildSketch() as s:
-    r = bd.Rectangle(1, 2)
-    bd.Offset(amount=-0.1, mode=bd.Mode.ADD)  # useless
-show(s, r.located(Location((1.5, 0, 0))))
-
-# %%
-with bd.BuildSketch() as s:
-    r = bd.Rectangle(1, 2)
-    bd.Offset(amount=0.1, mode=bd.Mode.REPLACE)  # ok, larger face, same as mode=ADD
-show(s, r.located(Location((1.5, 0, 0))))
-
-# %%
-with bd.BuildSketch() as s:
-    r = bd.Rectangle(1, 2)
-    bd.Offset(amount=-0.1, mode=bd.Mode.REPLACE)  # ok, smaller face
-show(s, r.located(Location((1.5, 0, 0))))
-
+show(s * Pos(-4, 0, 0), b, c * Pos(2, 0, 0))
 # %%
 
 
 # %%
 
-with bd.BuildPart() as p:
-    b = bd.Box(1, 2, 3)
-    bd.Offset(amount=0.1, mode=bd.Mode.SUBTRACT)  # useless
-b.locate(Location((1.5, 0, 0)))
-show(p, b)
+n = 10
+sphere = Sphere(1)
+boxes = []
+for loc in GridLocations(2.5, 2.5, n, n):
+    # boxes.append(Sphere(random.random() / 3 + 1) @ loc)
+    boxes.append(sphere @ loc)
+
+# %%
+s = time()
+objects = Compound.make_compound(boxes)
+
+s2 = time()
+print(s2 - s)
+
+show(objects)
+
+print(time() - s2)
 
 # %%
 
-with bd.BuildPart() as p:
-    b = bd.Box(1, 2, 3)
-    bd.Offset(amount=-0.1, mode=bd.Mode.SUBTRACT)  # ok, smaller box
-b.locate(Location((1.5, 0, 0)))
-show(p, b)
+s = time()
+
+b = boxes[0]
+c = b.fuse(*boxes[1:])
+
+s2 = time()
+print(s2 - s)
+
+show(c)
+print(time() - s2)
+# %%
+
 
 # %%
 
-with bd.BuildPart() as p:
-    b = bd.Box(1, 2, 3)
-    bd.Offset(amount=0.1, mode=bd.Mode.ADD)  # ok, larger box
-b.locate(Location((1.5, 0, 0)))
-show(p, b)
-
-# %%
-with bd.BuildPart() as p:
-    b = bd.Box(1, 2, 3)
-    bd.Offset(amount=-0.1, mode=bd.Mode.ADD)  # useless
-b.locate(Location((1.5, 0, 0)))
-show(p, b)
-
-# %%
-with bd.BuildPart() as p:
-    b = bd.Box(1, 2, 3)
-    bd.Offset(amount=0.1, mode=bd.Mode.REPLACE)  # ok, larger hollow box
-b.locate(Location((1.5, 0, 0)))
-show(p, b)
-
-# %%
-with bd.BuildPart() as p:
-    b = bd.Box(1, 2, 3)
-    bd.Offset(amount=-0.1, mode=bd.Mode.REPLACE)  # ok, same box, but hollow
-b.locate(Location((1.5, 0, 0)))
-show(p, b)
+c = AlgCompound()
+c.label = "spheres"
+s1 = sphere
+s1.position = (2, 0, 0)
+s1.name = "s1"
+s2 = sphere
+s2.position = (0, 2, 0)
+s2.name = "s2"
+s3 = sphere
+s3.position = (0, 0, 2)
+s3.name = "s3"
+c.children = [s1, s2, s3]
 
 # %%
