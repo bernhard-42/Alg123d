@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+import copy
 from typing import List
 
 import build123d as bd
@@ -135,9 +136,9 @@ class AlgCompound(Compound):
         if self.dim == 0:  # Cover addition of empty AlgCompound with another object
             if mode == Mode.ADD:
                 if len(objs) == 1:
-                    compound = objs[0]
+                    compound = copy.deepcopy(objs[0])
                 else:
-                    compound = objs.pop().fuse(*objs)
+                    compound = copy.deepcopy(objs.pop()).fuse(*objs)
             else:
                 raise RuntimeError("Can only add to an empty AlgCompound object")
         elif objs[0].dim == 0:  # Cover operation with empty AlgCompound object
@@ -170,7 +171,7 @@ class AlgCompound(Compound):
         return self._place(Mode.INTERSECT, *to_list(other))
 
     def __mul__(self, loc: Location):
-        return self.moved(loc)
+        return copy.copy(self).move(loc)
 
     def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
@@ -188,7 +189,7 @@ class AlgCompound(Compound):
         else:
             raise ValueError(f"Cannot multiply with {obj}")
 
-        return self.located(loc)
+        return copy.copy(self).locate(loc)
 
     def __mod__(self, position):
         if self.dim == 1:
