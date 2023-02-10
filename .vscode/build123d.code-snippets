@@ -1,0 +1,126 @@
+{
+	// Place your build123d workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"BuildPart": {
+		"scope": "python",
+		"prefix": ":bd_p",
+		"body": [
+			"with bd.BuildPart() as ${1:partname}:",
+			"    $0"
+		]
+	},
+	"BuildSketch": {
+		"scope": "python",
+		"prefix": ":bd_s",
+		"body": [
+			"with bd.BuildSketch() as ${1:sketchname}:",
+			"    $0"
+		]
+	},
+	"BuildLine": {
+		"scope": "python",
+		"prefix": ":bd_l",
+		"body": [
+			"with bd.BuildLine() as ${1:linename}:",
+			"    $0"
+		]
+	},
+	"Part": {
+		"scope": "python",
+		"prefix": ":bd_bp",
+		"body": [
+			"with bd.BuildPart() as ${1:partname}:",
+			"    bd.${2:class}(${3:params}, align=(bd.Align.CENTER, bd.Align.CENTER, bd.Align.CENTER))",
+			"    $0"
+		]
+	},
+	"Sketch": {
+		"scope": "python",
+		"prefix": ":bd_bs",
+		"body": [
+			"with bd.BuildSketch() as ${1:sketchname}:",
+			"    bd.${2:class}(${3:params}, align=(bd.Align.CENTER, bd.Align.CENTER))",
+			"    $0"
+		]
+	},
+	"Line": {
+		"scope": "python",
+		"prefix": ":bd_bl",
+		"body": [
+			"with bd.BuildLine() as ${1:linename}:",
+			"    bd.${2:class}(${3:params})",
+			"    $0"
+		]
+	},
+	"LineChain": {
+		"scope": "python",
+		"prefix": ":bd_lchain",
+		"body": [
+			"with bd.BuildLine() as ${1:linename}:",
+			"    ${2:l1} = bd.Line((${3:start}), (${4:end}))",
+			"    ${5:l2} = bd.Line(${2:l1} @ 0, (${6:end}))",
+			"    ${7:l3} = bd.Line(${5:l2} @ 0, (${8:end}))",
+			"    $0"
+		]
+	},
+	"PartSketch": {
+		"scope": "python",
+		"prefix": ":bd_pask",
+		"body": [
+			"with bd.BuildPart() as ${1:partname}:",
+			"    with bd.BuildSketch() as ${2:sketchname}:",
+			"        bd.${3:class}(${4:params}, align=(bd.Align.CENTER, bd.Align.CENTER))",
+			"        ${1:partname}.edges()",
+			"    $0"
+		]
+	},	
+	"SketchLine": {
+		"scope": "python",
+		"prefix": ":bd_skli",
+		"body": [
+			"with bd.BuildSketch() as ${1:sketchname}:",
+			"    with bd.BuildLine() as ${2:linename}:",
+			"        bd.${3:class}(${4:params})",
+			"    MakeFace()",
+			"    $0"
+		]
+	},	
+	"ExtrudeLine": {
+		"scope": "python",
+		"prefix": ":bd_exli",
+		"body": [
+			"with bd.BuildPart() as ${1:partname}:",
+			"    with bd.BuildSketch() as ${2:sketchname}:",
+			"        with bd.BuildLine() as ${3:linename}:",
+			"            bd.${4:class}(${5:params})",
+			"        bd.MakeFace()",
+			"    bd.Extrude(amount=${6:amount})",
+			"    $0"
+		]
+	},	
+	"ExtrudeSketch": {
+		"scope": "python",
+		"prefix": ":bd_exsk",
+		"body": [
+			"with bd.BuildPart() as ${1:partname}:",
+			"    with bd.BuildSketch() as ${2:sketchname}:",
+			"        bd.${3:class}(${4:params}, align=(bd.Align.CENTER, bd.Align.CENTER))",
+			"    bd.Extrude(amount=${5:amount})",
+			"    $0"
+		]
+	},	
+}
