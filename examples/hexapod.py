@@ -1,7 +1,7 @@
 import numpy as np
 
 from alg123d import *
-
+from cq_vscode.animation import Animation
 
 thickness = 2
 height = 40
@@ -250,8 +250,9 @@ for name in Base.base_hinges.keys():
     hexapod.assemble(f"{name}_lower_knee", f"{name}_knee")
 
 if "show_object" in locals():
-    show_object(hexapod)
+    show_object(hexapod, timeit=True)
 
+# %%
 
 #
 # Animation
