@@ -7,6 +7,7 @@ set_defaults(axes=True, axes0=True)
 
 s = 2
 
+
 class Club(AlgCompound):
     def __init__(
         self,
@@ -21,7 +22,7 @@ class Club(AlgCompound):
         club = l0 + b0 + b1 + b2 + b3
         club += mirror(club, about=Plane.YZ)
         club = make_face(club)
-        club = scale(club, by=height / club.bounding_box().ylen)
+        club = scale(club, by=height / club.bounding_box().size.Y)
 
         super().__init__(club)
         self._align(align)
@@ -40,7 +41,7 @@ class Spade(AlgCompound):
         spade = l0 + b0 + b1 + b2
         spade += mirror(spade, about=Plane.YZ)
         spade = make_face(spade)
-        spade = scale(spade, by=height / spade.bounding_box().ylen)
+        spade = scale(spade, by=height / spade.bounding_box().size.Y)
 
         super().__init__(spade.moved(Rot(180, 0, 180)))
         self._align(align)
@@ -60,7 +61,7 @@ class Heart(AlgCompound):
         heart = b1 + b2 + b3 + b4 + b5
         heart += mirror(heart, about=Plane.YZ)
         heart = make_face(heart)
-        heart = scale(heart, by=height / heart.bounding_box().ylen)
+        heart = scale(heart, by=height / heart.bounding_box().size.Y)
 
         super().__init__(heart.moved(Rot(180, 0, 180)))
         self._align(align)
@@ -76,7 +77,7 @@ class Diamond(AlgCompound):
         diamond += mirror(diamond, about=Plane.XZ)
         diamond += mirror(diamond, about=Plane.YZ)
         diamond = make_face(diamond)
-        diamond = scale(diamond, by=height / diamond.bounding_box().ylen)
+        diamond = scale(diamond, by=height / diamond.bounding_box().size.Y)
 
         super().__init__(diamond)
         self._align(align)

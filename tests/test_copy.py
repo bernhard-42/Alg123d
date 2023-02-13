@@ -7,9 +7,9 @@ s3 = copy.copy(s)
 s3._align(Align.MIN)
 
 # %%
-show(s, s, s, s, s, s2, s2, s2)  # show 2 dots progress
+show(s, s, s, s, s, s2, s2, s2, timeit=True)  # show 1 dots progress
 # %%
-show(s, s, s, s, s, s2, s2, s2)  # show 0 dots progress
+show(s, s, s, s, s, s2, s2, s2, timeit=True)  # show 0 dots progress
 # %%
-show(s, s, s, s, s, s3, s3, s3)  # show 1 dot progress
+show(s, s, s, s, s, s3, s3, s3, timeit=True)  # show 0 dot progress
 # %%

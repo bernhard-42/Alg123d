@@ -23,7 +23,7 @@ show(s)
 # %%
 
 cq_screw = cq.importers.importStep(
-    "/Users/bernhard.walter/Development/cad/build123d/docs/M6-1x12-countersunk-screw.step"
+    "tests/M6-1x12-countersunk-screw.step"
 )
 locs = HexLocations(6, 10, 10).locations
 
@@ -32,7 +32,7 @@ a = cq.Assembly(name="screws")
 for i, loc in enumerate([cq.Location(loc.wrapped) for loc in locs]):
     a.add(cq_screw, loc=loc, name=f"screw{i}")
 # %%
-show(a, timeit=False)
+show(a, timeit=True)
 # %%
 
 show(cq_screw, timeit=True)
