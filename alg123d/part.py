@@ -254,7 +254,7 @@ def extrude_until(
         elif isinstance(face, Compound):
             f = face.faces()[0]
 
-        z_max = limit.bounding_box().diagonal_length()
+        z_max = limit.bounding_box().diagonal
         axis = Axis(f.center(), f.normal_at(f.center()))
 
         ex = extrude(f, z_max)

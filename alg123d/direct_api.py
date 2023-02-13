@@ -295,7 +295,7 @@ Plane.symbol = plane_symbol
 
 def _revolutejoint_symbol(self) -> Compound:
     """A CAD symbol representing the axis of rotation as bound to part"""
-    radius = self.parent.bounding_box().diagonal_length() / 30
+    radius = self.parent.bounding_box().diagonal / 30
 
     return Compound.make_compound(
         [
