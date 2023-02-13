@@ -36,7 +36,11 @@ class Box(AlgCompound):
         length: float,
         width: float,
         height: float,
-        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align, Align]] = (
+            Align.CENTER,
+            Align.CENTER,
+            Align.CENTER,
+        ),
     ):
         if isinstance(align, Align):
             align = (align,) * 3
@@ -56,7 +60,11 @@ class Cylinder(AlgCompound):
         radius: float,
         height: float,
         arc_size: float = 360,
-        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align, Align]] = (
+            Align.CENTER,
+            Align.CENTER,
+            Align.CENTER,
+        ),
     ):
         if isinstance(align, Align):
             align = (align,) * 3
@@ -77,7 +85,11 @@ class Cone(AlgCompound):
         top_radius: float,
         height: float,
         arc_size: float = 360,
-        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align, Align]] = (
+            Align.CENTER,
+            Align.CENTER,
+            Align.CENTER,
+        ),
     ):
         if isinstance(align, Align):
             align = (align,) * 3
@@ -99,7 +111,11 @@ class Sphere(AlgCompound):
         arc_size1: float = -90,
         arc_size2: float = 90,
         arc_size3: float = 360,
-        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align, Align]] = (
+            Align.CENTER,
+            Align.CENTER,
+            Align.CENTER,
+        ),
     ):
         if isinstance(align, Align):
             align = (align,) * 3
@@ -122,7 +138,11 @@ class Torus(AlgCompound):
         minor_start_angle: float = 0,
         minor_end_angle: float = 360,
         major_angle: float = 360,
-        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align, Align]] = (
+            Align.CENTER,
+            Align.CENTER,
+            Align.CENTER,
+        ),
     ):
         if isinstance(align, Align):
             align = (align,) * 3
@@ -148,7 +168,11 @@ class Wedge(AlgCompound):
         zmin: float,
         xmax: float,
         zmax: float,
-        align: Union[Align,tuple[Align, Align, Align]] = (Align.CENTER, Align.CENTER, Align.CENTER),
+        align: Union[Align, tuple[Align, Align, Align]] = (
+            Align.CENTER,
+            Align.CENTER,
+            Align.CENTER,
+        ),
     ):
         params = dict(
             dx=dx,
