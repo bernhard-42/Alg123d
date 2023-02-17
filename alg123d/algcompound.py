@@ -9,7 +9,7 @@ import build123d as bd
 from .direct_api import *
 from .utils import to_list
 
-__all__ = ["SkipClean", "LazyAlgCompound", "AlgCompound", "create_compound"]
+__all__ = ["SkipClean", "Copy", "LazyAlgCompound", "AlgCompound", "create_compound"]
 
 CTX = [None, bd.BuildLine, bd.BuildSketch, bd.BuildPart]
 
@@ -26,6 +26,16 @@ class SkipClean:
 
     def __exit__(self, exception_type, exception_value, traceback):
         SkipClean.clean = True
+
+
+class Copy:
+    shallow = False
+
+    def __enter__(self):
+        Copy.shallow = True
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        Copy.shallow = False
 
 
 #
@@ -173,7 +183,10 @@ class AlgCompound(Compound):
         return self._place(Mode.INTERSECT, *to_list(other))
 
     def __mul__(self, loc: Location):
-        return copy.copy(self).move(loc)
+        if Copy.shallow:
+            return copy.copy(self).move(loc)
+        else:
+            return self.located(loc)
 
     def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
@@ -191,7 +204,10 @@ class AlgCompound(Compound):
         else:
             raise ValueError(f"Cannot multiply with {obj}")
 
-        return copy.copy(self).locate(loc)
+        if Copy.shallow:
+            return copy.copy(self).locate(loc)
+        else:
+            return self.located(loc)
 
     def __mod__(self, position):
         if self.dim == 1:

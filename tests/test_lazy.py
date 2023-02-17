@@ -40,10 +40,11 @@ a = time.time()
 rectangles = []
 r = Face.make_rect(meshop, meshop)
 for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
-    rectangles.append(r.located(loc))
+    if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2:
+        rectangles.append(r.located(loc))
 
 holes = rectangles.pop().fuse(*rectangles).clean()
-c = Circle(diam / 2) - AlgCompound(holes)
+c = Circle(diam / 2) - holes
 print(time.time() - a)
 
 show(c)

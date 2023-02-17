@@ -5,7 +5,7 @@ from .generic import *
 from .part import *
 from .sketch import *
 from .line import *
-from .algcompound import SkipClean, AlgCompound, LazyAlgCompound
+from .algcompound import SkipClean, Copy, AlgCompound, LazyAlgCompound
 
 from .assembly import *
 
