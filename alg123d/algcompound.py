@@ -186,7 +186,7 @@ class AlgCompound(Compound):
         if Copy.shallow:
             return copy.copy(self).move(loc)
         else:
-            return self.located(loc)
+            return self.moved(loc)
 
     def __matmul__(self, obj: Union[float, Location]):
         if isinstance(obj, (int, float)):
