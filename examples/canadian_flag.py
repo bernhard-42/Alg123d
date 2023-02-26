@@ -26,7 +26,7 @@ field = Rectangle(0.5, 1, align=(Align.MIN, Align.MIN))
 west_field = field @ Pos(-1, 0)
 east_field = field @ Pos(0.5, 0)
 centre_field = Rectangle(1, 1, align=(Align.CENTER, Align.MIN)) - leaf
-
+# %%
 
 if "show_object" in locals():
     show_object(
@@ -34,5 +34,7 @@ if "show_object" in locals():
         name="flag_white_part",
         options={"color": (255, 255, 255)},
     )
-    for f in [west_field, east_field, leaf]:
-        show_object(f, name="flag_red_parts", options={"color": (255, 0, 0)})
+
+    show_object(west_field, name="west_field", options={"color": (255, 0, 0)})
+    show_object(east_field, name="east_field", options={"color": (255, 0, 0)})
+    show_object(leaf, name="leaf", options={"color": (255, 0, 0)})
