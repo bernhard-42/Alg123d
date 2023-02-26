@@ -183,7 +183,7 @@ class AlgCompound(Compound):
         return self._place(Mode.INTERSECT, *to_list(other))
 
     def __mul__(self, loc: Location):
-        if Copy.shallow:
+        if self.dim == 3:
             return copy.copy(self).move(loc)
         else:
             return self.moved(loc)
@@ -204,7 +204,7 @@ class AlgCompound(Compound):
         else:
             raise ValueError(f"Cannot multiply with {obj}")
 
-        if Copy.shallow:
+        if self.dim == 3:
             return copy.copy(self).locate(loc)
         else:
             return self.located(loc)

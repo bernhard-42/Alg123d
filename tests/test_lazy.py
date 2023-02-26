@@ -1,22 +1,21 @@
 import time
-from cq_vscode import show, show_object, reset_show, set_port, set_defaults, get_defaults
+from cq_vscode import show
 
 from alg123d import *
 
 
 # %%
 
-diam =  200  # 175
+diam = 200  # 175
 meshop = 2
 gridxy = int(diam / meshop / 2)
 
 r = Rectangle(meshop, meshop)
-with Copy():
-    holes = [
-        r @ loc
-        for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy)
-        if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2
-    ]
+holes = [
+    r @ loc
+    for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy)
+    if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2
+]
 show(*holes)
 
 # %%
@@ -25,15 +24,14 @@ meshop = 2
 gridxy = int(diam / meshop / 2)
 
 a = time.time()
-with Copy():
-    with LazyAlgCompound() as holes:
-        r = Rectangle(meshop, meshop)
-        for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
-            if (
-                loc.position.X**2 + loc.position.Y**2
-                < (diam / 2 - meshop * 0.9) ** 2
-            ):
-                holes += r @ loc
+with LazyAlgCompound() as holes:
+    r = Rectangle(meshop, meshop)
+    for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
+        if (
+            loc.position.X**2 + loc.position.Y**2
+            < (diam / 2 - meshop * 0.9) ** 2
+        ):
+            holes += r @ loc
 
 c = Circle(diam / 2) - holes
 print(time.time() - a)
