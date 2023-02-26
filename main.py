@@ -1,3 +1,33 @@
+from build123d import *
+from cq_vscode import show, set_port
+
+# set_port(3940)
+
+f = Face.import_stl("/tmp/base.stl")
+show(f, colors=["#999"], default_edgecolor="#bbc")
+
+# %%
+
+
+with BuildPart() as box:
+    Box(1, 2, 3)
+
+show(box, default_edgecolor=(255, 0, 0))
+# %%
+pts = ((0, 0), (0, 1), (1, 1), (0, 0))
+
+with BuildPart() as bp:
+    with BuildSketch() as bs:
+        with BuildLine() as bl:
+            Polyline(*pts)
+        MakeFace()
+    Extrude(amount=1)
+
+show(bp)
+
+# %%
+
+
 from alg123d import *
 from time import time
 import build123d as bd
@@ -5,6 +35,7 @@ import build123d as bd
 set_defaults(grid=(True, True, True), axes=True, axes0=True)
 
 MAX_HASH_KEY = 2147483647
+
 
 # %%
 
@@ -37,7 +68,7 @@ for i, loc in enumerate([cq.Location(loc.wrapped) for loc in locs]):
     a.add(cq_screw, loc=loc, name=f"screw{i}")
 
 data = _convert(a)
-# show(a, timeit=True)
+show(a, timeit=True)
 
 # %%
 
