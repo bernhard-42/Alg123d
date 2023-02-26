@@ -84,7 +84,7 @@ hole_axis = Axis(
 screw_arm = JointBox(1, 1, 10, 0.49)
 j5 = CylindricalJoint("hole", base, hole_axis, linear_range=(-10, 10))
 j6 = RigidJoint("screw", screw_arm, screw_arm.faces().max().center_location)
-j5.connect_to(j6, position=-4, angle=9)
+j5.connect_to(j6, position=-4, angle=90)
 
 show(base, screw_arm, j5.symbol, j6.symbol)
 
