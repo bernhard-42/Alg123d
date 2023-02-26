@@ -48,9 +48,9 @@ class PolarLine(AlgCompound):
         start: VectorLike,
         length: float,
         angle: float = None,
-        direction: VectorLike = None,
+        length_mode: LengthMode = LengthMode.DIAGONAL,
     ):
-        params = dict(start=start, length=length, angle=angle, direction=direction)
+        params = dict(start=start, length=length, angle=angle, length_mode=length_mode)
         super().__init__(self.create_line(bd.PolarLine, params=params))
 
 
