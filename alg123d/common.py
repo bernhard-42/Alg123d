@@ -48,12 +48,12 @@ class PolarLocations(LocationList):
         radius: float,
         count: int,
         start_angle: float = 0.0,
-        stop_angle: float = 360.0,
+        angular_range: float = 360.0,
         rotate: bool = True,
     ):
         bd.Workplanes(Plane.XY).__enter__()
         super().__init__(
-            bd.PolarLocations(radius, count, start_angle, stop_angle, rotate)
+            bd.PolarLocations(radius, count, start_angle, angular_range, rotate)
         )
 
 

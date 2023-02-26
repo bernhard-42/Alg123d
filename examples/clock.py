@@ -29,7 +29,7 @@ clock_face -= [
     )
     @ loc
     for hour, loc in enumerate(
-        PolarLocations(clock_radius * 0.75, 12, 420, 60, rotate=False)
+        PolarLocations(clock_radius * 0.75, 12, 60, -360, rotate=False)
     )
 ]
 
