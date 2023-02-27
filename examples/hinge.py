@@ -95,6 +95,7 @@ class Hinge(AlgCompound):
             leaf = Compound.make_compound([leaf, pin @ pin_center])
 
         self.wrapped = leaf.wrapped
+        self.dim = 3
 
         # Leaf attachment
         RigidJoint(
