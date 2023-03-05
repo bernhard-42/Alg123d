@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from .algcompound import AlgCompound
-from .direct_api import *
+from .topology import *
 
 __all__ = [
     "from_cq",

@@ -6,7 +6,7 @@ from typing import List
 
 import build123d as bd
 
-from .direct_api import *
+from .topology import *
 from .utils import to_list
 
 __all__ = ["SkipClean", "Copy", "LazyAlgCompound", "AlgCompound", "create_compound"]

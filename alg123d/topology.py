@@ -1,7 +1,28 @@
 from typing import List
 
 from build123d.build_enums import *
-from build123d.direct_api import *
+from build123d.topology import *
+
+# Classes coverage:
+#  - Mixin1D
+#  - Mixin3D
+#  - Shape(NodeMixin)
+#  - ShapeList(list[T])
+#  - Compound(Shape, Mixin3D)
+#  - Edge(Shape, Mixin1D)
+#  - Face(Shape)
+#  - Shell(Shape)
+#  - Solid(Shape, Mixin3D)
+#  - Vertex(Shape)
+#  - Wire(Shape, Mixin1D)
+#  - DXF
+#  - SVG
+#  - Joint(ABC)
+#  - RigidJoint(Joint)
+#  - RevoluteJoint(Joint)
+#  - LinearJoint(Joint)
+#  - CylindricalJoint(Joint)
+#  - BallJoint(Joint)
 
 #
 # World locations
@@ -46,80 +67,6 @@ def _edge_center_location(self) -> Location:
 
 Edge.origin_location = property(_edge_origin_location)
 Edge.center_location = property(_edge_center_location)
-
-#
-# Location monkey patching and helpers
-#
-
-# Axis of locations
-
-
-def _location_x_axis(self) -> Axis:
-    p = Plane(self)
-    return Axis(p.origin, p.x_dir)
-
-
-def _location_y_axis(self) -> Axis:
-    p = Plane(self)
-    return Axis(p.origin, p.y_dir)
-
-
-def _location_z_axis(self) -> Axis:
-    p = Plane(self)
-    return Axis(p.origin, p.z_dir)
-
-
-def _location_plane(self) -> Plane:
-    return Plane(self)
-
-
-Location.x_axis = property(_location_x_axis)
-Location.y_axis = property(_location_y_axis)
-Location.z_axis = property(_location_z_axis)
-Location.plane = property(_location_plane)
-
-
-class Pos(Location):
-    def __init__(self, x: Union[float, Vertex, Vector] = 0, y: float = 0, z: float = 0):
-        if isinstance(x, (Vertex, Vector)):
-            super().__init__(x.to_tuple())
-        else:
-            super().__init__((x, y, z))
-
-
-class Rot(Location):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        super().__init__((0, 0, 0), (x, y, z))
-
-
-#
-# Plane monkey patching and helpers
-#
-
-
-def _plane_location(self):
-    return Location(self)
-
-
-Plane.location = property(_plane_location)
-
-
-class Planes:
-    def __init__(self, objs: List[Union[Plane, Location, Face]]) -> List[Plane]:
-        self.objects = [Plane(obj) for obj in objs]
-        self.index = 0
-
-    def __iter__(self):
-        self.index = 0
-        return self
-
-    def __next__(self):
-        if self.index < len(self.objects):
-            plane = self.objects[self.index]
-            self.index += 1
-            return plane
-        else:
-            raise StopIteration
 
 
 #
@@ -223,6 +170,7 @@ Shape.faces = _shape_faces
 Shape.shells = _shape_shells
 Shape.solids = _shape_solids
 
+
 #
 # ShapeList
 #
@@ -260,37 +208,10 @@ ShapeList.max = _shapelist_max
 ShapeList.min_group = _shapelist_min_group
 ShapeList.max_group = _shapelist_max_group
 
+
 #
-# Symbols
+# Joints
 #
-
-
-def axis_symbol(self, l=1) -> Edge:
-    edge = Edge.make_line(self.position, self.position + self.direction * 0.95 * l)
-    plane = Plane(
-        origin=self.position + 0.95 * l * self.direction,
-        z_dir=self.direction,
-    )
-    cone = Solid.make_cone(l / 60, 0, l / 20, plane)
-    return Compound.make_compound([edge] + cone.faces())
-
-
-def location_symbol(self, l=1) -> Compound:
-    axes = SVG.axes(axes_scale=l).locate(self)
-    return Compound.make_compound(axes)
-
-
-def plane_symbol(self, l: float = 1) -> Compound:
-    loc = self.location
-    circle = Edge.make_circle(l * 0.8).locate(loc)
-    axes = SVG.axes(axes_scale=l).locate(loc)
-
-    return Compound.make_compound(list(axes) + [circle])
-
-
-Axis.symbol = axis_symbol
-Location.symbol = location_symbol
-Plane.symbol = plane_symbol
 
 
 def _revolutejoint_symbol(self) -> Compound:

@@ -1,4 +1,5 @@
-from .direct_api import *
+from .geometry import *
+from .topology import *
 from .conversions import *
 from .common import *
 from .generic import *

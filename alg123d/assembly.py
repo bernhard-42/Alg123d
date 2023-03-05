@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple, Union, overload
 
 from webcolors import name_to_rgb
 
-from .direct_api import *
+from .topology import *
 
 
 class Action(Enum):
