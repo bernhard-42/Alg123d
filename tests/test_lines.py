@@ -18,12 +18,12 @@ show(l)
 # %%
 # PolarLine
 
-l = PolarLine((1, 1, 1), math.sqrt(3), direction=(-1, -1, -1))
+l = PolarLine((1, 1, 1), -math.sqrt(2), 45)
 show(Box(1, 1, 1, align=Align.MIN), l, transparent=True)
 
 # %%
 
-l = PolarLine((1, 1, 1), math.sqrt(2), angle=225)
+l = PolarLine((1, 1, 1), math.sqrt(2), angle=180)
 show(Box(1, 1, 1, align=Align.MIN), l, transparent=True)
 
 # %%

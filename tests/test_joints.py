@@ -84,7 +84,7 @@ hole_axis = Axis(
 screw_arm = JointBox(1, 1, 10, 0.49)
 j5 = CylindricalJoint("hole", base, hole_axis, linear_range=(-10, 10))
 j6 = RigidJoint("screw", screw_arm, screw_arm.faces().max().center_location)
-j5.connect_to(j6, position=-4, angle=90)
+j5.connect_to(j6, position=-1, angle=90)
 
 show(base, screw_arm, j5.symbol, j6.symbol)
 
@@ -114,4 +114,14 @@ j10 = RigidJoint("ball", ball, Location(Vector(0, 0, 1)))
 j9.connect_to(j10, angles=(10, 20, 30))
 
 show(base, ball, j9.symbol, j10.symbol)
+# %%
+
+show(base, base_top_edges,
+    fixed_arm, j1.symbol, j2.symbol,
+    hinge_arm, j3.symbol, j4.symbol,
+    slider_arm, s1.symbol, s2.symbol,
+    screw_arm, j5.symbol, j6.symbol,
+    pin_arm, j7.symbol, j8.symbol,
+    ball, j9.symbol, j10.symbol
+)
 # %%
