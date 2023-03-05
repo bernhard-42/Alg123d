@@ -94,6 +94,7 @@ class Hinge(AlgCompound):
         if not inner:
             leaf = Compound.make_compound([leaf, pin @ pin_center])
 
+        # super().__init__(leaf)
         self.wrapped = leaf.wrapped
         self.dim = 3
 
@@ -178,6 +179,7 @@ hinge_inner = Hinge(
     thickness=2 * MM,
     pin_diameter=4 * MM,
 )
+# %%
 hinge_outer = Hinge(
     width=5 * CM,
     length=12 * CM,
@@ -188,12 +190,12 @@ hinge_outer = Hinge(
 )
 
 # %%
-show(
-    hinge_inner,
-    *[h.symbol for h in hinge_inner.joints.values()],
-    hinge_outer @ Pos(6 * CM, 0),
-    *[h.symbol.moved(Pos(6 * CM, 0)) for h in hinge_outer.joints.values()],
-)
+# show(
+#     hinge_inner,
+#     *[h.symbol for h in hinge_inner.joints.values()],
+#     hinge_outer @ Pos(6 * CM, 0),
+#     *[h.symbol.moved(Pos(6 * CM, 0)) for h in hinge_outer.joints.values()],
+# )
 # %%
 
 # Create the box
@@ -212,7 +214,7 @@ RigidJoint(
     Location((-15 * CM, 0, 4 * CM), (180, 90, 0)),
 )
 
-show(box, box.joints["hinge_attachment"].symbol)
+# show(box, box.joints["hinge_attachment"].symbol)
 # %%
 
 # Create the lid
@@ -229,7 +231,7 @@ RigidJoint(
     Location((15 * CM, 0, 5 * MM), (180, 0, 0)),
 )
 
-show(lid, lid.joints["hinge_attachment"].symbol, plane.symbol(5))
+# show(lid, lid.joints["hinge_attachment"].symbol, plane.symbol(5))
 # %%
 
 box.joints["hinge_attachment"].connect_to(hinge_outer.joints["leaf"])

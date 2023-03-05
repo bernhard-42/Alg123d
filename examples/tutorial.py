@@ -155,7 +155,7 @@ polygons = [
     RegularPolygon(radius=5, side_count=5) @ (plane * loc)
     for loc in GridLocations(length / 2, width / 2, 2, 2)
 ]
-ex11 -= extrude(polygons, amount=thickness)
+ex11 -= extrude(polygons, amount=-thickness)
 
 show(ex11)
 
@@ -199,7 +199,7 @@ ex13 -= [
 ex13 -= [
     CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b)
     @ (plane * loc)
-    for loc in PolarLocations(radius=a, count=4, start_angle=45, stop_angle=360 + 45)
+    for loc in PolarLocations(radius=a, count=4, start_angle=45, angular_range=360)
 ]
 
 show(ex13)

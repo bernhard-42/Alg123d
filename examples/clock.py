@@ -23,7 +23,7 @@ clock_face -= [
 clock_face -= [
     Text(
         str(hour + 1),
-        fontsize=clock_radius * 0.175,
+        font_size=clock_radius * 0.175,
         font_style=FontStyle.BOLD,
         align=Align.CENTER,
     )

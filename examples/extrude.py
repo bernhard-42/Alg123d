@@ -2,12 +2,12 @@ from alg123d import *
 
 # simple
 
-simple = extrude(Text("O", fontsize=10, align=Align.CENTER), amount=5)
+simple = extrude(Text("O", font_size=10, align=Align.CENTER), amount=5)
 
 # both
 
 both = extrude(
-    Text("O", fontsize=10, align=Align.CENTER),
+    Text("O", font_size=10, align=Align.CENTER),
     amount=5,
     both=True,
 )
@@ -18,7 +18,7 @@ multiple = Box(10, 10, 10)
 t = AlgCompound()
 for plane in Planes(multiple.faces()):
     for loc in GridLocations(5, 5, 2, 2):
-        t += Text("Ω", fontsize=3, align=Align.CENTER) @ (plane * loc)
+        t += Text("Ω", font_size=3, align=Align.CENTER) @ (plane * loc)
 multiple = multiple + extrude(t, amount=1)
 
 # single minus multiple
