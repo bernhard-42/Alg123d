@@ -136,7 +136,7 @@ class Text(AlgCompound):
     def __init__(
         self,
         txt: str,
-        fontsize: float,
+        font_size: float,
         font: str = "Arial",
         font_path: str = None,
         font_style: FontStyle = FontStyle.REGULAR,
@@ -149,7 +149,7 @@ class Text(AlgCompound):
 
         params = dict(
             txt=txt,
-            fontsize=fontsize,
+            font_size=font_size,
             font=font,
             font_path=font_path,
             font_style=font_style,
