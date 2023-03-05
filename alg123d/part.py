@@ -161,9 +161,9 @@ class Torus(AlgCompound):
 class Wedge(AlgCompound):
     def __init__(
         self,
-        dx: float,
-        dy: float,
-        dz: float,
+        xsize: float,
+        ysize: float,
+        zsize: float,
         xmin: float,
         zmin: float,
         xmax: float,
@@ -175,9 +175,9 @@ class Wedge(AlgCompound):
         ),
     ):
         params = dict(
-            dx=dx,
-            dy=dy,
-            dz=dz,
+            xsize=xsize,
+            ysize=ysize,
+            zsize=zsize,
             xmin=xmin,
             zmin=zmin,
             xmax=xmax,
