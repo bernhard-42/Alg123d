@@ -273,7 +273,20 @@ def create_compound(
     else:
         if isinstance(objects, AlgCompound) and objects.dim == 1:
             objs = objects.edges()
-            dim = 1
+            if dim is None:
+                dim = 1 if part is None else part.dim
+        elif isinstance(objects, (Wire, Edge)):
+            objs = [objects]
+            if dim is None:
+                dim = 1 if part is None else part.dim
+        elif isinstance(objects, (Face)):
+            objs = [objects]
+            if dim is None:
+                dim = 2 if part is None else part.dim
+        elif isinstance(objects, (Wire, Solid)):
+            objs = [objects]
+            if dim is None:
+                dim = 3 if part is None else part.dim
         else:
             if isinstance(objects, (list, tuple)):
                 objs = objects
