@@ -60,7 +60,7 @@ class AlgCompound(Compound):
     def __init__(self, obj: Union[Compound, Solid, Face, Edge] = None, label=None):
         if isinstance(obj, Compound):
             objs = list(unwrap(obj))
-        elif isinstance(obj, (Solid, Face, Edge)):
+        elif isinstance(obj, (Solid, Face, Edge, Wire)):
             objs = [obj]
         elif obj is not None:
             raise TypeError(f"Unknown type {obj}")
