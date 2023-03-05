@@ -7,6 +7,7 @@ from .part import *
 from .sketch import *
 from .line import *
 from .algcompound import SkipClean, Copy, AlgCompound, LazyAlgCompound
+from build123d.importers import *
 
 from .assembly import *
 
