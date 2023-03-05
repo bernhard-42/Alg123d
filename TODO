@@ -1,4 +1,2 @@
--   Check why hexapod does not use instances
--   Why is LazyAlgCompound suddenly so much slower?
 -   Use Joints for Mates
 -   add serialize, deserialize
