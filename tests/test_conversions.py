@@ -1,6 +1,8 @@
 from alg123d import *
 import build123d as bd
 import cadquery as cq
+from ocp_vscode import show, show_object, reset_show, set_port, set_defaults, get_defaults
+set_port(3939)
 
 set_defaults(axes=True, axes0=True)
 
@@ -50,9 +52,8 @@ show(
 
 # Build123d <-> Alg123d
 
-with bd.BuildPart() as b:
-    with bd.Workplanes(Plane.XZ):
-        bd.Cylinder(1, 1)
+with bd.BuildPart(Plane.XZ) as b:
+    bd.Cylinder(1, 1)
 
 
 a = from_bd(b)
