@@ -17,7 +17,7 @@ try:
 
         print("Loaded show, show_object, set_defaults, open_viewer")
     else:
-        from cq_vscode import show, show_object, set_defaults, reset_show, Animation
+        from ocp_vscode import show, show_object, set_defaults, reset_show, Animation
 
         print("Loaded show, show_object, set_defaults, reset_show and Animation")
 
