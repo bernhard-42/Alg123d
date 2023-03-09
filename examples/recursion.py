@@ -1,4 +1,3 @@
-from cq_vscode import show
 from alg123d import *
 
 c0 = Text(
