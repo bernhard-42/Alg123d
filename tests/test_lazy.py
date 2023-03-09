@@ -1,6 +1,4 @@
 import time
-from cq_vscode import show
-
 from alg123d import *
 
 

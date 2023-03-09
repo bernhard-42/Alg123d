@@ -5,7 +5,6 @@ os.environ["JCQ_CACHE_SIZE_MB"] = "1024"
 import cadquery as cq
 from alg123d import *
 from alg123d.stepreader import StepReader
-from cq_vscode import show, set_port
 import time
 
 # %%

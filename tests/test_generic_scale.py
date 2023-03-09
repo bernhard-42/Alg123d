@@ -23,8 +23,8 @@ b = scale(a, 2)
 show(a, b)
 
 # %%
-
+# TODO
 a = Rectangle(1, 2)
 b = scale(a, (2, 1))
 
-show(a, b)
+# show(a, b)
