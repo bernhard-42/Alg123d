@@ -62,6 +62,8 @@ class AlgCompound(Compound):
             objs = list(unwrap(obj))
         elif isinstance(obj, (Solid, Face, Edge, Wire)):
             objs = [obj]
+        elif isinstance(obj, (tuple, list)):
+            objs = obj
         elif obj is not None:
             raise TypeError(f"Unknown type {obj}")
 
