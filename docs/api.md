@@ -7,14 +7,14 @@ Box(
     length: float,
     width: float,
     height: float,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+    align: Alig | Tuple[Align, Align, Align] = Align.CENTER
     )
 
 Cylinder(
     radius: float,
     height: float,
     arc_size: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+    align: Alig | Tuple[Align, Align, Align] = Align.CENTER
 )
 
 Cone(
@@ -22,7 +22,7 @@ Cone(
     top_radius: float,
     height: float,
     arc_size: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+    align: Alig | Tuple[Align, Align, Align] = Align.CENTER
 )
 
 Sphere(
@@ -30,7 +30,7 @@ Sphere(
     arc_size1: float = -90,
     arc_size2: float = 90,
     arc_size3: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+    align: Alig | Tuple[Align, Align, Align] = Align.CENTER
 )
 
 Torus(
@@ -39,13 +39,13 @@ Torus(
     minor_start_angle: float = 0,
     minor_end_angle: float = 360,
     major_angle: float = 360,
-    centered: bool | Tuple[bool, bool, bool] = (True, True, True)
+    align: Alig | Tuple[Align, Align, Align] = Align.CENTER
 )
 
 Wedge(
-    dx: float,
-    dy: float,
-    dz: float,
+    xsize: float,
+    ysize: float,
+    zsize: float,
     xmin: float,
     zmin: float,
     xmax: float,
@@ -158,12 +158,11 @@ RegularPolygon(
 
 Text(
     txt: str,
-    fontsize: float,
+    font_size: float,
     font: str = 'Arial',
     font_path: str = None,
     font_style: FontStyle = FontStyle.REGULAR,
-    halign: Halign = Halign.LEFT,
-    valign: Valign = Valign.CENTER,
+    align: Union[Align, tuple[Align, Align]] = Align.CENTER,
     path: Edge | Wire = None,
     position_on_path: float = 0.0
 )

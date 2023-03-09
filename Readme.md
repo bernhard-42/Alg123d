@@ -49,17 +49,35 @@ Notes:
 -   Some advanced concepts for performance reasons can be found in [Performance](./docs/performance.md)
 -   Some shortcuts can be found in [Shortcuts](./docs/shortcuts.md)
 
-### Placement at locations
+### Placement on planes and at locations
 
-An `AlgCompound` does not have any location or rotation paramater. The rationale is that a box defines its topology (shape, sizes and its center), but does not know where in space it will be located. Instead, it will be relocated with the `@` operator. The object location can be retrieved as usual in build123d via the `location` property of the underlying `build123d.Compound`.
+An `AlgCompound` does not have any location or rotation paramater. The rationale is that a box defines its topology (shape, sizes and its center), but does not know where in space it will be located. Instead, it will be relocated with the `@` operator (absolute location, similar to `located`) and `*` (relative location similar `moved`). The object location can be retrieved as usual in build123d via the `location` property of the underlying `build123d.Compound`.
 
-The generic form of object placement is
+The generic forms of object placement are:
 
-```python
-alg_compound @ (plane * location)
-```
+1. Absolute placement on `plane` or at `location`:
 
-and describes an `alg_compound`being placed on the`plane`and then moved relative to the`plane` by `location`.
+    ```python
+    alg_compound @ plane 
+    alg_compound @ location
+    ```
+
+2. Relative placement at `location`:
+
+    ```python
+    alg_compound * location
+    ```
+    Basically, this is the same as `@ (Plane.XY * location)`
+
+3. Placement on the `plane` and then moved relative to the `plane` by `location` (the location is relative to the local corrdinate system of the plane).
+
+    ```python
+    alg_compound @ (plane * location)
+    ```
+
+
+
+and describes an `alg_compound`being 
 
 Details can be found in [Locations](./docs/locations.md).
 
@@ -140,6 +158,7 @@ For `dim == 3` the following two properties are added:
 -   `-`: `(AlgCompound, AlgCompound) -> AlgCompound`: Cut first object with second object
 -   `&`: `(AlgCompound, AlgCompound) -> AlgCompound`: Intersect two objects
 -   `@`: `(AlgCompound, Plane|Location) -> AlgCompound`: Change absolute location of an AlgCompound
+-   `*`: `(AlgCompound, Location -> AlgCompound`: Change relative location of an AlgCompound
 
 **Use of existing build123d operators**
 

@@ -30,7 +30,7 @@
 
     Note that the `x`-axis and the `y`-axis of the plane are on the `x`-axis and the `z`-axis of the world coordinate system (red and blue axis)
 
-## Relatve positioning
+## Relative positioning
 
 1. **Positioning an object relative to a location**
 
@@ -100,6 +100,25 @@
 
     Note: This is the same as `box = Box(0.2, 0.2, 0.2) @ (loc * Location((0.2, 0.4, 0.1), (20, 40, 80)))`
 
-5. **Positioning and rotating an object relative to a planen**
+5. **Positioning and rotating an object relative to a plane**
 
     Since a `Plane` has one location and a `Location` defines exactly one `Plane`, the above examples apply to planes by taking the plane location into account
+
+
+6. **Brackets count!**
+
+    Note the difference between these two calls:
+
+    ```python
+    b @ (Plane.XZ * Pos(0, 0, -1) * Rot(z=45))
+    ```
+    ![rotation1](../images/rotate_ex1.png)
+
+    ```python
+    b @ (Plane.XZ * Pos(0, 0, -1)) * Rot(z=45)
+    ```
+    ![rotation2](../images/rotate_ex2.png)
+
+    The first will take the object `b`, place it on plane `Plane.XZ` and shift it in z-direction realtive to the local coordinate system of `Plane.XZ` and then rotate again relative to the coordinate system of `Plane.XZ`.
+    
+    The second has the rotation outside of the brackets, hence it now rotates the result of the placement in the brackets relative to `Plane.XY`.
