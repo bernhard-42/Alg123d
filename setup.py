@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup_args = {
     "name": "alg123d",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Algebraic 3D CAD",
     "long_description": "A system to create CAD objects in an algebraic way",
     "include_package_data": True,
