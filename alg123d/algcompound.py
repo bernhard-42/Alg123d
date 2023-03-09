@@ -190,7 +190,7 @@ class AlgCompound(Compound):
         else:
             return self.moved(loc)
 
-    def __matmul__(self, obj: Union[float, Location]):
+    def __matmul__(self, obj: Union[float, Location, Plane]):
         if isinstance(obj, (int, float)):
             if self.dim == 1:
                 return Wire.make_wire(self.edges()).position_at(obj)
