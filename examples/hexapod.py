@@ -1,7 +1,7 @@
 import numpy as np
 
 from alg123d import *
-from cq_vscode.animation import Animation
+from ocp_vscode.animation import Animation
 
 thickness = 2
 height = 40
