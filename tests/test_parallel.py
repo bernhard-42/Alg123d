@@ -22,8 +22,6 @@ show(b, b, names=["b1", "b2"])
 
 box = cq.Workplane().box(1, 1, 1).fillet(0.1)
 
-# %%
-
 show(box, box, names=["box1", "box2"])
 
 # %%

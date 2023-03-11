@@ -41,12 +41,6 @@ show(s)
 
 # %%
 
-s = Circle(1) @ Pos(1,1,1)
-
-show(s)
-
-# %%
-
 s = Circle(1) @ Plane.XY
 
 show(s)

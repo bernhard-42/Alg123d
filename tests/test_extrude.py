@@ -97,6 +97,37 @@ faces = [
     diamond @ Pos(s, s),
 ]
 
+show(faces, extrude(faces, 1, dir=(0, 0, 1)), alphas=[0.9, 0.3])
+
+# %%
+
 show(faces, extrude(faces, 1, dir=(0, 0, -1)), alphas=[0.9, 0.3])
+
+# %%
+
+x = Cone(10, 5, 10)
+x = split(x, by=Plane(origin=(0, 0, 6), z_dir=(1, 0, 1)), keep=Keep.BOTTOM)
+p = Plane(x.faces(Axis((0, 0, 0), (1, 0, 1))).max())
+
+faces = [
+    club @ (p * Pos(-s, -s)),
+    spade @ (p * Pos(-s, s)),
+    heart @ (p * Pos(s, -s)),
+    diamond @ (p * Pos(s, s)),
+]
+
+show(x, *faces)
+
+# %%
+
+normal = faces[0].faces()[0].center_normal  # club
+y = x + extrude(faces, 1, dir=normal)
+show(y)
+
+# %%
+
+normal = faces[1].faces()[0].center_normal  # spade
+y = x - extrude(faces, 1, dir=normal)
+show(y)
 
 # %%

@@ -31,3 +31,16 @@ b = chamfer(a, a.vertices(), 0.3)
 show(a, b @ Pos(0, 3))
 
 # %%
+
+b = Box(1, 1, 1) - Box(2, 2, 0.3)
+b = fillet(b, b.edges(), 0.1)
+show(b)
+
+# %%
+
+b = Rectangle(1, 2) - Rectangle(0.5, 3)
+b = fillet(b, b.vertices(), 0.1)
+
+show(b)
+
+#

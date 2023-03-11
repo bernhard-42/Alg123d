@@ -460,3 +460,21 @@ ex29 = shell(ex29, -b, openings=necktopf)
 
 show(ex29, transparent=True)
 # %%
+
+a, b, c = 80.0, 5.0, 3.0
+
+from alg123d import *
+
+ex31 = AlgCompound()
+
+for ploc in PolarLocations(a / 2, 6):
+    ex31 += RegularPolygon(b, 4) @ ploc
+    for gloc in GridLocations(3 * b, 3 * b, 2, 2):
+        ex31 += RegularPolygon(b, 3) @ (ploc * gloc)
+
+ex31 += RegularPolygon(3 * b, 6) @ Rot(z=30)
+ex31 = extrude(ex31, 2)
+
+show(ex31)
+
+# %%

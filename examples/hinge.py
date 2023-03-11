@@ -30,16 +30,10 @@ class Hinge(AlgCompound):
         # The profile of the hinge used to create the tabs
 
         hinge_profile = AlgCompound()
-        for i, loc in enumerate(
-            GridLocations(0, length / 5, 1, 5, align=(Align.MIN, Align.MIN))
-        ):
+        for i, loc in enumerate(GridLocations(0, length / 5, 1, 5, align=Align.MIN)):
             if i % 2 == inner:
-                hinge_profile += (
-                    Rectangle(width, length / 5, align=(Align.MIN, Align.MIN)) @ loc
-                )
-        hinge_profile += Rectangle(
-            width - barrel_diameter, length, align=(Align.MIN, Align.MIN)
-        )
+                hinge_profile += Rectangle(width, length / 5, align=Align.MIN) @ loc
+        hinge_profile += Rectangle(width - barrel_diameter, length, align=Align.MIN)
         hinge_profile = extrude(hinge_profile, -barrel_diameter)
 
         # The hinge pin
