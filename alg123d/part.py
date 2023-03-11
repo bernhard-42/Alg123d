@@ -245,6 +245,7 @@ class Bore(AlgCompound):
 def extrude(
     to_extrude: Union[Face, Compound, List[Union[Face, Compound]]],
     amount: float = None,
+    dir: VectorLike = None,
     both: bool = False,
     taper: float = 0.0,
 ) -> AlgCompound:
@@ -256,6 +257,14 @@ def extrude(
             faces.append(obj)
         else:
             raise ValueError(f"Type {type(obj)} not supported for extrude")
+
+    if dir is None:
+        planes = [Plane(face) for face in faces]
+    else:
+        planes = [
+            Plane(face.center(), face.center_location.x_axis.direction, Vector(dir))
+            for face in faces
+        ]
 
     return create_compound(
         bd.Extrude,
@@ -269,10 +278,10 @@ def extrude(
 def extrude_until(
     face: Union[Face, AlgCompound],
     limit: AlgCompound,
-    direction: VectorLike = None,
+    dir: VectorLike = None,
     until: Until = Until.NEXT,
 ) -> AlgCompound:
-    if direction is None:
+    if dir is None:
         if isinstance(face, Face):
             f = face
         elif isinstance(face, Compound):
@@ -281,14 +290,14 @@ def extrude_until(
         z_max = limit.bounding_box().diagonal
         axis = Axis(f.center(), f.normal_at(f.center()))
 
-        ex = extrude(f, z_max)
+        ex = extrude(f, z_max, dir=dir)
         if until == Until.NEXT:
             return AlgCompound((ex - limit).solids().min(axis))
         else:
             parts = limit & ex
             return AlgCompound((ex - limit).solids().min(axis)) + parts
     else:
-        return AlgCompound(Solid.extrude_until(face, limit, direction, until))
+        return AlgCompound(Solid.extrude_until(face, limit, dir, until))
 
 
 def loft(sections: List[Union[AlgCompound, Face]], ruled: bool = False) -> AlgCompound:
