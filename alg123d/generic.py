@@ -23,7 +23,7 @@ def chamfer(
     return create_compound(
         bd.Chamfer,
         objects,
-        params=dict(length=length, length2=length2),
+        params=dict(length=length, length2=length2, mode=Mode.PRIVATE),
         part=part,
     )
 
@@ -33,14 +33,18 @@ def fillet(
     objects: Union[List[Union[Edge, Vertex]], Edge, Vertex],
     radius: float,
 ) -> AlgCompound:
-    return create_compound(bd.Fillet, objects, params=dict(radius=radius), part=part)
+    return create_compound(
+        Fillet, objects, params=dict(radius=radius, mode=Mode.PRIVATE), part=part
+    )
 
 
 def mirror(
     objects: Union[List[AlgCompound], AlgCompound],
     about: Plane = Plane.XZ,
 ) -> AlgCompound:
-    return create_compound(bd.Mirror, objects, params=dict(about=about))
+    return create_compound(
+        bd.Mirror, objects, params=dict(about=about, mode=Mode.PRIVATE)
+    )
 
 
 def offset(
@@ -48,7 +52,9 @@ def offset(
     amount: float,
     kind: Kind = Kind.ARC,
 ) -> AlgCompound:
-    result = create_compound(bd.Offset, objects, params=dict(amount=amount, kind=kind))
+    result = create_compound(
+        bd.Offset, objects, params=dict(amount=amount, kind=kind, mode=Mode.PRIVATE)
+    )
     if isinstance(objects, AlgCompound) and objects.dim == 3:
         if amount > 0:
             return result + objects
@@ -62,7 +68,7 @@ def scale(objects: Shape, by: Union[float, Tuple[float, float, float]]) -> AlgCo
     if isinstance(by, (list, tuple)) and len(by) == 2:
         by = (*by, 1)
 
-    return create_compound(bd.Scale, objects, params=dict(by=by))
+    return create_compound(bd.Scale, objects, params=dict(by=by, mode=Mode.PRIVATE))
 
 
 def split(
@@ -70,4 +76,6 @@ def split(
     by: Plane = Plane.XZ,
     keep: Keep = Keep.TOP,
 ) -> AlgCompound:
-    return create_compound(bd.Split, objects, params=dict(bisect_by=by, keep=keep))
+    return create_compound(
+        bd.Split, objects, params=dict(bisect_by=by, keep=keep, mode=Mode.PRIVATE)
+    )

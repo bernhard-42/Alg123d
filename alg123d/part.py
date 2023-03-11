@@ -261,8 +261,8 @@ def extrude(
         bd.Extrude,
         dim=3,
         faces=faces,
-        planes=[Plane(face) for face in faces],
-        params=dict(amount=amount, both=both, taper=taper),
+        planes=planes,
+        params=dict(amount=amount, both=both, taper=taper, mode=Mode.PRIVATE),
     )
 
 
@@ -315,7 +315,10 @@ def revolve(
             faces.append(p)
 
     return create_compound(
-        bd.Revolve, faces, dim=3, params=dict(axis=axis, revolution_arc=arc)
+        bd.Revolve,
+        faces,
+        dim=3,
+        params=dict(axis=axis, revolution_arc=arc, mode=Mode.PRIVATE),
     )
 
 
@@ -339,6 +342,7 @@ def sweep(
             transition=transition,
             normal=normal,
             binormal=binormal,
+            mode=Mode.PRIVATE,
         ),
     )
 
@@ -360,5 +364,7 @@ def shell(
     kind: Kind = Kind.ARC,
 ) -> AlgCompound:
     return create_compound(
-        bd.Offset, objects, params=dict(amount=amount, openings=openings, kind=kind)
+        bd.Offset,
+        objects,
+        params=dict(amount=amount, openings=openings, kind=kind, mode=Mode.PRIVATE),
     )

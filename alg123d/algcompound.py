@@ -305,7 +305,10 @@ def create_compound(
 
     with CTX[dim]() as ctx:
         if part is not None:
-            ctx._add_to_context(Compound(part.wrapped))
+            if dim == 2:
+                ctx.sketch_local = Compound.make_compound(part.faces()).clean()
+            else:
+                ctx._add_to_context(Compound(part.wrapped))
 
         if faces is not None:
             ctx.pending_faces = faces
@@ -315,7 +318,7 @@ def create_compound(
 
         compound = unwrap(cls(**params) if objs is None else cls(*objs, **params))
 
-        if part is not None:
+        if part is not None and dim != 2:
             compound = unwrap(ctx._obj)
 
     solids = compound.solids()
