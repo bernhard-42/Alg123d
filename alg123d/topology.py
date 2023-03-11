@@ -38,7 +38,12 @@ def _face_center_location(self) -> Location:
     return Plane(origin=origin, x_dir=x_dir, z_dir=z_dir).location
 
 
+def _face_center_normal(self) -> Vector:
+    return self.normal_at(self.center())
+
+
 Face.center_location = property(_face_center_location)
+Face.center_normal = property(_face_center_normal)
 
 #  of an edge at its origin
 
