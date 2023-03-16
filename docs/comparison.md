@@ -1,6 +1,6 @@
 ## Example 1
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -19,7 +19,7 @@
 
 ## Example 2
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -42,7 +42,7 @@
 
 ## Example 3
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -65,7 +65,7 @@
 
 ## Example 4
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -73,10 +73,10 @@
   with BuildPart() as ex4:
       with BuildSketch() as ex4_sk:
           with BuildLine() as ex4_ln:
-              l1 = Line((0, 0), (length, 0))
-              l2 = Line((length, 0), (length, width))
-              l3 = ThreePointArc((length, width), (width, width * 1.5), (0.0, width))
-              l4 = Line((0.0, width), (0, 0))
+              Line((0, 0), (length, 0))
+              Line((length, 0), (length, width))
+              ThreePointArc((length, width), (width, width * 1.5), (0.0, width))
+              Line((0.0, width), (0, 0))
           MakeFace()
       Extrude(amount=thickness)
   ```
@@ -98,7 +98,7 @@
 
 ## Example 5
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b, c, d = 90, 45, 15, 7.5
@@ -124,7 +124,7 @@
 
 ## Example 6
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b, c = 80, 60, 10
@@ -148,7 +148,7 @@
 
 ## Example 7
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b, c = 60, 80, 5
@@ -176,7 +176,7 @@
 
 ## Example 8
 
-- **Build23d**
+- **Build123d**
 
   ```python
   (L, H, W, t) = (100.0, 20.0, 20.0, 1.0)
@@ -224,7 +224,7 @@
 
 ## Example 9
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -247,7 +247,7 @@
 
 ## Example 10
 
-- **Build23d**
+- **Build123d**
 
   ```python
   with BuildPart() as ex10:
@@ -272,7 +272,7 @@
 
 ## Example 11
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -312,7 +312,7 @@
 
 ## Example 12
 
-- **Build23d**
+- **Build123d**
 
   ```python
   sPnts = [
@@ -360,7 +360,7 @@
 
 ## Example 13
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b = 40, 4
@@ -394,7 +394,7 @@
 
 ## Example 14
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b = 40, 20
@@ -424,7 +424,7 @@
 
 ## Example 15
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b, c = 80, 40, 20
@@ -461,7 +461,7 @@
 
 ## Example 16
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -508,7 +508,7 @@
 
 ## Example 17
 
-- **Build23d**
+- **Build123d**
 
   ```python
   a, b = 30, 20
@@ -532,7 +532,7 @@
 
 ## Example 18
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -563,7 +563,7 @@
 
 ## Example 19
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -586,7 +586,7 @@
 
 ## Example 20
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -615,7 +615,7 @@
 
 ## Example 21
 
-- **Build23d**
+- **Build123d**
 
   ```python
   width, length = 10.0, 60.0
@@ -641,7 +641,7 @@
 
 ## Example 22
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
@@ -673,7 +673,7 @@
 
 ## Example 23
 
-- **Build23d**
+- **Build123d**
 
   ```python
   pts = [
@@ -721,7 +721,7 @@
 
 ## Example 24
 
-- **Build23d**
+- **Build123d**
 
   ```python
   length, width, thickness = 80.0, 60.0, 10.0
