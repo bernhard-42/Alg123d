@@ -70,20 +70,21 @@ class AlgCompound(Compound):
         if obj is None:
             dummy = Solid.make_sphere(1)
             super().__init__(Compound.make_compound([dummy]).wrapped, label=label)
-            self.dim = 0
+            self._dim = 0
             self.wrapped = None
 
         elif all([isinstance(obj, (Edge, Wire)) for obj in objs]):
             super().__init__(Compound.make_compound(objs).wrapped, label=label)
-            self.dim = 1
+            self._dim = 1
 
         elif all([isinstance(obj, Face) for obj in objs]):
             super().__init__(Compound.make_compound(objs).wrapped, label=label)
-            self.dim = 2
+            self._dim = 2
 
         elif all([isinstance(obj, Solid) for obj in objs]):
             super().__init__(Compound.make_compound(objs).wrapped, label=label)
-            self.dim = 3
+            self._dim = 3
+            self._coord = Location()
             self.metadata = {}
 
         else:
@@ -114,11 +115,11 @@ class AlgCompound(Compound):
     ) -> AlgCompound:
         if align is not None:
             if isinstance(align, Align):
-                align = (align,) * self.dim
+                align = (align,) * self._dim
 
             bbox = self.bounding_box()
             align_offset = []
-            for i in range(self.dim):
+            for i in range(self._dim):
                 if align[i] == Align.MIN:
                     align_offset.append(-bbox.min.to_tuple()[i])
                 elif align[i] == Align.CENTER:
@@ -142,12 +143,12 @@ class AlgCompound(Compound):
     def _place(self, mode: Mode, *objs: AlgCompound):
         objs = [o if isinstance(o, AlgCompound) else AlgCompound(o) for o in objs]
 
-        if not (objs[0].dim == 0 or self.dim == 0 or self.dim == objs[0].dim):
+        if not (objs[0]._dim == 0 or self._dim == 0 or self._dim == objs[0]._dim):
             raise RuntimeError(
-                f"Cannot combine objects of different dimensionality: {self.dim} and {objs[0].dim}"
+                f"Cannot combine objects of different dimensionality: {self._dim} and {objs[0]._dim}"
             )
 
-        if self.dim == 0:  # Cover addition of empty AlgCompound with another object
+        if self._dim == 0:  # Cover addition of empty AlgCompound with another object
             if mode == Mode.ADD:
                 if len(objs) == 1:
                     compound = copy.deepcopy(objs[0])
@@ -155,13 +156,13 @@ class AlgCompound(Compound):
                     compound = copy.deepcopy(objs.pop()).fuse(*objs)
             else:
                 raise RuntimeError("Can only add to an empty AlgCompound object")
-        elif objs[0].dim == 0:  # Cover operation with empty AlgCompound object
+        elif objs[0]._dim == 0:  # Cover operation with empty AlgCompound object
             compound = self
         else:
             if mode == Mode.ADD:
                 compound = self.fuse(*objs)
 
-            elif self.dim == 1:
+            elif self._dim == 1:
                 raise RuntimeError("Lines can only be added")
 
             else:
@@ -212,7 +213,7 @@ class AlgCompound(Compound):
             return self.located(loc)
 
     def __mod__(self, position):
-        if self.dim == 1:
+        if self._dim == 1:
             return Wire.make_wire(self.edges()).tangent_at(position)
         else:
             raise TypeError(f"unsupported operand type(s)")
@@ -229,7 +230,7 @@ class AlgCompound(Compound):
         return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
 
     def edge(self) -> Edge:
-        if self.dim == 1:
+        if self._dim == 1:
             if len(self.edges()) == 1:
                 return self.edges()[0]
             else:
@@ -238,13 +239,13 @@ class AlgCompound(Compound):
             raise RuntimeError("edge() exists for dim==1 only")
 
     def wire(self) -> Wire:
-        if self.dim == 1:
+        if self._dim == 1:
             return Wire.combine(self.edges())[0]
         else:
             raise RuntimeError("wire() exists for dim==1 only")
 
     def face(self) -> Face:
-        if self.dim == 2:
+        if self._dim == 2:
             if len(self.faces()) == 1:
                 return self.faces()[0]
             else:
@@ -253,7 +254,7 @@ class AlgCompound(Compound):
             raise RuntimeError("face() exists for dim==2 only")
 
     def solid(self) -> Solid:
-        if self.dim == 3:
+        if self._dim == 3:
             if len(self.solids()) == 1:
                 return self.solids()[0]
             else:
@@ -273,22 +274,22 @@ def create_compound(
     if objects is None:
         objs = None
     else:
-        if isinstance(objects, AlgCompound) and objects.dim == 1:
+        if isinstance(objects, AlgCompound) and objects._dim == 1:
             objs = objects.edges()
             if dim is None:
-                dim = 1 if part is None else part.dim
+                dim = 1 if part is None else part._dim
         elif isinstance(objects, (Wire, Edge)):
             objs = [objects]
             if dim is None:
-                dim = 1 if part is None else part.dim
+                dim = 1 if part is None else part._dim
         elif isinstance(objects, (Face)):
             objs = [objects]
             if dim is None:
-                dim = 2 if part is None else part.dim
+                dim = 2 if part is None else part._dim
         elif isinstance(objects, (Wire, Solid)):
             objs = [objects]
             if dim is None:
-                dim = 3 if part is None else part.dim
+                dim = 3 if part is None else part._dim
         else:
             if isinstance(objects, (list, tuple)):
                 objs = objects
@@ -299,9 +300,9 @@ def create_compound(
 
             if dim is None:
                 if part is None:
-                    dim = max([o.dim for o in objs])
+                    dim = max([o._dim for o in objs])
                 else:
-                    dim = part.dim
+                    dim = part._dim
 
     with CTX[dim]() as ctx:
         if part is not None:
@@ -355,10 +356,10 @@ class LazyAlgCompound(AlgCompound):
             else:
                 dim = 1
 
-            if self.dim == 0:
-                self.dim = dim
+            if self._dim == 0:
+                self._dim = dim
             else:
-                if dim != self.dim:
+                if dim != self._dim:
                     raise RuntimeError("Cannot add objects with different dimensions")
 
             self._collected_objects.append(other)
