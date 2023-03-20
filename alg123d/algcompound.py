@@ -23,6 +23,7 @@ class SkipClean:
 
     def __enter__(self):
         SkipClean.clean = False
+        return self
 
     def __exit__(self, exception_type, exception_value, traceback):
         SkipClean.clean = True
