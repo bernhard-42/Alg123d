@@ -2,9 +2,9 @@
 
 ## Objects and object arithmetic
 
-$A^n$ is the set of all `AlgCompounds a` with `a.dim = n` for $n = 1,2,3$
+$A^n$ is the set of all `AlgCompounds a` with `a._dim = n` for $n = 1,2,3$
 
-$e_n$ := `Zero` , for $n = 1,2,3$ , are `AlgCompounds a` with `a.dim = n` and `a.wrapped = None`
+$e_n$ := `Zero` , for $n = 1,2,3$ , are `AlgCompounds a` with `a._dim = n` and `a.wrapped = None`
 
 **Sets of predefined basic shapes:**
 
@@ -58,6 +58,6 @@ Inverse element: $l^{-1} \in L$: `l.inverse()`
 
 For $n = 1, 2, 3$:
 
-$@: A^n \times L \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.located(l)`)
+$*: L \times A^n  \rightarrow A^n$ (locate an object $a \in A^n$ at location $l \in L$, i.e. `a.moved(l)`)
 
-$@: A^n \times P \rightarrow A^n$ (locate an object $a \in A^n$ on a plane $p \in P$, i.e. `a.located(p.to_location())`)
+$*: P \times A^n  \rightarrow A^n$ (locate an object $a \in A^n$ on a plane $p \in P$, i.e. `a.moved(p.to_location())`)

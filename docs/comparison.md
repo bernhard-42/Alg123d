@@ -118,7 +118,7 @@
   ```python
   a, b, c, d = 90, 45, 15, 7.5
 
-  sk5 = Circle(a) - Rectangle(c, c) @ Pos(b, 0.0) - Circle(d) @ Pos(0.0, b)
+  sk5 = Circle(a) - Pos(b, 0.0) * Rectangle(c, c) - Pos(0.0, b) * Circle(d)
   ex5 = extrude(sk5, c)
   ```
 
@@ -142,7 +142,7 @@
   ```python
   a, b, c = 80, 60, 10
 
-  sk6 = [Circle(c) @ loc for loc in Locations((b, 0), (0, b), (-b, 0), (0, -b))]
+  sk6 = [loc * Circle(c) for loc in Locations((b, 0), (0, b), (-b, 0), (0, -b))]
   ex6 = extrude(Circle(a) - sk6, c)
   ```
 
@@ -167,10 +167,10 @@
   a, b, c = 60, 80, 5
 
   polygons = [
-      RegularPolygon(radius=2 * c, side_count=6) @ loc
+      loc * RegularPolygon(radius=2 * c, side_count=6)
       for loc in Locations((0, 3 * c), (0, -3 * c))
   ]
-  sk7 = Rectangle(a, b) @ Rot(z=5) - polygons
+  sk7 = Rot(z=5) * Rectangle(a, b) - polygons
   ex7 = extrude(sk7, c)
   ```
 
@@ -304,7 +304,7 @@
 
   plane = Plane(ex11.faces().max())
   sk11 = [
-      RegularPolygon(radius=5, side_count=5) @ (plane * loc)
+      plane * loc * RegularPolygon(radius=5, side_count=5)
       for loc in GridLocations(length / 2, width / 2, 2, 2)
   ]
   ex11 -= extrude(sk11, thickness)
@@ -383,11 +383,11 @@
   plane = Plane(ex13.faces().max())
 
   ex13 -= [
-      CounterSink(ex13, radius=b, counter_sink_radius=2 * b) @ (plane * loc)
+      plane * loc * CounterSink(ex13, radius=b, counter_sink_radius=2 * b)
       for loc in PolarLocations(radius=a, count=4)
   ]
   ex13 -= [
-      CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b) @ (plane * loc)
+      plane * loc * CounterBore(ex13, radius=b, counter_bore_radius=2 * b, counter_bore_depth=b)
       for loc in PolarLocations(radius=a, count=4, start_angle=45, stop_angle=360 + 45)
   ]
   ```
@@ -418,7 +418,7 @@
   l2 = JernArc(start=l1 @ 1, tangent=l1 % 1, radius=a, arc_size=-90)
   l3 = Line(l2 @ 1, l2 @ 1 + Vector(-a, a))
 
-  sk14 = Rectangle(b, b) @ Plane.XZ
+  sk14 = Plane.XZ * Rectangle(b, b)
   ex14 = sweep(sk14.faces(), path=(l1 + l2 + l3).wire())
   ```
 
@@ -491,10 +491,10 @@
   sk16 = Rectangle(length, width)
   sk16 = fillet(sk16, sk16.vertices(), radius=length / 10)
 
-  circles = [Circle(length / 12) @ loc for loc in GridLocations(length / 4, 0, 3, 1)]
+  circles = [loc * Circle(length / 12) for loc in GridLocations(length / 4, 0, 3, 1)]
   sk16 = sk16 - circles - Rectangle(length, width, align=(Align.MIN, Align.MIN))
 
-  ex16_single = extrude(sk16 @ Plane.XZ, length)
+  ex16_single = extrude(Plane.XZ * sk16, length)
 
   planes = [
       Plane.XY.offset(width),
@@ -557,7 +557,7 @@
   ex18 = chamfer(ex18, ex18.edges().max_group(), a)
   ex18 = fillet(ex18, ex18.edges(Axis.Z), b)
 
-  sk18 = Rectangle(2 * b, 2 * b) @ Plane(ex18.faces().min())
+  sk18 = Plane(ex18.faces().min()) * Rectangle(2 * b, 2 * b)
   ex18 -= extrude(sk18, -thickness)
   ```
 
@@ -581,7 +581,7 @@
 
   ex19 = Box(length, width, thickness)
   vertex = ex19.faces().min().vertices()[-1]
-  ex19 -= Bore(ex19, radius=width / 4) @ Pos(vertex)
+  ex19 -= Pos(vertex) * Bore(ex19, radius=width / 4)
   ```
 
 ## Example 20
@@ -609,7 +609,7 @@
   plane = Plane(ex20.faces().min(Axis.X)).offset(thickness)
   # plane = Plane(ex20.faces().min(Axis.X)) * Pos(z=thickness)
 
-  sk20 = Circle(width / 2) @ plane
+  sk20 = plane * Circle(width / 2)
   ex20 += extrude(sk20, thickness)
   ```
 
@@ -636,7 +636,7 @@
 
   ex21 = extrude(Circle(width / 2), length)
   plane = Plane(origin=ex21.center(), z_dir=(-1, 0, 0))
-  ex21 += extrude(Circle(width / 2), length) @ plane
+  ex21 += plane * extrude(Circle(width / 2), length)
   ```
 
 ## Example 22
@@ -665,7 +665,7 @@
   plane = Plane(ex22.faces().max()) * Rot(0, 50, 0)
 
   holes = [
-      Circle(thickness / 4) @ (plane * loc)
+      plane * loc * Circle(thickness / 4)
       for loc in GridLocations(length / 4, width / 4, 2, 2)
   ]
   ex22 -= extrude(holes, -100, both=True)
@@ -713,8 +713,8 @@
   l2 = Line(l1 @ 1, l1 @ 0)
   sk23 = make_face([l1, l2])
 
-  sk23 += Circle(25) @ Pos(0, 35)
-  sk23 = split(sk23, by=Plane.ZY) @ Plane.XZ
+  sk23 += Pos(0, 35) * Circle(25)
+  sk23 = Plane.XZ * split(sk23, by=Plane.ZY)
 
   ex23 = revolve(sk23, axis=Axis.Z)
   ```
@@ -744,8 +744,8 @@
   plane = Plane(ex24.faces().max())
 
   faces = [
-      Circle(length / 3) @ plane,
-      Rectangle(length / 6, width / 6) @ plane.offset(length / 2),
+      plane * Circle(length / 3),
+      plane.offset(length / 2) * Rectangle(length / 6, width / 6),
   ]
 
   ex24 += loft(faces)

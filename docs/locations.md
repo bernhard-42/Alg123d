@@ -7,7 +7,7 @@
     ```python
     loc = Location((0.1, 0.2, 0.3), (10, 20, 30))
 
-    face = Rectangle(1,2) @ loc
+    face = loc * Rectangle(1,2)
 
     show_object(face)
     show_object(loc.symbol())
@@ -20,7 +20,7 @@
     ```python
     plane = Plane.XZ
 
-    face = Rectangle(1, 2) @ plane
+    face = plane * Rectangle(1, 2)
 
     show_object(face)
     show_object(plane.symbol())
@@ -35,7 +35,7 @@
 1. **Positioning an object relative to a location**
 
     ```python
-    box = Box(0.2, 0.2, 0.2) @ (loc * Pos(0.2, 0.4, 0.1))
+    box = loc * Pos(0.2, 0.4, 0.1) * Box(0.2, 0.2, 0.2)
 
     show_object(face)
     show_object(loc.symbol())
@@ -49,7 +49,7 @@
 2. **Rotate an object relative to a location**
 
     ```python
-    box = Box(0.2, 0.2, 0.2) @ (loc * Rot(z=80))
+    box = loc * Rot(z=80) * Box(0.2, 0.2, 0.2)
 
     show_object(face)
     show_object(loc.symbol())
@@ -61,7 +61,7 @@
     The box is rotated around the `x`-axis, `y`-axis and `z`-axis of the underlying location
 
     ```python
-    box = Box(0.2, 0.2, 0.2) @ (loc * Rot(20, 40, 80))
+    box = loc * Rot(20, 40, 80) * Box(0.2, 0.2, 0.2)
 
     show_object(face)
     show_object(loc.symbol())
@@ -75,7 +75,7 @@
 3. **Rotate and position an object relative to a location**
 
     ```python
-    box = Box(0.2, 0.2, 0.2) @ (loc *  Rot(20, 40, 80) * Pos(0.2, 0.4, 0.1))
+    box = loc *  Rot(20, 40, 80) * Pos(0.2, 0.4, 0.1) * Box(0.2, 0.2, 0.2)
 
     show_object(face)
     show_object(loc.symbol())
@@ -88,7 +88,7 @@
 4. **Position and rotate an object relative to a location**
 
     ```python
-    box = Box(0.2, 0.2, 0.2) @ (loc * Pos(0.2, 0.4, 0.1) * Rot(20, 40, 80))
+    box = loc * Pos(0.2, 0.4, 0.1) * Rot(20, 40, 80) * Box(0.2, 0.2, 0.2)
 
     show_object(face)
     show_object(loc.symbol())
@@ -103,22 +103,3 @@
 5. **Positioning and rotating an object relative to a plane**
 
     Since a `Plane` has one location and a `Location` defines exactly one `Plane`, the above examples apply to planes by taking the plane location into account
-
-
-6. **Brackets count!**
-
-    Note the difference between these two calls:
-
-    ```python
-    b @ (Plane.XZ * Pos(0, 0, -1) * Rot(z=45))
-    ```
-    ![rotation1](../images/rotate_ex1.png)
-
-    ```python
-    b @ (Plane.XZ * Pos(0, 0, -1)) * Rot(z=45)
-    ```
-    ![rotation2](../images/rotate_ex2.png)
-
-    The first will take the object `b`, place it on plane `Plane.XZ` and shift it in z-direction realtive to the local coordinate system of `Plane.XZ` and then rotate again relative to the coordinate system of `Plane.XZ`.
-    
-    The second has the rotation outside of the brackets, hence it now rotates the result of the placement in the brackets relative to `Plane.XY`.
