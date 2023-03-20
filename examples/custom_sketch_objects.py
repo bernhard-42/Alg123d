@@ -91,10 +91,10 @@ heart = Heart(s, align=Align.MAX)
 diamond = Diamond(s, align=Align.MAX)
 
 faces = [
-    club @ Pos(-s, -s),
-    spade @ Pos(-s, s),
-    heart @ Pos(s, -s),
-    diamond @ Pos(s, s),
+    Pos(-s, -s) * club,
+    Pos(-s, s) * spade,
+    Pos(s, -s) * heart,
+    Pos(s, s) * diamond,
 ]
 
 show(faces, extrude(faces, 1, dir=(0, 0, -1)), alphas=[0.9, 0.3])

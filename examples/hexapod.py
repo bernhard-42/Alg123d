@@ -39,23 +39,20 @@ class Base:
 
     def create(self):
         base = extrude(Ellipse(width, length), thickness)
-        base -= Box(2 * width, 20, 3 * thickness) @ Pos(y=-length + 5)
+        base -= Pos(y=-length + 5) * Box(2 * width, 20, 3 * thickness)
 
         for name, pos in self.base_hinges.items():
             last = base.edges()
-            base -= (
-                Cylinder(
-                    diam / 2 + tol,
-                    thickness,
-                    align=(Align.CENTER, Align.CENTER, Align.MIN),
-                )
-                @ pos
+            base -= pos * Cylinder(
+                diam / 2 + tol,
+                thickness,
+                align=(Align.CENTER, Align.CENTER, Align.MIN),
             )
             self.base_edges[name] = (base.edges() - last).min()
 
         for name, pos in self.stand_holes.items():
             last = base.edges()
-            base -= Box(width / 2 + 2 * tol, thickness + 2 * tol, 5 * thickness) @ pos
+            base -= pos * Box(width / 2 + 2 * tol, thickness + 2 * tol, 5 * thickness)
             self.stand_edges[name] = (base.edges() - last).min_group()
 
         base.mates = {
@@ -68,7 +65,7 @@ class Base:
                 for name, edge in self.stand_edges.items()
             }
         )
-        base.mates["base"] = Mate(base.faces().max(), name="base") @ Pos(
+        base.mates["base"] = Mate(base.faces().max(), name="base") * Pos(
             z=height + 2 * tol
         )
         base.mates["top"] = Mate(base.faces().min(), name="top")
@@ -92,7 +89,7 @@ class Stand:
         t2 = thickness / 2
         w = height / 2 + tol - self.h / 2
         for i in [-1, 1]:
-            rect = Rectangle(thickness, self.h) @ Pos(0, i * w, t2)
+            rect = Pos(0, i * w, t2) * Rectangle(thickness, self.h)
             block = extrude(rect, self.h)
             stand += block
 
@@ -104,14 +101,11 @@ class Stand:
             )
 
         for plane in [Plane(faces[0]), Plane(faces[-1])]:
-            stand += (
-                Box(
-                    thickness,
-                    width / 2,
-                    thickness,
-                    align=(Align.CENTER, Align.CENTER, Align.MIN),
-                )
-                @ plane
+            stand += plane * Box(
+                thickness,
+                width / 2,
+                thickness,
+                align=(Align.CENTER, Align.CENTER, Align.MIN),
             )
 
         stand.mates = {"bottom": Mate(stand.faces().max(Axis.Y), name="bottom")}
@@ -139,11 +133,11 @@ class UpperLeg:
         upper_leg = fillet(upper_leg, upper_leg.edges().max(Axis.X), radius=4)
 
         last = upper_leg.edges()
-        upper_leg -= Bore(upper_leg, diam / 2 + tol) @ leg_hole
+        upper_leg -= leg_hole * Bore(upper_leg, diam / 2 + tol)
         self.knee_hole = upper_leg.edges(GeomType.CIRCLE) - last
 
-        upper_leg += Cylinder(diam / 2, 2 * (height / 2 + thickness + tol)) @ Rot(
-            90, 0, 0
+        upper_leg += Rot(90, 0, 0) * Cylinder(
+            diam / 2, 2 * (height / 2 + thickness + tol)
         )
 
         upper_leg.mates = {
@@ -173,7 +167,7 @@ class LowerLeg:
         lower_leg = fillet(lower_leg, lower_leg.edges(Axis.Z), radius=4)
 
         last = lower_leg.edges()
-        lower_leg -= Bore(lower_leg, diam / 2 + tol) @ leg_hole
+        lower_leg -= leg_hole * Bore(lower_leg, diam / 2 + tol)
         self.knee_hole = (lower_leg.edges(GeomType.CIRCLE) - last).sort_by()
 
         lower_leg.mates = {
@@ -207,7 +201,7 @@ rot = {"front_stand": Rot(180, 0, 90), "back_stand": Rot(180, 0, -90)}
 for name in Base.stand_holes.keys():
     hexapod.add(stand, name=name, color=Color(128, 204, 230))
 
-    hexapod[f"/base/{name}"].mate(name, stand.mates["bottom"] @ rot[name])
+    hexapod[f"/base/{name}"].mate(name, stand.mates["bottom"] * rot[name])
 
 angles = {
     "right_back": 195,
@@ -225,7 +219,7 @@ for name in Base.base_hinges.keys():
 
     hexapod[f"/base/{name}_leg"].mate(
         f"{name}_hinge",
-        upper_leg.mates["hinge"] @ Rot(180, 0, angles[name]),
+        upper_leg.mates["hinge"] * Rot(180, 0, angles[name]),
         origin=True,
     )
     hexapod[f"/base/{name}_leg"].mate(
@@ -235,7 +229,7 @@ for name in Base.base_hinges.keys():
     hexapod[f"/base/{name}_leg/lower_leg"].mate(
         f"{name}_lower_knee",
         lower_leg.mates["knee_bottom" if "right" in name else "knee_top"]
-        @ Rot(0, 0, -75),
+        * Rot(0, 0, -75),
         origin=True,
     )
 

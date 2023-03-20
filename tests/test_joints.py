@@ -17,7 +17,7 @@ class JointBox(AlgCompound):
         obj = extrude(rect, amount=height, taper=taper)
         if radius != 0.0:
             obj = fillet(obj, obj.edges(), radius)
-        obj -= Cylinder(width / 4, length) @ Rot(y=90)
+        obj -= Rot(y=90) * Cylinder(width / 4, length)
 
         super().__init__(obj)
 
@@ -116,12 +116,26 @@ j9.connect_to(j10, angles=(10, 20, 30))
 show(base, ball, j9.symbol, j10.symbol)
 # %%
 
-show(base, base_top_edges,
-    fixed_arm, j1.symbol, j2.symbol,
-    hinge_arm, j3.symbol, j4.symbol,
-    slider_arm, s1.symbol, s2.symbol,
-    screw_arm, j5.symbol, j6.symbol,
-    pin_arm, j7.symbol, j8.symbol,
-    ball, j9.symbol, j10.symbol
+show(
+    base,
+    base_top_edges,
+    fixed_arm,
+    j1.symbol,
+    j2.symbol,
+    hinge_arm,
+    j3.symbol,
+    j4.symbol,
+    slider_arm,
+    s1.symbol,
+    s2.symbol,
+    screw_arm,
+    j5.symbol,
+    j6.symbol,
+    pin_arm,
+    j7.symbol,
+    j8.symbol,
+    ball,
+    j9.symbol,
+    j10.symbol,
 )
 # %%

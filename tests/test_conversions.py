@@ -21,15 +21,15 @@ a1 = from_cq(e)
 
 show(
     c,
-    a @ Pos(2, 0, 0),
-    a1 @ Pos(4, 0, 0),
-    a2 @ Pos(6, 0, 0),
-    a3 @ Pos(8, 0, 0),
+    Pos(2, 0, 0) * a,
+    Pos(4, 0, 0) * a1,
+    Pos(6, 0, 0) * a2,
+    Pos(8, 0, 0) * a3,
 )
 
 # %%
 
-a = Cylinder(1, 1, align=Align.MIN) @ Plane.XZ
+a = Plane.XZ * Cylinder(1, 1, align=Align.MIN)
 s = a.solids()
 f = a.faces()
 e = a.edges()
@@ -63,10 +63,10 @@ a1 = from_bd(b.edges())
 
 show(
     b,
-    a @ Pos(2, 0, 0),
-    a1 @ Pos(4, 0, 0),
-    a2 @ Pos(6, 0, 0),
-    a3 @ Pos(8, 0, 0),
+    Pos(2, 0, 0) * a ,
+    Pos(4, 0, 0) * a1 ,
+    Pos(6, 0, 0) * a2 ,
+    Pos(8, 0, 0) * a3 ,
 )
 
 # %%
@@ -78,6 +78,6 @@ with bd.BuildSketch() as s:
 a = from_bd(s)
 a2 = from_bd(s.faces())
 a1 = from_bd(s.edges())
-show(a, a2 @ Pos(2, 0, 0), a1 @ Pos(4, 0, 0))
+show(a, Pos(2, 0, 0) * a2, Pos(4, 0, 0) * a1)
 
 # %%

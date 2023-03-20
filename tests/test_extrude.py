@@ -85,16 +85,16 @@ class Diamond(AlgCompound):
 
 # %%
 
-club = Club(s, align=Align.MAX)
-spade = Spade(s, align=Align.MAX)
-heart = Heart(s, align=Align.MAX)
-diamond = Diamond(s, align=Align.MAX)
+club = Club(s, align=Align.CENTER)
+spade = Spade(s, align=Align.CENTER)
+heart = Heart(s, align=Align.CENTER)
+diamond = Diamond(s, align=Align.CENTER)
 
 faces = [
-    club @ Pos(-s, -s),
-    spade @ Pos(-s, s),
-    heart @ Pos(s, -s),
-    diamond @ Pos(s, s),
+    Pos(-s, -s) * club,
+    Pos(-s, s) * spade,
+    Pos(s, -s) * heart,
+    Pos(s, s) * diamond,
 ]
 
 show(faces, extrude(faces, 1, dir=(0, 0, 1)), alphas=[0.9, 0.3])
@@ -110,13 +110,13 @@ x = split(x, by=Plane(origin=(0, 0, 6), z_dir=(1, 0, 1)), keep=Keep.BOTTOM)
 p = Plane(x.faces(Axis((0, 0, 0), (1, 0, 1))).max())
 
 faces = [
-    club @ (p * Pos(-s, -s)),
-    spade @ (p * Pos(-s, s)),
-    heart @ (p * Pos(s, -s)),
-    diamond @ (p * Pos(s, s)),
+    p * Pos(-s, -s) * club,
+    p * Pos(-s, s) * spade,
+    p * Pos(s, -s) * heart,
+    p * Pos(s, s) * diamond,
 ]
 
-show(x, *faces)
+show(x, *faces, p.symbol())
 
 # %%
 

@@ -61,7 +61,7 @@ class MG92B:
         b = fillet(b, b.edges().min(), self.f)
 
         #  extrude the rectangle in minus direction and subtract it from the object
-        r = Rectangle(self.cable_diameter, 5 * self.cable_diameter) @ cable_loc
+        r = cable_loc * Rectangle(self.cable_diameter, 5 * self.cable_diameter)
         b -= extrude(r, -self.cable_depth)
 
         self._bottom = b
@@ -75,9 +75,9 @@ class MG92B:
 
         # return 3 cables at location loc with "* Pos" means locate relative to the object location
         return (
-            cable @ (loc * Pos(y=-self.cable_diameter))
-            + cable @ loc
-            + cable @ (loc * Pos(y=self.cable_diameter))
+            loc * Pos(y=-self.cable_diameter) * cable
+            + loc * cable
+            + loc * Pos(y=self.cable_diameter) * cable
         )
 
     def body(self):
@@ -88,14 +88,11 @@ class MG92B:
         plane = Plane(self.bottom().faces().max())
 
         # create a box, not centered in z direction on this plane
-        b = (
-            Box(
-                self.body_length,
-                self.body_width,
-                self.body_height,
-                align=(Align.CENTER, Align.CENTER, Align.MIN),
-            )
-            @ plane
+        b = plane * Box(
+            self.body_length,
+            self.body_width,
+            self.body_height,
+            align=(Align.CENTER, Align.CENTER, Align.MIN),
         )
 
         self._body = fillet(b, b.edges(Axis.Z), self.f)
@@ -150,12 +147,12 @@ class MG92B:
         )
         self.poly = polygon
         # create the polygon, extrude it and rotate it upwards to the XZ plane
-        t = extrude(Polygon(polygon), self.body_width / 2, both=True) @ Plane.XZ
+        t = Plane.XZ * extrude(Polygon(polygon), self.body_width / 2, both=True)
 
         t = fillet(t, t.edges(Axis.Z), self.f)
 
         # finally lift it up to top body plane
-        t = t @ plane
+        t = plane * t
 
         # create the holes in the wings.
         # First, remember all edges before the action
@@ -163,7 +160,7 @@ class MG92B:
 
         # Since we don't restrict the depth of the Bore, we can define the locations on the XY plane
         for loc in Locations((-self.hole_distance / 2, 0), (self.hole_distance / 2, 0)):
-            t -= Bore(t, self.hole_diameter / 2) @ loc
+            t -= loc * Bore(t, self.hole_diameter / 2)
 
         # Finally get the circles of all new edges and select the two lowest
         self.fix_holes = (t.edges(GeomType.CIRCLE) - last).min_group()
@@ -174,13 +171,13 @@ class MG92B:
         loc = Pos((self.body_length - self.body_width) / 2, 0, offset)
 
         # create the motor housing
-        motor = extrude(Circle(self.motor_diameter / 2), self.motor_height1) @ loc
+        motor = loc * extrude(Circle(self.motor_diameter / 2), self.motor_height1)
         motor = fillet(motor, motor.edges().max(), self.f)
 
         # get the max face of the motor in z direction
         plane = Plane(motor.faces().max())
         # and add the second cylinder on top of the motor
-        motor += extrude(Circle(3.65), self.motor_height2) @ plane
+        motor += plane * extrude(Circle(3.65), self.motor_height2)
 
         # add the motor to the top
         t += motor
@@ -189,7 +186,7 @@ class MG92B:
         loc.position -= Vector(self.motor_diameter / 2, 0, 0)
 
         # create the gear at this location
-        gear = extrude(Circle(self.gear_diameter / 2), self.motor_height1) @ loc
+        gear = loc * extrude(Circle(self.gear_diameter / 2), self.motor_height1)
         gear = fillet(gear, gear.edges().max(), self.f)
 
         # add the geat to the top
@@ -203,17 +200,17 @@ class MG92B:
         plane = Plane(self.top().faces().max())
 
         # create the spline axis as cylinder on top of the result
-        spline = extrude(Circle(self.spline_radius1), self.spline_height1) @ plane
+        spline = plane * extrude(Circle(self.spline_radius1), self.spline_height1)
 
         # create the spline gear as cylinder on top of the new result
         plane = Plane(spline.faces().max())
-        spline += extrude(Circle(self.spline_radius2), self.spline_height2) @ plane
+        spline += plane * extrude(Circle(self.spline_radius2), self.spline_height2)
 
         # select the spline gear top face
         self.spline_hole = spline.edges(GeomType.CIRCLE).max()
 
         # and drill a hole into it
-        spline -= Bore(spline, 1, self.spline_height2) @ Plane(spline.faces().max())
+        spline -= Plane(spline.faces().max()) * Bore(spline, 1, self.spline_height2)
 
         self._spline = chamfer(spline, spline.edges().max(), 0.3)
 

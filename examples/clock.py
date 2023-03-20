@@ -12,22 +12,22 @@ minute_indicator = fillet(
 )
 
 clock_face = Circle(clock_radius)
-clock_face -= [minute_indicator @ loc for loc in PolarLocations(0, 60)]
+clock_face -= [loc * minute_indicator for loc in PolarLocations(0, 60)]
 
 
 clock_face -= [
-    SlotOverall(clock_radius * 0.05, clock_radius * 0.025) @ loc
+    loc * SlotOverall(clock_radius * 0.05, clock_radius * 0.025)
     for loc in PolarLocations(clock_radius * 0.875, 12)
 ]
 
 clock_face -= [
-    Text(
+    loc
+    * Text(
         str(hour + 1),
         font_size=clock_radius * 0.175,
         font_style=FontStyle.BOLD,
         align=Align.CENTER,
     )
-    @ loc
     for hour, loc in enumerate(
         PolarLocations(clock_radius * 0.75, 12, 60, -360, rotate=False)
     )

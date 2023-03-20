@@ -105,13 +105,13 @@ show(Rectangle(8, 2).edges(), s)
 
 # %%
 
-s = SlotCenterToCenter(6, 1) @ Location((0, 0), 30)
+s = Location((0, 0), 30) * SlotCenterToCenter(6, 1)
 show(Rectangle(8, 2).edges(), s)
 
 # %%
 
 s = SlotCenterPoint((1, 1), (2, 0), 2)
-show((Rectangle(4, 4) @ Pos(1, 1)).edges(), s)
+show((Pos(1, 1)*Rectangle(4, 4)).edges(), s)
 
 
 # %%

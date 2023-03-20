@@ -23,8 +23,8 @@ leaf += mirror(leaf, about=Plane.YZ)
 leaf = make_face(leaf)
 
 field = Rectangle(0.5, 1, align=(Align.MIN, Align.MIN))
-west_field = field @ Pos(-1, 0)
-east_field = field @ Pos(0.5, 0)
+west_field = Pos(-1, 0) * field
+east_field = Pos(0.5, 0) * field
 centre_field = Rectangle(1, 1, align=(Align.CENTER, Align.MIN)) - leaf
 # %%
 

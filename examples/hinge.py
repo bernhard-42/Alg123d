@@ -32,7 +32,7 @@ class Hinge(AlgCompound):
         hinge_profile = AlgCompound()
         for i, loc in enumerate(GridLocations(0, length / 5, 1, 5, align=Align.MIN)):
             if i % 2 == inner:
-                hinge_profile += Rectangle(width, length / 5, align=Align.MIN) @ loc
+                hinge_profile += loc * Rectangle(width, length / 5, align=Align.MIN)
         hinge_profile += Rectangle(width - barrel_diameter, length, align=Align.MIN)
         hinge_profile = extrude(hinge_profile, -barrel_diameter)
 
@@ -51,7 +51,7 @@ class Hinge(AlgCompound):
         pin_head = fillet(
             pin_head, pin_head.edges(GeomType.CIRCLE).max(), radius=pin_diameter / 3
         )
-        pin += pin_head @ Plane(pin.faces().max())
+        pin += Plane(pin.faces().max()) * pin_head
 
         # The leaf
         l1 = Line((0, 0), (width - barrel_diameter / 2, 0))
@@ -70,27 +70,27 @@ class Hinge(AlgCompound):
         l6 = Line(l5 @ 1, l1 @ 0)
         face = make_face([l1, l2, l3, l4, l5, l6])
         pin_center = Pos(width - barrel_diameter / 2, barrel_diameter / 2)
-        pin_hole = Circle(pin_diameter / 2 + 0.1 * MM) @ pin_center
+        pin_hole = pin_center * Circle(pin_diameter / 2 + 0.1 * MM)
         face -= pin_hole
         leaf = extrude(face, length)
-        leaf &= hinge_profile @ Rot(x=90)
+        leaf &= Rot(x=90) * hinge_profile
 
         # Create holes for fasteners
         plane = Plane(leaf.faces(Axis.Y).max())
 
         holes = [
-            CounterSink(leaf, 3 * MM, 5 * MM) @ (plane * loc)
+            plane * loc * CounterSink(leaf, 3 * MM, 5 * MM)
             for loc in GridLocations(0, length / 3, 1, 3)
         ]
         leaf -= holes
 
         # Add the hinge pin to the external leaf
         if not inner:
-            leaf = Compound.make_compound([leaf, pin @ pin_center])
+            leaf = Compound.make_compound([leaf, pin_center * pin])
 
         # super().__init__(leaf)
         self.wrapped = leaf.wrapped
-        self.dim = 3
+        self._dim = 3
 
         # Leaf attachment
         RigidJoint(
@@ -187,7 +187,7 @@ hinge_outer = Hinge(
 # show(
 #     hinge_inner,
 #     *[h.symbol for h in hinge_inner.joints.values()],
-#     hinge_outer @ Pos(6 * CM, 0),
+#     Pos(6 * CM, 0) * hinge_outer,
 #     *[h.symbol.moved(Pos(6 * CM, 0)) for h in hinge_outer.joints.values()],
 # )
 # %%
@@ -197,10 +197,10 @@ hinge_outer = Hinge(
 box = Box(30 * CM, 30 * CM, 10 * CM)
 box = shell(box, -1 * CM, openings=box.faces().max())
 # Create a notch for the hinge
-box -= Box(2 * CM, 12 * CM, 4 * MM) @ Pos(-15 * CM, 0, 5 * CM)
+box -= Pos(-15 * CM, 0, 5 * CM) * Box(2 * CM, 12 * CM, 4 * MM)
 plane = Plane(box.faces().min(Axis.X)) * Pos(2 * CM, 0, 0)
 for loc in GridLocations(0, 40 * MM, 1, 3):
-    box -= Bore(box, 3 * MM, 1 * CM) @ (plane * loc)
+    box -= plane * loc * Bore(box, 3 * MM, 1 * CM)
 
 RigidJoint(
     "hinge_attachment",
@@ -217,7 +217,7 @@ lid = Box(30 * CM, 30 * CM, 1 * CM)
 
 plane = Plane(lid.faces().min()) * Pos(13 * CM, 0)
 for loc in GridLocations(0, 40 * MM, 1, 3):
-    lid -= Bore(lid, 3 * MM, 1 * CM) @ (plane * loc)
+    lid -= plane * loc * Bore(lid, 3 * MM, 1 * CM)
 
 RigidJoint(
     "hinge_attachment",

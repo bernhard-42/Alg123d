@@ -15,6 +15,6 @@ def func(idx):
     return c[idx] if idx == 0 else c[idx] - func(idx - 1)
 
 
-mainp = extrude(func(13), 1) @ Pos(0, 2.25)
+mainp = Pos(0, 2.25) * extrude(func(13), 1)
 
 show(mainp, axes=True, axes0=True)

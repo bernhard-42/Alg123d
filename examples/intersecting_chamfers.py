@@ -1,8 +1,8 @@
 from alg123d import *
 
-blocks = Box(1, 2, 1, align=(Align.CENTER, Align.MIN, Align.MIN)) @ Pos(-1, -1, 0)
+blocks = Pos(-1, -1, 0) * Box(1, 2, 1, align=(Align.CENTER, Align.MIN, Align.MIN))
 blocks += Box(1, 1, 2, align=(Align.CENTER, Align.MIN, Align.MIN))
-blocks += Box(1, 2, 1, align=(Align.CENTER, Align.MIN, Align.MIN)) @ Pos(1, -1, 0)
+blocks += Pos(1, -1, 0) * Box(1, 2, 1, align=(Align.CENTER, Align.MIN, Align.MIN))
 
 bottom_edges = blocks.edges().filter_by_position(Axis.Z, 0, 1, inclusive=(True, False))
 blocks2 = chamfer(blocks, bottom_edges, length=0.1)

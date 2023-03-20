@@ -10,7 +10,7 @@ gridxy = int(diam / meshop / 2)
 
 r = Rectangle(meshop, meshop)
 holes = [
-    r @ loc
+    loc * r
     for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy)
     if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2
 ]
@@ -29,7 +29,7 @@ with LazyAlgCompound() as holes:
             loc.position.X**2 + loc.position.Y**2
             < (diam / 2 - meshop * 0.9) ** 2
         ):
-            holes += r @ loc
+            holes += loc * r
 
 c = Circle(diam / 2) - holes
 print(time.time() - a)
@@ -41,7 +41,7 @@ a = time.time()
 r = Rectangle(meshop, meshop)
 locs = GridLocations(meshop * 2, meshop * 2, gridxy, gridxy)
 holes = [
-    r @ loc
+    loc * r
     for loc in locs
     if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2
 ]
@@ -58,7 +58,7 @@ rectangles = []
 r = Face.make_rect(meshop, meshop)
 for loc in GridLocations(meshop * 2, meshop * 2, gridxy, gridxy):
     if loc.position.X**2 + loc.position.Y**2 < (diam / 2 - meshop * 0.9) ** 2:
-        rectangles.append(r.located(loc))
+        rectangles.append(r.moved(loc))
 
 holes = rectangles.pop().fuse(*rectangles).clean()
 c = Circle(diam / 2) - holes

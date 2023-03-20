@@ -6,7 +6,7 @@ powerup = Spline(
     tangent_scalars=(0.5, 2),
 )
 corner = RadiusArc(powerup @ 1, (100, 60, 0), -30)
-screw = Helix(75, 150, 15, direction=(-1, 0, 0)) @ Pos(75, 40, 15)
+screw = Pos(75, 40, 15) * Helix(75, 150, 15, direction=(-1, 0, 0))
 
 roller_coaster = powerup + corner + screw
 roller_coaster += Spline((corner @ 1, screw @ 0), tangents=(corner % 1, screw % 0))

@@ -1,5 +1,6 @@
 from alg123d import *
-set_defaults(grid=(True,True,True), axes=True, axes0=True)
+
+set_defaults(grid=(True, True, True), axes=True, axes0=True)
 
 # %%
 
@@ -13,7 +14,7 @@ show(s)
 
 # Place circle on XZ plane
 
-s = Circle(1) @ Plane.XZ
+s = Plane.XZ * Circle(1)
 
 show(s)
 
@@ -21,39 +22,25 @@ show(s)
 
 # Place circle on XZ plane and then move relative to XY plane
 
-s = (Circle(1) @ Plane.XZ) * Pos(1,1,1)
+s = Plane.XZ * Pos(1, 1, 1) * Circle(1)
 
 show(s)
 
 # %%
 
-# Place circle on a plane that is XZ plane moved relative to XZ plane
-# "Local" movement on plane
-
-s = Circle(1) @ (Plane.XZ * Pos(1,1,1))
-
-show(s)
-# %%
-
-s = Circle(1) * Pos(1,1,1)
+s = Pos(1, 1, 1) * Circle(1)
 
 show(s)
 
 # %%
 
-s = Circle(1) @ Plane.XY
+s = Plane.ZY * Circle(1)
 
 show(s)
 
 # %%
 
-s = (Circle(1) @ Plane.XY) * Pos(1,1,1)
-
-show(s)
-
-# %%
-
-s = Circle(1) @ (Plane.XY * Pos(1,1,1))
+s = Plane.XY * Pos(1, 1, 1) * Circle(1)
 
 show(s)
 

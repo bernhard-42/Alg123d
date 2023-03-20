@@ -11,14 +11,17 @@ pillow_block = extrude(plan, thickness)
 
 plane = Plane(pillow_block.faces().max())
 
-pillow_block -= (
-    CounterBore(pillow_block, bearing_axle_radius, bearing_radius, bearing_thickness)
-    @ plane
+pillow_block -= plane * CounterBore(
+    pillow_block, bearing_axle_radius, bearing_radius, bearing_thickness
 )
 for loc in GridLocations(width - 2 * padding, height - 2 * padding, 2, 2):
-    pillow_block -= CounterBore(
-        pillow_block, screw_shaft_radius, screw_head_radius, screw_head_height
-    ) @ (plane * loc)
+    pillow_block -= (
+        plane
+        * loc
+        * CounterBore(
+            pillow_block, screw_shaft_radius, screw_head_radius, screw_head_height
+        )
+    )
 
 # Render the part
 if "show_object" in locals():

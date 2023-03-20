@@ -21,9 +21,9 @@ with LazyAlgCompound() as sections:
             z_dir=handle_path % (i / segment_count),
         )
         if i % segment_count == 0:
-            section = Circle(1) @ plane
+            section = plane * Circle(1)
         else:
-            section = Rectangle(1.25, 3) @ plane
+            section = plane * Rectangle(1.25, 3)
             section = fillet(section, section.vertices(), radius=0.2)
         sections += section
 

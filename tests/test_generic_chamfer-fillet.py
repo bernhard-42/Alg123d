@@ -5,30 +5,30 @@ set_defaults(axes=True, axes0=True, transparent=False)
 # %%
 
 a = Box(1, 1, 1)
-b = a + Cylinder(0.1, 2) @ Pos(-0.3, -0.3)
+b = a + Pos(-0.3, -0.3) * Cylinder(0.1, 2)
 c = chamfer(b, a.edges(), 0.1)
-show(a, b @ Pos(0, 2), c @ Pos(y=4))
+show(a, Pos(0, 2) * b, Pos(y=4) * c)
 
 # %%
 
 a = Box(1, 1, 1)
-b = a - Cylinder(0.1, 2) @ Pos(0.3, 0.3)
+b = a - Pos(0.3, 0.3) * Cylinder(0.1, 2)
 c = fillet(b, a.edges(), 0.1)
-show(a, b @ Pos(0, 2), c @ Pos(0, 4))
+show(a, Pos(0, 2) * b, Pos(0, 4) * c)
 
 # %%
 
 a = Rectangle(1, 2)
 b = fillet(a, a.vertices(), 0.3)
 
-show(a, b @ Pos(0, 3))
+show(a, Pos(0, 3)*b)
 
 # %%
 
 a = Rectangle(1, 2)
 b = chamfer(a, a.vertices(), 0.3)
 
-show(a, b @ Pos(0, 3))
+show(a,  Pos(0, 3)*b)
 
 # %%
 

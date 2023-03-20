@@ -6,7 +6,7 @@ slice_count = 10
 art = AlgCompound()
 for i in range(slice_count + 1):
     plane = Plane(origin=(0, 0, i * 3), z_dir=(0, 0, 1))
-    art += Circle(10 * sin(i * pi / slice_count) + 5) @ plane
+    art += plane * Circle(10 * sin(i * pi / slice_count) + 5)
 
 art = loft(art)
 top_bottom = art.faces(GeomType.PLANE)

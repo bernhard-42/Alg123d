@@ -19,10 +19,10 @@ cust_width = cust_bb.max.X - cust_bb.min.X
 l1 = Line((font_height * 0.3, 0), (font_height * 0.3, font_height))
 one = l1 + TangentArc(l1 @ 1, (0, font_height * 0.7), tangent=(l1 % 1) * -1)
 
-two = Text("2", font_size=10, align=(Align.MIN, Align.MIN)) @ Pos(font_height * 0.35, 0)
+two = Pos(font_height * 0.35, 0) * Text("2", font_size=10, align=(Align.MIN, Align.MIN))
 
 three_d = Text("3d", font_size=10, align=(Align.MIN, Align.MIN))
-three_d = extrude(three_d, amount=font_height * 0.3) @ Pos(font_height * 1.1, 0)
+three_d = Pos(font_height * 1.1, 0) * extrude(three_d, amount=font_height * 0.3)
 logo_width = three_d.vertices().sort_by(Axis.X)[-1].X
 
 t1 = TangentArc((0, 0), (1, 0.75), tangent=(1, 0))
@@ -36,18 +36,18 @@ l2 = Line(
     (logo_width, -font_height * 0.1),
     (logo_width, -ext_line_length - font_height * 0.1),
 )
-extension_lines = arrow_left @ Pos(*(l1 @ 0.5))
-extension_lines += arrow_left @ (Pos(*(l2 @ 0.5)) * Rot(z=180))
+extension_lines = Pos(*(l1 @ 0.5)) * arrow_left
+extension_lines += (Pos(*(l2 @ 0.5)) * Rot(z=180)) * arrow_left
 extension_lines += Line(l1 @ 0.5, l1 @ 0.5 + Vector(dim_line_length, 0))
 extension_lines += Line(l2 @ 0.5, l2 @ 0.5 - Vector(dim_line_length, 0))
 
 # Precisely center the build Faces
 p1 = Pos((l1 @ 0.5 + l2 @ 0.5) / 2 - Vector((build_bb.max.X + build_bb.min.X) / 2, 0))
-build = build_text @ p1
+build = p1 * build_text
 
 # add the customizable text to the build text sketch
 p2 = Pos((l1 @ 1 + l2 @ 1) / 2 - Vector(cust_bb.max.X + cust_bb.min.X, 1.4))
-build += cust_text @ p2
+build += p2 * cust_text
 
 cmpd = Compound.make_compound([three_d, two, one, build, extension_lines])
 

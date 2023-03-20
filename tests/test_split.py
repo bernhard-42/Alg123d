@@ -4,7 +4,7 @@ set_defaults(axes=True, axes0=True, transparent=True)
 
 # %%
 
-a = Box(1, 2, 3) + Cylinder(0.3, 4) + Cylinder(0.3, 4) @ Plane.XZ
+a = Box(1, 2, 3) + Cylinder(0.3, 4) + Plane.XZ * Cylinder(0.3, 4)
 
 b = split(a)
 

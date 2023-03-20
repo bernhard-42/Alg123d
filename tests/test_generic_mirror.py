@@ -4,7 +4,7 @@ set_defaults(axes=True, axes0=True, transparent=False)
 
 # %%
 
-a = Box(1, 2, 3) @ Pos(4, 2, 0)
+a = Pos(4, 2, 0) * Box(1, 2, 3)
 a = fillet(a, a.edges(), 0.1)
 b = a + mirror(a, Plane.XZ)
 show(a.edges(), b)
@@ -12,20 +12,20 @@ show(a.edges(), b)
 
 # %%
 
-a = Box(1, 2, 3) @ Pos(4, 2, 0)
+a = Pos(4, 2, 0) * Box(1, 2, 3)
 a = fillet(a, a.edges(), 0.1)
 b = mirror(a, Plane.XZ)
 show(a.edges(), b)
 
 # %%
 
-a = Circle(1) @ Pos(4, 2, 0)
+a = Pos(4, 2, 0) * Circle(1)
 b = a + mirror(a, Plane.XZ)
 show(a.edges(), b)
 
 # %%
 
-a = Circle(1) @ Pos(4, 2, 0)
+a = Pos(4, 2, 0) * Circle(1)
 b = mirror(a, Plane.XZ)
 show(a.edges(), b)
 

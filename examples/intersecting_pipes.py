@@ -1,12 +1,12 @@
 from alg123d import *
 
-pipes = Box(10, 10, 10) @ Rot(10, 20, 30)
+pipes = Rot(10, 20, 30) * Box(10, 10, 10)
 
 for plane in Planes(pipes.faces()):
-    pipe = Circle(4) @ plane
+    pipe = plane * Circle(4)
     pipes -= extrude(pipe, amount=-5)
-    pipe = Circle(4.5) @ plane
-    pipe -= Circle(4) @ plane
+    pipe = plane * Circle(4.5)
+    pipe -= plane * Circle(4)
 
     last = pipes.edges()
     pipes += extrude(pipe, amount=10)

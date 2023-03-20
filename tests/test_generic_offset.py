@@ -8,7 +8,7 @@ set_defaults(axes=True, axes0=True, transparent=True, grid=(True, True, True))
 
 p = Polyline([(-2, 5), (-12, 5), (-12, 10), (10, 10)])
 o = offset(p, 1)
-show(o, p @ Pos(0, -15, 0))
+show(o, Pos(0, -15, 0) * p)
 
 
 # %%
@@ -17,7 +17,7 @@ show(o, p @ Pos(0, -15, 0))
 
 f = Rectangle(10, 20)
 o = offset(f, 1)
-show(f, o @ Pos(15, 0, 0))
+show(f, Pos(15, 0, 0) * o)
 
 # %%
 
@@ -25,19 +25,19 @@ show(f, o @ Pos(15, 0, 0))
 
 b = Box(10, 20, 15)
 o = offset(b, 1)
-show(b, o @ Pos(15, 0, 0), transparent=True)
+show(b, Pos(15, 0, 0) * o, transparent=True)
 
 # %%
 b = Box(10, 20, 15)
 o = offset(b, 1) - b
-show(b, o @ Pos(15, 0, 0), transparent=True)
+show(b, Pos(15, 0, 0) * o, transparent=True)
 
 # %%
 # Offset solid
 
 b = Box(10, 20, 15)
 o = offset(b, -1)
-show(b, o @ Pos(15, 0, 0), transparent=True)
+show(b, Pos(15, 0, 0) * o, transparent=True)
 
 # %%
 
