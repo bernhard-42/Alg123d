@@ -185,49 +185,28 @@ class AlgCompound(Compound):
     def __and__(self, other: Union[AlgCompound, List[AlgCompound]]):
         return self._place(Mode.INTERSECT, *to_list(other))
 
-    def __mul__(self, loc: Location):
-        if self.dim == 3:
-            return copy.copy(self).move(loc)
+    def __matmul__(self, position):
+        if self._dim == 1:
+            return Wire.make_wire(self.edges()).position_at(position)
         else:
-            return self.moved(loc)
-
-    def __matmul__(self, obj: Union[float, Location, Plane]):
-        if isinstance(obj, (int, float)):
-            if self.dim == 1:
-                return Wire.make_wire(self.edges()).position_at(obj)
-            else:
-                raise TypeError("Only lines can access positions")
-
-        elif isinstance(obj, Location):
-            loc = obj
-
-        elif isinstance(obj, Plane):
-            loc = obj.location
-
-        else:
-            raise ValueError(f"Cannot multiply with {obj}")
-
-        if self.dim == 3:
-            return copy.copy(self).locate(loc)
-        else:
-            return self.located(loc)
+            raise TypeError("Only lines can access positions")
 
     def __mod__(self, position):
         if self._dim == 1:
             return Wire.make_wire(self.edges()).tangent_at(position)
         else:
-            raise TypeError(f"unsupported operand type(s)")
+            raise TypeError(f"Only lines can access positions")
 
     def __repr__(self):
         def r2(v):
             return tuple([round(e, 2) for e in v])
 
-        if self.dim == 0:
+        if self._dim == 0:
             loc_str = "None"
         else:
             loc_str = f"(position={r2(self.location.position)}, rotation={r2(self.location.orientation)})"
 
-        return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self.dim}"
+        return f"obj={self.__class__.__name__}; loc={loc_str}; dim={self._dim}"
 
     def edge(self) -> Edge:
         if self._dim == 1:

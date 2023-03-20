@@ -240,7 +240,7 @@ class Mate:
     def to_plane(self) -> Plane:
         return Plane(self.origin, self.x_dir, self.z_dir)
 
-    def __matmul__(self, loc: Location):
+    def __mul__(self, loc: Location):
         """
         Change location to a given loc
         :param loc: Location

@@ -40,10 +40,28 @@ def _location_plane(self) -> Plane:
     return Plane(self)
 
 
+def _location__mul__(self, other: Union[Location, Shape]) -> Union[Location, Shape]:
+    """Combine locations or move shape (premultiply with self)"""
+    if isinstance(other, Location):
+        return Location(self.wrapped * other.wrapped)
+
+    elif isinstance(other, Shape):
+        if other._dim == 3:
+            return copy.copy(other).move(self)
+        else:
+            return other.moved(self)
+
+    else:
+        raise TypeError(
+            "Locations can only be multiplied with Locations or Shapes to relocate them"
+        )
+
+
 Location.x_axis = property(_location_x_axis)
 Location.y_axis = property(_location_y_axis)
 Location.z_axis = property(_location_z_axis)
 Location.plane = property(_location_plane)
+Location.__mul__ = _location__mul__
 
 
 class Pos(Location):
@@ -68,7 +86,19 @@ def _plane_location(self):
     return Location(self)
 
 
+def _plane__mul__(self, other: Union[Location, Shape]) -> Union[Plane, Shape]:
+    if isinstance(other, Location):
+        return Plane(self.to_location() * other)
+
+    elif isinstance(other, Shape):
+        return self.to_location() * other
+
+    else:
+        raise TypeError("Planes can only be multiplied with Locations to relocate them")
+
+
 Plane.location = property(_plane_location)
+Plane.__mul__ = _plane__mul__
 
 
 class Planes:

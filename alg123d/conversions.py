@@ -33,7 +33,7 @@ def to_bd(obj):
 
     if hasattr(obj, "dim"):
         ctx = {1: bd.BuildLine, 2: bd.BuildSketch, 3: bd.BuildPart}
-        with ctx[obj.dim]() as c:
+        with ctx[obj._dim]() as c:
             bd.Add(Compound.make_compound(list(obj)))
         return c
     else:

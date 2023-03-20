@@ -153,7 +153,7 @@ def offset(
     result = create_compound(
         bd.Offset, objects, params=dict(amount=amount, kind=kind, mode=Mode.PRIVATE)
     )
-    if isinstance(objects, AlgCompound) and objects.dim == 3:
+    if isinstance(objects, AlgCompound) and objects._dim == 3:
         if amount > 0:
             return result + objects
         else:

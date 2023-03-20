@@ -242,7 +242,7 @@ class SlotOverall(AlgCompound):
 
 
 def make_face(objs: Union[AlgCompound, List[Edge]]):
-    if isinstance(objs, AlgCompound) and objs.dim == 1:
+    if isinstance(objs, AlgCompound) and objs._dim == 1:
         edges = objs.edges()
     elif isinstance(objs, (tuple, list)):
         edges = objs
